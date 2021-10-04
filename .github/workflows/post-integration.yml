@@ -1,0 +1,46 @@
+name: "Post-Integration"
+
+on:
+  push:
+    branches:
+      - main
+      - '!stable'
+      - '!gh-pages'
+
+env:
+  ATC_EMAIL: 'atcnet.org@gmail.com'
+  ATC_NAME: 'Atc-Net'
+
+jobs:
+  merge-to-stable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup dotnet 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: 🧹 Clean
+        run: dotnet clean -c Release && dotnet nuget locals all --clear
+
+      - name: 🔁 Restore packages
+        run: dotnet restore
+
+      - name: 🛠️ Build
+        run: dotnet build -c Release --no-restore /p:UseSourceLink=true
+
+      - name: 🧪 Run unit tests
+        run: dotnet test -c Release --no-build
+
+      - name: ⏩ Merge to stable-branch
+        run: |
+          git config --local user.email ${{ env.ATC_EMAIL }}
+          git config --local user.name ${{ env.ATC_NAME }}
+          git checkout stable
+          git merge --ff-only master
+          git push origin stable
