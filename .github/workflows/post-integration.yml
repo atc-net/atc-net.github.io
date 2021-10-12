@@ -42,5 +42,5 @@ jobs:
           git config --local user.email ${{ env.ATC_EMAIL }}
           git config --local user.name ${{ env.ATC_NAME }}
           git checkout stable
-          git merge --ff-only master
+          git merge --ff-only main
           git push origin stable
