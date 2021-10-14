@@ -27,7 +27,7 @@ atc-appbar-band {
   .atc-appbar-brand-text {
     letter-spacing: 0.25rem; } }
 
-.mudblazor-navmenu {
+.atc-navmenu {
   overflow: auto;
   margin-bottom: 12px; }
 
@@ -43,15 +43,15 @@ atc-appbar-band {
   display: flex;
   flex-grow: 1; }
 
-.mud-container + .mud-container {
+.atc-container + .atc-container {
   margin-bottom: 128px; }
 
-.mudblazor-main-content {
+.atc-main-content {
   padding-top: 86px;
   padding-bottom: 86px; }
 
 @media (min-width: 960px) {
-  .mudblazor-main-content {
+  .atc-main-content {
     padding-top: 128px;
     padding-bottom: 64px;
     padding-left: 12px; } }
@@ -70,21 +70,6 @@ atc-appbar-band {
       color: #988ef1;
       font-weight: 500;
       font-size: 1rem; }
-
-.docs-search-bar .mud-input {
-  height: 42px; }
-
-.docs-search-bar.mud-input-control {
-  background-color: rgba(255, 255, 255, 0.15);
-  margin-bottom: 5px;
-  height: 42px;
-  border-radius: var(--mud-default-borderradius); }
-  .docs-search-bar.mud-input-control .mud-input-root, .docs-search-bar.mud-input-control .mud-icon-default {
-    color: #fafafa; }
-
-.docs-search-bar .mud-input.mud-input-outlined .mud-input-outlined-border {
-  border: none;
-  border-radius: var(--mud-default-borderradius); }
 
 #mudads {
   margin-bottom: 50px;
@@ -153,13 +138,13 @@ atc-appbar-band {
   bottom: 0;
   right: 0; }
 
-.mud-codeblock {
+.atc-codeblock {
   height: 100%;
   background-color: var(--mud-palette-black);
   border-radius: var(--mud-default-borderradius);
   padding: 16px;
   overflow: auto; }
-  .mud-codeblock pre {
+  .atc-codeblock pre {
     height: 100%;
     color: #ededed;
     padding: 0px;
@@ -167,53 +152,53 @@ atc-appbar-band {
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     -webkit-font-smoothing: subpixel-antialiased;
     direction: ltr; }
-  .mud-codeblock .html + .csharp {
+  .atc-codeblock .html + .csharp {
     margin-top: 23px; }
-  .mud-codeblock .html .htmlTagDelimiter {
+  .atc-codeblock .html .htmlTagDelimiter {
     color: #979797; }
-  .mud-codeblock .html .htmlElementName {
+  .atc-codeblock .html .htmlElementName {
     color: #988ef1; }
-  .mud-codeblock .html .htmlAttributeName {
+  .atc-codeblock .html .htmlAttributeName {
     color: #27b5b5; }
-  .mud-codeblock .html .htmlOperator, .mud-codeblock .html .quot {
+  .atc-codeblock .html .htmlOperator, .atc-codeblock .html .quot {
     color: #c8c8c8; }
-  .mud-codeblock .html .htmlAttributeValue {
+  .atc-codeblock .html .htmlAttributeValue {
     color: #ededed; }
-  .mud-codeblock .html .htmlLink {
+  .atc-codeblock .html .htmlLink {
     color: #61afef;
     text-decoration: underline; }
-  .mud-codeblock .html .enum {
+  .atc-codeblock .html .enum {
     color: #b4eb8f;
     background-color: rgba(255, 255, 255, 0.15); }
-  .mud-codeblock .html .enumValue, .mud-codeblock .html .sharpVariable {
+  .atc-codeblock .html .enumValue, .atc-codeblock .html .sharpVariable {
     color: #ededed;
     background-color: rgba(255, 255, 255, 0.15); }
-  .mud-codeblock .html .keyword {
+  .atc-codeblock .html .keyword {
     color: #61afef;
     background-color: rgba(255, 255, 255, 0.15); }
-  .mud-codeblock .html .atSign {
+  .atc-codeblock .html .atSign {
     color: #000;
     background-color: #d2d295; }
-  .mud-codeblock .html .comment {
+  .atc-codeblock .html .comment {
     color: #57a64a; }
-  .mud-codeblock .csharp .atSign {
+  .atc-codeblock .csharp .atSign {
     color: #000;
     background-color: #d2d295; }
-  .mud-codeblock .csharp .keyword {
+  .atc-codeblock .csharp .keyword {
     color: #569cd6; }
-  .mud-codeblock .csharp .string {
+  .atc-codeblock .csharp .string {
     color: #d69d85; }
-  .mud-codeblock .csharp .function {
+  .atc-codeblock .csharp .function {
     color: #dcdcaa; }
-  .mud-codeblock .csharp .class {
+  .atc-codeblock .csharp .class {
     color: #4ec9b0; }
-  .mud-codeblock .csharp .localVar {
+  .atc-codeblock .csharp .localVar {
     color: #9cdcfe; }
-  .mud-codeblock .csharp .interface {
+  .atc-codeblock .csharp .interface {
     color: #b0d7a3; }
-  .mud-codeblock .csharp .number {
+  .atc-codeblock .csharp .number {
     color: #b0d7a3; }
-  .mud-codeblock .csharp .enum {
+  .atc-codeblock .csharp .enum {
     color: #b4eb8f; }
-  .mud-codeblock .csharp .comment {
+  .atc-codeblock .csharp .comment {
     color: #57a64a; }
