@@ -1,37 +1,32 @@
-﻿<div class="top-row ps-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">AtcWeb</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿<MudNavMenu>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+    <MudNavGroup Title="Introduction"
+                 Icon="@Icons.Material.Filled.School"
+                 Expanded="@(section == "introduction")"
+                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
+        <MudNavLink Href="/">What is ATC</MudNavLink>
+        <MudNavLink Href="/">How it started</MudNavLink>
+        <MudNavLink Href="/">Team & Contributors</MudNavLink>
+        <MudNavLink Href="/">Project overview</MudNavLink>
+    </MudNavGroup>
 
-@code {
-    private bool collapseNavMenu = true;
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-autoformatter</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-azure-options</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-coding-rules</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-coding-rules-updater</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos-eventstore</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos-sql-api-repository</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-dataplatform</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-docs</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-dummy</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-iot-digitaltwin</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-rest-api-generator</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-rest-client</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-snippets</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-template-dotnet-package</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-test</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-wpf</MudNavLink>
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+</MudNavMenu>
