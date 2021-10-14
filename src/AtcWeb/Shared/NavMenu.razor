@@ -1,13 +1,14 @@
-﻿<MudNavMenu>
+﻿<MudNavMenu Class="atc-navmenu">
+    <div class="docs-nav-fader"></div>
 
     <MudNavGroup Title="Introduction"
                  Icon="@Icons.Material.Filled.School"
                  Expanded="@(section == "introduction")"
                  ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/">What is ATC</MudNavLink>
-        <MudNavLink Href="/">How it started</MudNavLink>
-        <MudNavLink Href="/">Team & Contributors</MudNavLink>
-        <MudNavLink Href="/">Project overview</MudNavLink>
+        <MudNavLink Href="/introduction/what-is-atc">What is ATC</MudNavLink>
+        <MudNavLink Href="/introduction/how-it-started">How it started</MudNavLink>
+        <MudNavLink Href="/introduction/team-and-contributors">Team & Contributors</MudNavLink>
+        <MudNavLink Href="/introduction/project-overview">Project overview</MudNavLink>
     </MudNavGroup>
 
     <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc</MudNavLink>

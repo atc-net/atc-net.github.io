@@ -6,16 +6,16 @@ namespace AtcWeb.Models
 {
     public class DocsComponents
     {
-        private List<MudComponent> mudComponents = new();
+        private readonly List<AtcComponent> atcComponents = new ();
 
         /// <summary>
-        /// The elements of the list of mud-components
+        /// The elements of the list of atc-components
         /// </summary>
-        internal IEnumerable<MudComponent> Elements => mudComponents.OrderBy(e => e.Name);
+        internal IEnumerable<AtcComponent> Elements => atcComponents.OrderBy(e => e.Name);
 
         public DocsComponents AddItem(string name, Type component, params Type[] childComponents)
         {
-            var componentItem = new MudComponent
+            var componentItem = new AtcComponent
             {
                 Name = name,
                 Link = name.ToLower().Replace(" ", ""),
@@ -24,14 +24,14 @@ namespace AtcWeb.Models
                 IsNavGroup = false
             };
 
-            mudComponents.Add(componentItem);
+            atcComponents.Add(componentItem);
 
             return this;
         }
 
         public DocsComponents AddNavGroup(string name, bool expanded, DocsComponents groupItems)
         {
-            var componentItem = new MudComponent
+            var componentItem = new AtcComponent
             {
                 Name = name,
                 NavGroupExpanded = expanded,
@@ -39,7 +39,7 @@ namespace AtcWeb.Models
                 IsNavGroup = true
             };
 
-            mudComponents.Add(componentItem);
+            atcComponents.Add(componentItem);
 
             return this;
         }

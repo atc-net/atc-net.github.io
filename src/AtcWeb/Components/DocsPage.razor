@@ -1,0 +1,12 @@
+﻿<MudMainContent Class="atc-main-content">
+    <MudContainer MaxWidth="@MaxWidth">
+        <div id="docspage" class="docs-page">
+            <CascadingValue Value="this" IsFixed="true">
+                @ChildContent
+            </CascadingValue>
+        </div>
+    </MudContainer>
+    <MudDrawer @bind-Open="contentDrawerOpen" Breakpoint="Breakpoint.Lg" Anchor="Anchor.End" ClipMode="DrawerClipMode.Always" Elevation="0" Color="Color.Transparent" Class="pt-6">
+        <MudPageContentNavigation SectionClassSelector="docs-section-header" @ref="contentNavigation" ActivateFirstSectionAsDefault="true" />
+    </MudDrawer>
+</MudMainContent>

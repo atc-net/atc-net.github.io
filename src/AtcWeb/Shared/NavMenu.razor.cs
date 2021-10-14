@@ -25,7 +25,7 @@ namespace AtcWeb.Shared
             StateHasChanged();
         }
 
-        bool IsSubGroupExpanded(MudComponent item)
+        bool IsSubGroupExpanded(AtcComponent item)
         {
             return item.GroupItems.Elements.Any(i => i.Link == componentLink);
         }
