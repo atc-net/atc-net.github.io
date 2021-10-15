@@ -16,6 +16,7 @@ namespace AtcWeb.Components
         [Inject] NavigationManager NavigationManager { get; set; }
 
         [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
+
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         private bool contentDrawerOpen = true;

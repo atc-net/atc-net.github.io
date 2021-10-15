@@ -6,7 +6,7 @@ namespace AtcWeb.Models
 {
     public class DocsComponents
     {
-        private readonly List<AtcComponent> atcComponents = new ();
+        private readonly List<AtcComponent> atcComponents = new();
 
         /// <summary>
         /// The elements of the list of atc-components
@@ -18,7 +18,7 @@ namespace AtcWeb.Models
             var componentItem = new AtcComponent
             {
                 Name = name,
-                Link = name.ToLower().Replace(" ", ""),
+                Link = name.ToLower().Replace(" ", string.Empty),
                 Component = component,
                 ChildComponents = childComponents,
                 IsNavGroup = false
