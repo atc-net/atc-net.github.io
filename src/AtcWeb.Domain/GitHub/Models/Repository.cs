@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub.Models
 {
     public class Repository
@@ -32,19 +33,19 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string DefaultBranchName { get; }
 
-        public string GetDotName()
-            => BaseData.Name
-                .PascalCase()
-                .Replace("-", ".", StringComparison.Ordinal)
-                .Replace("Autoformatter", "AutoFormatter", StringComparison.Ordinal);
-
         public List<(string Group, string Key, Uri Url)> Badges { get; }
 
         public string Description { get; private set; }
 
+        public RootMetadata Root { get; private set; }
+
         public WorkflowMetadata Workflow { get; private set; }
 
+        public CodingRulesMetadata CodingRules { get; private set; }
+
         public DotnetMetadata Dotnet { get; private set; }
+
+        public bool HasRootReadme => Root?.HasReadme ?? false;
 
         public bool HasWorkflowPreIntegration => Workflow?.HasPreIntegration ?? false;
 
@@ -52,25 +53,57 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool HasWorkflowRelease => Workflow?.HasRelease ?? false;
 
-        public bool HasDotnetSolutionFile => Dotnet?.HasSolutionFile ?? false;
+        public bool HasCodingRulesEditorConfigRoot => CodingRules?.HasEditorConfigRoot ?? false;
 
-        public Task Load(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
+        public bool HasCodingRulesEditorConfigSrc => CodingRules?.HasEditorConfigSrc ?? false;
+
+        public bool HasCodingRulesEditorConfigTest => CodingRules?.HasEditorConfigTest ?? false;
+
+        public bool HasDotnetSolution => Dotnet?.HasSolution ?? false;
+
+        public bool HasDotnetDirectoryBuildPropsRoot => Dotnet?.HasDirectoryBuildPropsRoot ?? false;
+
+        public bool HasDotnetDirectoryBuildPropsSrc => Dotnet?.HasDirectoryBuildPropsSrc ?? false;
+
+        public bool HasDotnetDirectoryBuildPropsTest => Dotnet?.HasDirectoryBuildPropsTest ?? false;
+
+        public Task Load(
+            GitHubApiClient gitHubApiClient,
+            GitHubHtmlClient gitHubHtmlClient,
+            GitHubRawClient gitHubRawClient,
+            CancellationToken cancellationToken)
         {
             if (gitHubApiClient is null)
             {
                 throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
-            return InvokeLoad(gitHubApiClient, cancellationToken);
+            if (gitHubHtmlClient is null)
+            {
+                throw new ArgumentNullException(nameof(gitHubHtmlClient));
+            }
+
+            if (gitHubRawClient is null)
+            {
+                throw new ArgumentNullException(nameof(gitHubRawClient));
+            }
+
+            return InvokeLoad(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
         }
 
         [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
-        private async Task InvokeLoad(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
+        private async Task InvokeLoad(
+            GitHubApiClient gitHubApiClient,
+            GitHubHtmlClient gitHubHtmlClient,
+            GitHubRawClient gitHubRawClient,
+            CancellationToken cancellationToken)
         {
             Description = "Coming soon...";
-            Workflow = await LoadWorkflow(gitHubApiClient, cancellationToken);
-            Dotnet = await LoadDotnet(gitHubApiClient, cancellationToken);
+            Root = await GitHubRepositoryMetadataHelper.LoadRoot(gitHubHtmlClient, gitHubRawClient, BaseData.Name, DefaultBranchName, cancellationToken);
+            Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(gitHubRawClient, BaseData.Name, DefaultBranchName, cancellationToken);
+            CodingRules = await GitHubRepositoryMetadataHelper.LoadCodingRules(gitHubRawClient, BaseData.Name, DefaultBranchName, cancellationToken);
+            Dotnet = await GitHubRepositoryMetadataHelper.LoadDotnet(gitHubRawClient, BaseData.Name, DefaultBranchName, cancellationToken);
 
             if (HasWorkflowPreIntegration)
             {
@@ -134,44 +167,6 @@ namespace AtcWeb.Domain.GitHub.Models
                     "Vulnerabilities",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=vulnerabilities")));
             }
-        }
-
-        private async Task<WorkflowMetadata> LoadWorkflow(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
-        {
-            var data = new WorkflowMetadata();
-
-            (bool isSuccessfulPreIntegration, string rawPreIntegration) = await gitHubApiClient.GetRawAtcWorkflowFile(BaseData.Name, DefaultBranchName, "pre-integration.yml", cancellationToken);
-            if (isSuccessfulPreIntegration)
-            {
-                data.RawPreIntegration = rawPreIntegration;
-
-                (bool isSuccessfulPostIntegration, string rawPostIntegration) = await gitHubApiClient.GetRawAtcWorkflowFile(BaseData.Name, DefaultBranchName, "post-integration.yml", cancellationToken);
-                if (isSuccessfulPostIntegration)
-                {
-                    data.RawPostIntegration = rawPostIntegration;
-                }
-
-                (bool isSuccessfulRelease, string rawRelease) = await gitHubApiClient.GetRawAtcWorkflowFile(BaseData.Name, DefaultBranchName, "release.yml", cancellationToken);
-                if (isSuccessfulRelease)
-                {
-                    data.RawRelease = rawRelease;
-                }
-            }
-
-            return data;
-        }
-
-        private async Task<DotnetMetadata> LoadDotnet(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
-        {
-            var data = new DotnetMetadata();
-
-            (bool isSuccessfulSolutionFile, string rawSolutionFile) = await gitHubApiClient.GetRawAtcSolutionFile(BaseData.Name, GetDotName() + ".sln", DefaultBranchName, cancellationToken);
-            if (isSuccessfulSolutionFile)
-            {
-                data.RawSolutionFile = rawSolutionFile;
-            }
-
-            return data;
         }
     }
 }

@@ -26,6 +26,8 @@ namespace AtcWeb.Domain.GitHub
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+
+            this.httpClient = new HttpClient(); //// TODO: Remove when Introduce typed httpclient..
             this.httpClient.BaseAddress = new Uri("https://api.github.com"); //// TODO: Introduce typed httpclient..
             this.httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
             this.jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
@@ -128,46 +130,6 @@ namespace AtcWeb.Domain.GitHub
             catch
             {
                 return (false, new List<GitHubContributor>());
-            }
-        }
-
-        public async Task<(bool isSuccessful, string)> GetRawAtcWorkflowFile(string repositoryName, string defaultBranchName, string ymlFile, CancellationToken cancellationToken)
-        {
-            //// TODO: AddCache
-
-            try
-            {
-                var result = await httpClient.GetStringAsync(
-                    new Uri($"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/.github/workflows/{ymlFile}"),
-                    cancellationToken);
-
-                return string.IsNullOrEmpty(result)
-                    ? (false, string.Empty)
-                    : (true, result);
-            }
-            catch
-            {
-                return (false, string.Empty);
-            }
-        }
-
-        public async Task<(bool isSuccessful, string)> GetRawAtcSolutionFile(string repositoryName, string slnFile, string defaultBranchName, CancellationToken cancellationToken)
-        {
-            //// TODO: AddCache
-
-            try
-            {
-                var result = await httpClient.GetStringAsync(
-                    new Uri($"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/{slnFile}"),
-                    cancellationToken);
-
-                return string.IsNullOrEmpty(result)
-                    ? (false, string.Empty)
-                    : (true, result);
-            }
-            catch
-            {
-                return (false, string.Empty);
             }
         }
     }

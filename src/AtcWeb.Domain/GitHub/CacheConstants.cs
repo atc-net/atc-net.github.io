@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace AtcWeb.Domain.GitHub
 {
@@ -7,6 +7,8 @@ namespace AtcWeb.Domain.GitHub
         public const string CacheKeyRepositories = "Repositories";
 
         public const string CacheKeyContributors = "Contributors";
+
+        public const string CacheKeyCodeFile = "CodeFile";
 
         public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 

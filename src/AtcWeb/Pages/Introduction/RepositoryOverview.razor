@@ -1,8 +1,4 @@
-﻿@page "/introduction/repository-overview"
-
-@using System.Threading
-@using AtcWeb.Domain.GitHub
-@using AtcWeb.Domain.GitHub.Models
+@page "/introduction/repository-overview"
 
 @inherits RepositoryOverviewBase
 
@@ -74,11 +70,24 @@
                             </tbody>
                         </MudSimpleTable>
                         <ul>
+                            <li>HasRootReadme: @repository.HasRootReadme</li>
+
                             <li>HasWorkflowPreIntegration: @repository.HasWorkflowPreIntegration</li>
                             <li>HasWorkflowPostIntegration: @repository.HasWorkflowPostIntegration</li>
                             <li>HasWorkflowRelease: @repository.HasWorkflowRelease</li>
-                            <li>HasDotnetSolutionFile: @repository.HasDotnetSolutionFile</li>
+
+                            <li>HasCodingRulesEditorConfigRoot: @repository.HasCodingRulesEditorConfigRoot</li>
+                            <li>HasCodingRulesEditorConfigSrc: @repository.HasCodingRulesEditorConfigSrc</li>
+                            <li>HasCodingRulesEditorConfigTest: @repository.HasCodingRulesEditorConfigTest</li>
+
+                            <li>HasDotnetSolution: @repository.HasDotnetSolution</li>
+                            <li>HasDotnetDirectoryBuildPropsRoot: @repository.HasDotnetDirectoryBuildPropsRoot</li>
+                            <li>HasDotnetDirectoryBuildPropsSrc: @repository.HasDotnetDirectoryBuildPropsSrc</li>
+                            <li>HasDotnetDirectoryBuildPropsTest: @repository.HasDotnetDirectoryBuildPropsTest</li>
                         </ul>
+                        <MudCard>
+                            <MudCardContent> @repository.Root.Test</MudCardContent>
+                        </MudCard>
                     </SectionContent>
                 </DocsPageSection>
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,8 +16,14 @@ namespace AtcWeb
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(_ => new HttpClient
+            {
+                BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+            });
+
             builder.Services.AddScoped<GitHubApiClient>();
+            builder.Services.AddScoped<GitHubHtmlClient>();
+            builder.Services.AddScoped<GitHubRawClient>();
             builder.Services.AddScoped<GitHubRepositoryService>();
 
             builder.Services.AddMemoryCache();

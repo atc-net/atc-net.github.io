@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,10 +10,17 @@ namespace AtcWeb.Domain.GitHub
     public class GitHubRepositoryService
     {
         private readonly GitHubApiClient gitHubApiClient;
+        private readonly GitHubHtmlClient gitHubHtmlClient;
+        private readonly GitHubRawClient gitHubRawClient;
 
-        public GitHubRepositoryService(GitHubApiClient gitHubApiClient)
+        public GitHubRepositoryService(
+            GitHubApiClient gitHubApiClient,
+            GitHubHtmlClient gitHubHtmlClient,
+            GitHubRawClient gitHubRawClient)
         {
             this.gitHubApiClient = gitHubApiClient ?? throw new ArgumentNullException(nameof(gitHubApiClient));
+            this.gitHubHtmlClient = gitHubHtmlClient ?? throw new ArgumentNullException(nameof(gitHubHtmlClient));
+            this.gitHubRawClient = gitHubRawClient ?? throw new ArgumentNullException(nameof(gitHubRawClient));
         }
 
         public async Task<List<Repository>> GetRepositoriesAsync(CancellationToken cancellationToken = default)
@@ -28,7 +35,7 @@ namespace AtcWeb.Domain.GitHub
             foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
             {
                 var repository = new Repository(gitHubRepository);
-                await repository.Load(gitHubApiClient, cancellationToken);
+                await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
                 data.Add(repository);
             }
 
