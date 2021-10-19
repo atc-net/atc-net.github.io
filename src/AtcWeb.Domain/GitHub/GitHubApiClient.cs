@@ -7,11 +7,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.Serialization;
-using AtcWeb.Models;
+using AtcWeb.Domain.GitHub.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-namespace AtcWeb.Services
+// ReSharper disable StringLiteralTypo
+namespace AtcWeb.Domain.GitHub
 {
     public class GitHubApiClient
     {
@@ -61,22 +61,22 @@ namespace AtcWeb.Services
             }
         }
 
-        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAllAtcContributors(CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributors(CancellationToken cancellationToken)
         {
             await LockObject.WaitAsync(cancellationToken);
 
             try
             {
-                var cacheEntry = await memoryCache.GetOrCreate(CacheConstants.CacheKeyContributorsAll, async entry =>
+                var cacheEntry = await memoryCache.GetOrCreate(CacheConstants.CacheKeyContributors, async entry =>
                 {
                     var result = new List<GitHubContributor>();
 
-                    var (isSuccessfulRepositories, gitHubRepositories) = await GetAtcRepositories(cancellationToken);
+                    (bool isSuccessfulRepositories, var gitHubRepositories) = await GetAtcRepositories(cancellationToken);
                     if (isSuccessfulRepositories)
                     {
                         foreach (var gitHubRepository in gitHubRepositories)
                         {
-                            var (isSuccessfulContributors, gitHubContributors) = await GetContributorsByRepository(gitHubRepository.Name, cancellationToken);
+                            (bool isSuccessfulContributors, var gitHubContributors) = await GetAtcContributorsByRepository(gitHubRepository.Name, cancellationToken);
                             if (!isSuccessfulContributors)
                             {
                                 continue;
@@ -109,7 +109,7 @@ namespace AtcWeb.Services
             }
         }
 
-        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetContributorsByRepository(string repositoryName, CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepository(string repositoryName, CancellationToken cancellationToken)
         {
             try
             {
@@ -125,6 +125,45 @@ namespace AtcWeb.Services
             catch
             {
                 return (false, new List<GitHubContributor>());
+            }
+        }
+
+        public async Task<(bool isSuccessful, string)> GetRawAtcWorkflowFile(string repositoryName, string defaultBranchName, string ymlFile, CancellationToken cancellationToken)
+        {
+            // TODO: AddCache
+
+            try
+            {
+                var result = await httpClient.GetStringAsync(
+                    new Uri($"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/.github/workflows/{ymlFile}"),
+                    cancellationToken);
+
+                return string.IsNullOrEmpty(result)
+                    ? (false, string.Empty)
+                    : (true, result);
+            }
+            catch
+            {
+                return (false, string.Empty);
+            }
+        }
+
+        public async Task<(bool isSuccessful, string)> GetRawAtcSolutionFile(string repositoryName, string slnFile, string defaultBranchName, CancellationToken cancellationToken)
+        {
+            // TODO: AddCache
+
+            try
+            {
+                var result = await httpClient.GetStringAsync(
+                    new Uri($"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/{slnFile}"),
+                    cancellationToken);
+                return string.IsNullOrEmpty(result)
+                    ? (false, string.Empty)
+                    : (true, result);
+            }
+            catch
+            {
+                return (false, string.Empty);
             }
         }
     }

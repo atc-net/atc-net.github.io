@@ -1,0 +1,90 @@
+﻿@page "/introduction/repository-overview"
+
+@using System.Threading
+@using AtcWeb.Domain.GitHub
+@using AtcWeb.Domain.GitHub.Models
+
+@inject GitHubRepositoryService repositoryService
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="Repository overview"
+                    SubTitle="This is the overview of all atc repositories.">
+    </DocsPageHeader>
+    @if (repositories is not null)
+    {
+        <DocsPageContent>
+            @foreach (var repository in repositories)
+            {
+                <DocsPageSection>
+                    <SectionHeader Title="@repository.BaseData.Name">
+                        <SubTitle>@repository.BaseData.Description</SubTitle>
+                        <Description>@repository.Description</Description>
+                    </SectionHeader>
+                    <SectionContent AutoMarginContent="false" FullWidth="true" DarkenBackground="true">
+                        <MudSimpleTable>
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">General Project Info</th>
+                                    <th style="width: 25%">Packages</th>
+                                    <th style="width: 25%">Build Status</th>
+                                    <th style="width: 25%">Code Quality</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "General Project Info"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Packages"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Build Status"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Code Quality"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                        <ul>
+                            <li>HasWorkflowPreIntegration: @repository.HasWorkflowPreIntegration</li>
+                            <li>HasWorkflowPostIntegration: @repository.HasWorkflowPostIntegration</li>
+                            <li>HasWorkflowRelease: @repository.HasWorkflowRelease</li>
+                            <li>HasDotnetSolutionFile: @repository.HasDotnetSolutionFile</li>
+                        </ul>
+                    </SectionContent>
+                </DocsPageSection>
+            }
+        </DocsPageContent>
+    }
+</DocsPage>
+
+@code {
+    private List<Repository> repositories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        repositories = await repositoryService.GetRepositoriesAsync(CancellationToken.None);
+    }
+}

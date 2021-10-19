@@ -2,18 +2,18 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.Test;
-using AtcWeb.Services;
+using AtcWeb.Domain.GitHub;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
-namespace AtcWeb.Tests.Services
+namespace AtcWeb.Domain.Tests.Services
 {
     public class GitHubApiIntegrationTests
     {
         [Theory, AutoNSubstituteData]
-        public async Task Can_Get_Repositories(
+        public async Task GetAtcRepositories(
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
@@ -34,7 +34,7 @@ namespace AtcWeb.Tests.Services
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Can_Get_Contributors(
+        public async Task GetAtcContributors(
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace AtcWeb.Tests.Services
             var gitHubApiClient = new GitHubApiClient(new HttpClient(), memoryCache);
 
             // Act
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAllAtcContributors(cancellationToken);
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
 
             // Assert
             Assert.True(isSuccessful);
@@ -55,7 +55,7 @@ namespace AtcWeb.Tests.Services
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Can_Get_Contributors_For_Single_Repository(
+        public async Task GetAtcContributorsByRepository(
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
@@ -63,7 +63,7 @@ namespace AtcWeb.Tests.Services
             var gitHubApiClient = new GitHubApiClient(new HttpClient(), memoryCache);
 
             // Act
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetContributorsByRepository("atc", cancellationToken);
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepository("atc", cancellationToken);
 
             // Assert
             Assert.True(isSuccessful);

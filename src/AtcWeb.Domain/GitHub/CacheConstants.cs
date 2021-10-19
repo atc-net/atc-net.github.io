@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace AtcWeb.Services
+namespace AtcWeb.Domain.GitHub
 {
     public static class CacheConstants
     {
         public const string CacheKeyRepositories = "Repositories";
 
-        public const string CacheKeyContributorsAll = "ContributorsAll";
+        public const string CacheKeyContributors = "Contributors";
 
         public static TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 

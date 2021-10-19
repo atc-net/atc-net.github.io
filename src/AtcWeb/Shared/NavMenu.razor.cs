@@ -7,10 +7,10 @@ namespace AtcWeb.Shared
 {
     public partial class NavMenu
     {
-        [Inject] NavigationManager NavMan { get; set; }
+        private string section;
+        private string componentLink;
 
-        string section;
-        string componentLink;
+        [Inject] NavigationManager NavigationManager { get; set; }
 
         protected override void OnInitialized()
         {
@@ -20,12 +20,12 @@ namespace AtcWeb.Shared
 
         public void Refresh()
         {
-            section = NavMan.GetSection();
-            componentLink = NavMan.GetComponentLink();
+            section = NavigationManager.GetSection();
+            componentLink = NavigationManager.GetComponentLink();
             StateHasChanged();
         }
 
-        bool IsSubGroupExpanded(AtcComponent item)
+        public bool IsSubGroupExpanded(AtcComponent item)
         {
             return item.GroupItems.Elements.Any(i => i.Link == componentLink);
         }

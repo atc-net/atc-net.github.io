@@ -1,0 +1,43 @@
+﻿
+.docs-icon-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+
+    & .atc-divider {
+        margin-bottom: 20px;
+    }
+}
+
+
+.docs-icon-panel {
+    height: 120px;
+    width: 90px;
+    padding: 20px 10px;
+    display: inline-block;
+    text-align: center;
+
+    & .atc-typography {
+        margin-top: 10px;
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+.docs-icon-panel-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    & .atc-svg-icon {
+        font-size: 40px;
+    }
+}
+
+.docs-icon-material-container {
+    /*& .atc-input-control {
+        background-color: var(--mud-palette-surface);
+    }*/
+}

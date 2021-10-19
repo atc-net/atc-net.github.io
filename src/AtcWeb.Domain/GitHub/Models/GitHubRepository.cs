@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace AtcWeb.Models
+namespace AtcWeb.Domain.GitHub.Models
 {
     public class GitHubRepository
     {
