@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AtcWeb</name>
+    </assembly>
+    <members>
+        <member name="M:AtcWeb.Extensions.NavigationManagerExtensions.IsHomePage(Microsoft.AspNetCore.Components.NavigationManager)">
+            <summary>
+            Determines if the current page is the base page
+            </summary>
+        </member>
+        <member name="M:AtcWeb.Extensions.NavigationManagerExtensions.GetSection(Microsoft.AspNetCore.Components.NavigationManager)">
+            <summary>
+            Gets the section part of the documentation page
+            </summary>
+        </member>
+        <member name="M:AtcWeb.Extensions.NavigationManagerExtensions.GetComponentLink(Microsoft.AspNetCore.Components.NavigationManager)">
+            <summary>
+            Gets the link of the component on the documentation page
+            </summary>
+        </member>
+        <member name="P:AtcWeb.Models.DocsComponents.Elements">
+            <summary>
+            The elements of the list of atc-components
+            </summary>
+        </member>
+    </members>
+</doc>
