@@ -1,4 +1,4 @@
-﻿<MudCard Elevation="4">
+<MudCard Elevation="4">
     <MudCardHeader>
         <CardHeaderAvatar>
             <MudAvatar Image="@AvatarLink" Size="Size.Large" Class="mud-elevation-4"/>
@@ -20,14 +20,15 @@
 </MudCard>
 
 @code {
-    [Parameter]
-    public string AvatarLink { get; set; }
 
     [Parameter]
-    public string GithubLink { get; set; }
+    public string AvatarLink { get; set; } = string.Empty;
 
     [Parameter]
-    public string Name { get; set; }
+    public string GithubLink { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
 
     [Parameter]
     public string Contributor { get; set; } = "Contributor";

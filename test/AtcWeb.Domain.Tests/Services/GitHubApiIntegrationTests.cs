@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,15 +11,44 @@ using Xunit;
 
 namespace AtcWeb.Domain.Tests.Services
 {
-    public class GitHubApiIntegrationTests
+    public class GitHubApiIntegrationTests : IAsyncLifetime, IDisposable
     {
+        private HttpClient httpClient;
+
+        public Task InitializeAsync()
+        {
+            httpClient = new HttpClient();
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                httpClient.Dispose();
+            }
+        }
+
+        public Task DisposeAsync()
+        {
+            httpClient.Dispose();
+            return Task.CompletedTask;
+        }
+
         [Theory, AutoNSubstituteData]
         public async Task GetAtcRepositories(
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(new HttpClient(), memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
 
             // Act
             var (isSuccessful, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
@@ -39,7 +69,7 @@ namespace AtcWeb.Domain.Tests.Services
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(new HttpClient(), memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
 
             // Act
             var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
@@ -60,7 +90,7 @@ namespace AtcWeb.Domain.Tests.Services
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(new HttpClient(), memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
 
             // Act
             var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepository("atc", cancellationToken);

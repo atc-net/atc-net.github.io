@@ -5,9 +5,9 @@ namespace AtcWeb.Domain.GitHub.Models
 {
     public class GitHubRepository
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [JsonPropertyName("html_url")]
         public string Url { get; set; }
@@ -22,10 +22,10 @@ namespace AtcWeb.Domain.GitHub.Models
         public DateTimeOffset PushedAt { get; set; }
 
         [JsonPropertyName("clone_url")]
-        public string CloneUrl { get; set; }
+        public string CloneUrl { get; set; } = string.Empty;
 
         [JsonPropertyName("language")]
-        public string Language { get; set; }
+        public string Language { get; set; } = string.Empty;
 
         public override string ToString()
             => $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(Url)}: {Url}, {nameof(CreatedAt)}: {CreatedAt}, {nameof(UpdatedAt)}: {UpdatedAt}, {nameof(PushedAt)}: {PushedAt}, {nameof(CloneUrl)}: {CloneUrl}, {nameof(Language)}: {Language}";

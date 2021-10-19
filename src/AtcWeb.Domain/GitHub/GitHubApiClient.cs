@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -20,11 +21,12 @@ namespace AtcWeb.Domain.GitHub
         private readonly IMemoryCache memoryCache;
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
+        [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
         public GitHubApiClient(HttpClient httpClient, IMemoryCache memoryCache)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
-            this.httpClient.BaseAddress = new Uri("https://api.github.com"); // TODO: Introduce type httpclient..
+            this.httpClient.BaseAddress = new Uri("https://api.github.com"); //// TODO: Introduce typed httpclient..
             this.httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
             this.jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         }
@@ -131,7 +133,7 @@ namespace AtcWeb.Domain.GitHub
 
         public async Task<(bool isSuccessful, string)> GetRawAtcWorkflowFile(string repositoryName, string defaultBranchName, string ymlFile, CancellationToken cancellationToken)
         {
-            // TODO: AddCache
+            //// TODO: AddCache
 
             try
             {
@@ -151,7 +153,7 @@ namespace AtcWeb.Domain.GitHub
 
         public async Task<(bool isSuccessful, string)> GetRawAtcSolutionFile(string repositoryName, string slnFile, string defaultBranchName, CancellationToken cancellationToken)
         {
-            // TODO: AddCache
+            //// TODO: AddCache
 
             try
             {

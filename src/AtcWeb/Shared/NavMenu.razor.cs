@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using AtcWeb.Extensions;
 using AtcWeb.Models;
 using Microsoft.AspNetCore.Components;
@@ -7,10 +7,11 @@ namespace AtcWeb.Shared
 {
     public partial class NavMenu
     {
-        private string section;
-        private string componentLink;
+        private string? section;
+        private string? componentLink;
 
-        [Inject] NavigationManager NavigationManager { get; set; }
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
         protected override void OnInitialized()
         {
@@ -25,9 +26,8 @@ namespace AtcWeb.Shared
             StateHasChanged();
         }
 
-        public bool IsSubGroupExpanded(AtcComponent item)
-        {
-            return item.GroupItems.Elements.Any(i => i.Link == componentLink);
-        }
+        public bool IsSubGroupExpanded(AtcComponent? item)
+            => item is not null &&
+               item.GroupItems.Elements.Any(i => i.Link == componentLink);
     }
 }

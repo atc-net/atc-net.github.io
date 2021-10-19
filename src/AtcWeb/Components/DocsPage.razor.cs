@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +13,14 @@ namespace AtcWeb.Components
         private readonly Queue<DocsSectionLink> bufferedSections = new ();
         private MudPageContentNavigation contentNavigation;
 
-        [Inject] NavigationManager NavigationManager { get; set; }
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
-        [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
+        [Parameter]
+        public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         private bool contentDrawerOpen = true;
 

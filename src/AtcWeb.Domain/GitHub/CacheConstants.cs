@@ -8,8 +8,8 @@ namespace AtcWeb.Domain.GitHub
 
         public const string CacheKeyContributors = "Contributors";
 
-        public static TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
+        public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
-        public static TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+        public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
     }
 }

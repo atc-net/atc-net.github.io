@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace AtcWeb.Domain.GitHub.Models
     {
         public Repository(GitHubRepository gitHubRepository)
         {
-            this.BaseData = gitHubRepository ?? throw new ArgumentNullException();
+            this.BaseData = gitHubRepository ?? throw new ArgumentNullException(nameof(gitHubRepository));
             this.DefaultBranchName = "main";
             if (gitHubRepository.Name.Equals("atc", StringComparison.Ordinal) ||
                 gitHubRepository.Name.Equals("atc-autoformatter", StringComparison.Ordinal))
@@ -34,7 +35,7 @@ namespace AtcWeb.Domain.GitHub.Models
         public string GetDotName()
             => BaseData.Name
                 .PascalCase()
-                .Replace("-", ".")
+                .Replace("-", ".", StringComparison.Ordinal)
                 .Replace("Autoformatter", "AutoFormatter", StringComparison.Ordinal);
 
         public List<(string Group, string Key, Uri Url)> Badges { get; }
@@ -53,7 +54,19 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool HasDotnetSolutionFile => Dotnet?.HasSolutionFile ?? false;
 
-        public async Task Load(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
+        public Task Load(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
+        {
+            if (gitHubApiClient is null)
+            {
+                throw new ArgumentNullException(nameof(gitHubApiClient));
+            }
+
+            return InvokeLoad(gitHubApiClient, cancellationToken);
+        }
+
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
+        [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
+        private async Task InvokeLoad(GitHubApiClient gitHubApiClient, CancellationToken cancellationToken)
         {
             Description = "Coming soon...";
             Workflow = await LoadWorkflow(gitHubApiClient, cancellationToken);
@@ -90,7 +103,7 @@ namespace AtcWeb.Domain.GitHub.Models
                     "Packages",
                     "Github Version",
                     new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=github&message=latest")));
-                
+
                 Badges.Add((
                     "Packages",
                     "NuGet Version",
@@ -100,22 +113,22 @@ namespace AtcWeb.Domain.GitHub.Models
                     "Code Quality",
                     "Maintainability Rating",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=sqale_rating")));
-                
+
                 Badges.Add((
                     "Code Quality",
                     "Reliability Rating",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=reliability_rating")));
-                
+
                 Badges.Add((
                     "Code Quality",
                     "Security Rating",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=security_rating")));
-                
+
                 Badges.Add((
                     "Code Quality",
                     "Bugs",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=bugs")));
-                
+
                 Badges.Add((
                     "Code Quality",
                     "Vulnerabilities",
