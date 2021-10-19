@@ -71,12 +71,12 @@ namespace AtcWeb.Domain.GitHub
                 {
                     var result = new List<GitHubContributor>();
 
-                    (bool isSuccessfulRepositories, var gitHubRepositories) = await GetAtcRepositories(cancellationToken);
-                    if (isSuccessfulRepositories)
+                    var (isSuccessful, gitHubRepositories) = await GetAtcRepositories(cancellationToken);
+                    if (isSuccessful)
                     {
                         foreach (var gitHubRepository in gitHubRepositories)
                         {
-                            (bool isSuccessfulContributors, var gitHubContributors) = await GetAtcContributorsByRepository(gitHubRepository.Name, cancellationToken);
+                            var (isSuccessfulContributors, gitHubContributors) = await GetAtcContributorsByRepository(gitHubRepository.Name, cancellationToken);
                             if (!isSuccessfulContributors)
                             {
                                 continue;
@@ -84,7 +84,8 @@ namespace AtcWeb.Domain.GitHub
 
                             foreach (var gitHubContributor in gitHubContributors)
                             {
-                                if (result.FirstOrDefault(x => x.Id.Equals(gitHubContributor.Id)) is null)
+                                if (result.FirstOrDefault(x => x.Id.Equals(gitHubContributor.Id)) is null &&
+                                    !gitHubContributor.Name.Equals("ATCBot", StringComparison.Ordinal))
                                 {
                                     result.Add(gitHubContributor);
                                 }
@@ -157,6 +158,7 @@ namespace AtcWeb.Domain.GitHub
                 var result = await httpClient.GetStringAsync(
                     new Uri($"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/{slnFile}"),
                     cancellationToken);
+
                 return string.IsNullOrEmpty(result)
                     ? (false, string.Empty)
                     : (true, result);

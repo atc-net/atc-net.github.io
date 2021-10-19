@@ -19,18 +19,28 @@ namespace AtcWeb.Domain.GitHub
         public async Task<List<Repository>> GetRepositoriesAsync(CancellationToken cancellationToken = default)
         {
             var data = new List<Repository>();
-            var endpointResult = await gitHubApiClient.GetAtcRepositories(cancellationToken);
-            if (endpointResult.isSuccessful)
+            var (isSuccessful, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
+            if (!isSuccessful)
             {
-                foreach (var gitHubRepository in endpointResult.Item2.OrderBy(x => x.Name))
-                {
-                    var repository = new Repository(gitHubRepository);
-                    await repository.Load(gitHubApiClient, cancellationToken);
-                    data.Add(repository);
-                }
+                return data;
+            }
+
+            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
+            {
+                var repository = new Repository(gitHubRepository);
+                await repository.Load(gitHubApiClient, cancellationToken);
+                data.Add(repository);
             }
 
             return data;
+        }
+
+        public async Task<List<GitHubContributor>> GetContributorsAsync(CancellationToken cancellationToken = default)
+        {
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
+            return isSuccessful
+                ? gitHubContributors
+                : new List<GitHubContributor>();
         }
     }
 }

@@ -1,12 +1,28 @@
 ﻿@page "/introduction/team-and-contributors"
 
+@inherits TeamAndContributorsBase
+
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="Meet the team"
                     SubTitle="ATC-NET is not a one-person show. A nice little community has emerged and a couple of highly motivated people are working on improvements and are regularly adding more components. Everyone is welcome to join in and contribute to make this library even more awesome than it already is.">
     </DocsPageHeader>
     <DocsPageContent>
         <DocsPageSection>
-            Coming soon...
+            <MudGrid Justify="Justify.Center">
+                @if (contributors is null)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                }
+                else
+                {
+                    @foreach (var contributor in contributors.OrderBy(x => x.Name))
+                    {
+                        <MudItem xs="12" md="6">
+                            <GitHubContributor Name="@contributor.Name" AvatarLink="@contributor.AvatarUrl" GithubLink="@contributor.Url"/>
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
         </DocsPageSection>
     </DocsPageContent>
 </DocsPage>

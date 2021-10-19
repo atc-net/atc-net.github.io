@@ -4,16 +4,22 @@
 @using AtcWeb.Domain.GitHub
 @using AtcWeb.Domain.GitHub.Models
 
-@inject GitHubRepositoryService repositoryService
+@inherits RepositoryOverviewBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="Repository overview"
                     SubTitle="This is the overview of all atc repositories.">
     </DocsPageHeader>
-    @if (repositories is not null)
-    {
-        <DocsPageContent>
-            @foreach (var repository in repositories)
+    <DocsPageContent>
+        @if (repositories is null)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            </MudGrid>
+        }
+        else
+        {
+            foreach (var repository in repositories)
             {
                 <DocsPageSection>
                     <SectionHeader Title="@repository.BaseData.Name">
@@ -34,7 +40,7 @@
                                 <tr>
                                     <td>
                                         <ul>
-                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "General Project Info"))
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "General Project Info"))
                                             {
                                                 <li><img src="@url" alt="@key" /></li>
                                             }
@@ -42,7 +48,7 @@
                                     </td>
                                     <td>
                                         <ul>
-                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Packages"))
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Packages"))
                                             {
                                                 <li><img src="@url" alt="@key" /></li>
                                             }
@@ -50,7 +56,7 @@
                                     </td>
                                     <td>
                                         <ul>
-                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Build Status"))
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Build Status"))
                                             {
                                                 <li><img src="@url" alt="@key" /></li>
                                             }
@@ -58,7 +64,7 @@
                                     </td>
                                     <td>
                                         <ul>
-                                            @foreach ((var _, string key, var url) in repository.Badges.Where(x => x.Group == "Code Quality"))
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Code Quality"))
                                             {
                                                 <li><img src="@url" alt="@key" /></li>
                                             }
@@ -76,15 +82,6 @@
                     </SectionContent>
                 </DocsPageSection>
             }
-        </DocsPageContent>
-    }
+        }
+    </DocsPageContent>
 </DocsPage>
-
-@code {
-    private List<Repository> repositories;
-
-    protected override async Task OnInitializedAsync()
-    {
-        repositories = await repositoryService.GetRepositoriesAsync(CancellationToken.None);
-    }
-}
