@@ -30,7 +30,7 @@ namespace AtcWeb.Domain.GitHub
 
         public async Task<(bool isSuccessful, HtmlDocument)> GetHtmlAtcCode(string repositoryName, CancellationToken cancellationToken)
         {
-            var url = $"{httpClient.BaseAddress}/atc-net/{repositoryName}";
+            var url = $"/atc-net/{repositoryName}";
             var cacheKey = $"{CacheConstants.CacheKeyCodeFile}_{url}";
             if (memoryCache.TryGetValue(cacheKey, out HtmlDocument data))
             {

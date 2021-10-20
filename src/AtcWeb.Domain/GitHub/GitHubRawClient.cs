@@ -1,10 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Atc.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 
 // ReSharper disable StringLiteralTypo
@@ -32,7 +30,7 @@ namespace AtcWeb.Domain.GitHub
             var cacheKey = $"{CacheConstants.CacheKeyCodeFile}_{url}";
             if (memoryCache.TryGetValue(cacheKey, out string data))
             {
-                return (true, data);
+                return (isSuccessful: true, data);
             }
 
             try
@@ -40,15 +38,15 @@ namespace AtcWeb.Domain.GitHub
                 var result = await httpClient.GetStringAsync(new Uri(url), cancellationToken);
                 if (string.IsNullOrEmpty(result))
                 {
-                    return (false, string.Empty);
+                    return (isSuccessful: false, string.Empty);
                 }
 
                 memoryCache.Set(cacheKey, result);
-                return (true, result);
+                return (isSuccessful: true, result);
             }
             catch
             {
-                return (false, string.Empty);
+                return (isSuccessful: false, string.Empty);
             }
         }
     }

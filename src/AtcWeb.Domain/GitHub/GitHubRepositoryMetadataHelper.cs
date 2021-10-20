@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
-using HtmlAgilityPack;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub
@@ -30,7 +29,7 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new RootMetadata();
 
-            (bool isSuccessfulHtmlLandingPage, HtmlDocument htmlLandingPage) = await gitHubHtmlClient.GetHtmlAtcCode(repositoryName, cancellationToken);
+            var (isSuccessfulHtmlLandingPage, htmlLandingPage) = await gitHubHtmlClient.GetHtmlAtcCode(repositoryName, cancellationToken);
             if (isSuccessfulHtmlLandingPage)
             {
                 Console.WriteLine($"#LP-OK - {repositoryName}"); // TODO: Remove-debug
@@ -40,7 +39,7 @@ namespace AtcWeb.Domain.GitHub
                     .OuterHtml;
             }
 
-            (bool isSuccessfulReadme, string rawReadme) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "README.md", cancellationToken);
+            var (isSuccessfulReadme, rawReadme) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "README.md", cancellationToken);
             if (isSuccessfulReadme)
             {
                 data.RawReadme = rawReadme;
@@ -62,7 +61,7 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new WorkflowMetadata();
 
-            (bool isSuccessfulPreIntegration, string rawPreIntegration) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, ".github/workflows/pre-integration.yml", cancellationToken);
+            var (isSuccessfulPreIntegration, rawPreIntegration) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, ".github/workflows/pre-integration.yml", cancellationToken);
             if (isSuccessfulPreIntegration)
             {
                 data.RawPreIntegration = rawPreIntegration;
@@ -96,17 +95,17 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new CodingRulesMetadata();
 
-            (bool isSuccessfulEditorConfigRoot, string rawEditorConfigRoot) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, ".editorconfig", cancellationToken);
+            var (isSuccessfulEditorConfigRoot, rawEditorConfigRoot) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, ".editorconfig", cancellationToken);
             if (isSuccessfulEditorConfigRoot)
             {
                 data.RawEditorConfigRoot = rawEditorConfigRoot;
 
-                (bool isSuccessfulEditorConfigSrc, string rawEditorConfigSrc) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "src/.editorconfig", cancellationToken);
+                var (isSuccessfulEditorConfigSrc, rawEditorConfigSrc) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "src/.editorconfig", cancellationToken);
                 if (isSuccessfulEditorConfigSrc)
                 {
                     data.RawEditorConfigSrc = rawEditorConfigSrc;
 
-                    (bool isSuccessfulEditorConfigTest, string rawEditorConfigTest) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "test/.editorconfig", cancellationToken);
+                    var (isSuccessfulEditorConfigTest, rawEditorConfigTest) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "test/.editorconfig", cancellationToken);
                     if (isSuccessfulEditorConfigTest)
                     {
                         data.RawEditorConfigTest = rawEditorConfigTest;
@@ -135,22 +134,22 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new DotnetMetadata();
 
-            (bool isSuccessfulSolution, string rawSolution) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, dotName + ".sln", cancellationToken);
+            var (isSuccessfulSolution, rawSolution) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, dotName + ".sln", cancellationToken);
             if (isSuccessfulSolution)
             {
                 data.RawSolution = rawSolution;
 
-                (bool isSuccessfulDirectoryBuildPropsRoot, string rawDirectoryBuildPropsRoot) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "Directory.Build.props", cancellationToken);
+                var (isSuccessfulDirectoryBuildPropsRoot, rawDirectoryBuildPropsRoot) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "Directory.Build.props", cancellationToken);
                 if (isSuccessfulDirectoryBuildPropsRoot)
                 {
                     data.RawDirectoryBuildPropsRoot = rawDirectoryBuildPropsRoot;
 
-                    (bool isSuccessfulDirectoryBuildPropsSrc, string rawDirectoryBuildPropsSrc) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "src/Directory.Build.props", cancellationToken);
+                    var (isSuccessfulDirectoryBuildPropsSrc, rawDirectoryBuildPropsSrc) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "src/Directory.Build.props", cancellationToken);
                     if (isSuccessfulDirectoryBuildPropsSrc)
                     {
                         data.RawDirectoryBuildPropsSrc = rawDirectoryBuildPropsSrc;
 
-                        (bool isSuccessfulDirectoryBuildPropsTest, string rawDirectoryBuildPropsTest) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "test/Directory.Build.props", cancellationToken);
+                        var (isSuccessfulDirectoryBuildPropsTest, rawDirectoryBuildPropsTest) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "test/Directory.Build.props", cancellationToken);
                         if (isSuccessfulDirectoryBuildPropsTest)
                         {
                             data.RawDirectoryBuildPropsTest = rawDirectoryBuildPropsTest;

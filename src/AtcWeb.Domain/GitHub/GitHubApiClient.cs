@@ -37,7 +37,7 @@ namespace AtcWeb.Domain.GitHub
         {
             if (memoryCache.TryGetValue(CacheConstants.CacheKeyRepositories, out List<GitHubRepository> data))
             {
-                return (true, data);
+                return (isSuccessful: true, data);
             }
 
             try
@@ -49,7 +49,7 @@ namespace AtcWeb.Domain.GitHub
 
                 if (result is null)
                 {
-                    return (false, new List<GitHubRepository>());
+                    return (isSuccessful: false, new List<GitHubRepository>());
                 }
 
                 if (result.Count > 0)
@@ -57,11 +57,11 @@ namespace AtcWeb.Domain.GitHub
                     memoryCache.Set(CacheConstants.CacheKeyRepositories, result);
                 }
 
-                return (true, result);
+                return (isSuccessful: true, result);
             }
             catch
             {
-                return (false, new List<GitHubRepository>());
+                return (isSuccessful: false, new List<GitHubRepository>());
             }
         }
 
@@ -102,11 +102,11 @@ namespace AtcWeb.Domain.GitHub
                     return result;
                 });
 
-                return (true, cacheEntry);
+                return (isSuccessful: true, cacheEntry);
             }
             catch
             {
-                return (false, new List<GitHubContributor>());
+                return (isSuccessful: false, new List<GitHubContributor>());
             }
             finally
             {
@@ -124,12 +124,12 @@ namespace AtcWeb.Domain.GitHub
                     cancellationToken);
 
                 return result is null
-                    ? (false, new List<GitHubContributor>())
-                    : (true, result);
+                    ? (isSuccessful: false, new List<GitHubContributor>())
+                    : (isSuccessful: true, result);
             }
             catch
             {
-                return (false, new List<GitHubContributor>());
+                return (isSuccessful: false, new List<GitHubContributor>());
             }
         }
     }
