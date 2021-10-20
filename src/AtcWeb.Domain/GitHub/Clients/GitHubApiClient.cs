@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -12,24 +11,19 @@ using AtcWeb.Domain.GitHub.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 // ReSharper disable StringLiteralTypo
-namespace AtcWeb.Domain.GitHub
+namespace AtcWeb.Domain.GitHub.Clients
 {
     public class GitHubApiClient
     {
         private static readonly SemaphoreSlim LockObject = new SemaphoreSlim(1, 1);
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClientFactory;
         private readonly IMemoryCache memoryCache;
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
-        [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
-        public GitHubApiClient(HttpClient httpClient, IMemoryCache memoryCache)
+        public GitHubApiClient(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
         {
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
-
-            this.httpClient = new HttpClient(); //// TODO: Remove when Introduce typed httpclient..
-            this.httpClient.BaseAddress = new Uri("https://api.github.com"); //// TODO: Introduce typed httpclient..
-            this.httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
             this.jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         }
 
@@ -42,6 +36,7 @@ namespace AtcWeb.Domain.GitHub
 
             try
             {
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
                 var result = await httpClient.GetFromJsonAsync<List<GitHubRepository>>(
                     "/orgs/atc-net/repos",
                     jsonSerializerOptions,
@@ -118,6 +113,7 @@ namespace AtcWeb.Domain.GitHub
         {
             try
             {
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
                 var result = await httpClient.GetFromJsonAsync<List<GitHubContributor>>(
                     $"/repos/atc-net/{repositoryName}/contributors",
                     jsonSerializerOptions,

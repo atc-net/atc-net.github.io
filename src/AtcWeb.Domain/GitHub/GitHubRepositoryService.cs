@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AtcWeb.Domain.GitHub.Clients;
 using AtcWeb.Domain.GitHub.Models;
 
 namespace AtcWeb.Domain.GitHub
@@ -32,7 +33,7 @@ namespace AtcWeb.Domain.GitHub
                 return data;
             }
 
-            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
+            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name).Take(3)) // TODO: Remove 3!!!
             {
                 var repository = new Repository(gitHubRepository);
                 await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);

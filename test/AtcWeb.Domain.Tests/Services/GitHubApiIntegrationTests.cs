@@ -1,9 +1,8 @@
-using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.Test;
-using AtcWeb.Domain.GitHub;
+using AtcWeb.Domain.GitHub.Clients;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,44 +10,16 @@ using Xunit;
 
 namespace AtcWeb.Domain.Tests.Services
 {
-    public class GitHubApiIntegrationTests : IAsyncLifetime, IDisposable
+    public class GitHubApiIntegrationTests
     {
-        private HttpClient httpClient;
-
-        public Task InitializeAsync()
-        {
-            httpClient = new HttpClient();
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                httpClient.Dispose();
-            }
-        }
-
-        public Task DisposeAsync()
-        {
-            httpClient.Dispose();
-            return Task.CompletedTask;
-        }
-
         [Theory, AutoNSubstituteData]
         public async Task GetAtcRepositories(
+            [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
             var (isSuccessful, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
@@ -65,11 +36,12 @@ namespace AtcWeb.Domain.Tests.Services
 
         [Theory, AutoNSubstituteData]
         public async Task GetAtcContributors(
+            [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
             var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
@@ -86,11 +58,12 @@ namespace AtcWeb.Domain.Tests.Services
 
         [Theory, AutoNSubstituteData]
         public async Task GetAtcContributorsByRepository(
+            [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
             CancellationToken cancellationToken)
         {
             // Arrange
-            var gitHubApiClient = new GitHubApiClient(httpClient, memoryCache);
+            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
             var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepository("atc", cancellationToken);

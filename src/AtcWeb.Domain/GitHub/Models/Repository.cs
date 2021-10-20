@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using AtcWeb.Domain.GitHub.Clients;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub.Models
