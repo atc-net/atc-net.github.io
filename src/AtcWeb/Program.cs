@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AtcWeb.Domain;
 using AtcWeb.Domain.GitHub;
 using AtcWeb.Domain.GitHub.Clients;
+using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
@@ -41,6 +42,12 @@ namespace AtcWeb
             builder.Services.AddScoped<GitHubHtmlClient>();
             builder.Services.AddScoped<GitHubRawClient>();
             builder.Services.AddScoped<GitHubRepositoryService>();
+            builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(x =>
+            {
+                var sanitizer = new HtmlSanitizer();
+                sanitizer.AllowedAttributes.Add("class");
+                return sanitizer;
+            });
 
             builder.Services.AddMemoryCache();
 

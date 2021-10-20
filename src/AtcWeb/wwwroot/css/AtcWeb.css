@@ -392,3 +392,9 @@ atc-appbar-band {
   /*& .atc-input-control {
         background-color: var(--mud-palette-surface);
     }*/ }
+
+.markdown table, th, td {
+  border-collapse: collapse;
+  border: 1px solid black; }
+  .markdown table > th, .markdown table td, th > th, th td, td > th, td td {
+    padding: 5px; }

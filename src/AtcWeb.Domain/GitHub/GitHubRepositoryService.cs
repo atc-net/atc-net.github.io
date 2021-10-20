@@ -33,7 +33,7 @@ namespace AtcWeb.Domain.GitHub
                 return data;
             }
 
-            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name).Take(3)) // TODO: Remove 3!!!
+            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
             {
                 var repository = new Repository(gitHubRepository);
                 await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
