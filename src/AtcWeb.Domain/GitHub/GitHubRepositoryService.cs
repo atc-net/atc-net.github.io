@@ -24,7 +24,7 @@ namespace AtcWeb.Domain.GitHub
             this.gitHubRawClient = gitHubRawClient ?? throw new ArgumentNullException(nameof(gitHubRawClient));
         }
 
-        public async Task<List<Repository>> GetRepositoriesAsync(CancellationToken cancellationToken = default)
+        public async Task<List<Repository>> GetRepositoriesAsync(bool populateMetaData = false, CancellationToken cancellationToken = default)
         {
             var data = new List<Repository>();
             var (isSuccessful, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
@@ -36,7 +36,12 @@ namespace AtcWeb.Domain.GitHub
             foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
             {
                 var repository = new Repository(gitHubRepository);
-                await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
+
+                if (populateMetaData)
+                {
+                    await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
+                }
+
                 data.Add(repository);
             }
 
