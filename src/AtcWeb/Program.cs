@@ -6,6 +6,7 @@ using AtcWeb.Domain.GitHub;
 using AtcWeb.Domain.GitHub.Clients;
 using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 
@@ -19,6 +20,13 @@ namespace AtcWeb
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+
+            builder.Services.AddScoped(_ => new DefaultBrowserOptionsMessageHandler
+            {
+                DefaultBrowserRequestCache = BrowserRequestCache.NoStore,
+                DefaultBrowserRequestMode = BrowserRequestMode.NoCors,
+            });
+
             builder.Services.AddHttpClient(HttpClientConstants.GitHubApiClient, httpClient =>
             {
                 httpClient.BaseAddress = new Uri("https://api.github.com");
@@ -30,7 +38,7 @@ namespace AtcWeb
                 httpClient.BaseAddress = new Uri("https://github.com");
                 httpClient.DefaultRequestHeaders.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
-            });
+            }).AddHttpMessageHandler<DefaultBrowserOptionsMessageHandler>();
 
             builder.Services.AddHttpClient(HttpClientConstants.GitHubRawClient, httpClient =>
             {
