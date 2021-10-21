@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +8,7 @@ using AtcWeb.Domain.GitHub.Clients;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
+using NSubstitute;
 using Xunit;
 
 namespace AtcWeb.Domain.Tests.Services
@@ -14,11 +17,21 @@ namespace AtcWeb.Domain.Tests.Services
     {
         [Theory, AutoNSubstituteData]
         public async Task GetAtcRepositories(
-            [Frozen] IHttpClientFactory httpClientFactory,
+            [NotNull] [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
+            [NotNull] HttpClient httpClient,
             CancellationToken cancellationToken)
         {
             // Arrange
+            httpClient.BaseAddress = new Uri("https://api.github.com");
+            httpClient.DefaultRequestVersion = new Version(1, 0);
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
+
+            httpClientFactory
+                .CreateClient(HttpClientConstants.GitHubApiClient)
+                .Returns(httpClient);
+
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
@@ -38,9 +51,19 @@ namespace AtcWeb.Domain.Tests.Services
         public async Task GetAtcContributors(
             [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
+            [NotNull] HttpClient httpClient,
             CancellationToken cancellationToken)
         {
             // Arrange
+            httpClient.BaseAddress = new Uri("https://api.github.com");
+            httpClient.DefaultRequestVersion = new Version(1, 0);
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
+
+            httpClientFactory
+                .CreateClient(HttpClientConstants.GitHubApiClient)
+                .Returns(httpClient);
+
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
@@ -60,9 +83,19 @@ namespace AtcWeb.Domain.Tests.Services
         public async Task GetAtcContributorsByRepository(
             [Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
+            [NotNull] HttpClient httpClient,
             CancellationToken cancellationToken)
         {
             // Arrange
+            httpClient.BaseAddress = new Uri("https://api.github.com");
+            httpClient.DefaultRequestVersion = new Version(1, 0);
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Mobile Safari/537.36");
+
+            httpClientFactory
+                .CreateClient(HttpClientConstants.GitHubApiClient)
+                .Returns(httpClient);
+
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
