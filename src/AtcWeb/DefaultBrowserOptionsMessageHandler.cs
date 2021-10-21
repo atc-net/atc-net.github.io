@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -6,10 +7,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AtcWeb
 {
-    /// <seealso cref="https://www.meziantou.net/bypass-browser-cache-using-httpclient-in-blazor-webassembly.htm"/>
     public sealed class DefaultBrowserOptionsMessageHandler : DelegatingHandler
     {
-        private static readonly HttpRequestOptionsKey<IDictionary<string, object>> s_fetchRequestOptionsKey = new("WebAssemblyFetchOptions");
+        private static readonly HttpRequestOptionsKey<IDictionary<string, object>> FetchRequestOptionsKey = new ("WebAssemblyFetchOptions");
 
         public DefaultBrowserOptionsMessageHandler()
         {
@@ -28,8 +28,13 @@ namespace AtcWeb
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             // Get the existing options to not override them if set explicitly
-            if (!request.Options.TryGetValue(s_fetchRequestOptionsKey, out var fetchOptions))
+            if (!request.Options.TryGetValue(FetchRequestOptionsKey, out var fetchOptions))
             {
                 fetchOptions = null;
             }

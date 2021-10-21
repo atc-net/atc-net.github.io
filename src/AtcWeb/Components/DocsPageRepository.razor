@@ -1,0 +1,45 @@
+@using AtcWeb.Domain.GitHub.Models
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    @if (Repository is null)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+        </MudGrid>
+    }
+    else
+    {
+        <DocsPageHeader Title="@Repository.BaseData.Name" SubTitle="@Repository.BaseData.Description"></DocsPageHeader>
+        <DocsPageContent>
+            <DocsPageSection>
+                <SectionHeader Title="Welcome" />
+                <SectionContent AutoMarginContent="false" FullWidth="true" DarkenBackground="true">
+                    @ChildContent
+                </SectionContent>
+            </DocsPageSection>
+            <DocsPageSection>
+                <SectionHeader Title="Readme" />
+                <SectionContent AutoMarginContent="false" FullWidth="true">
+                    <MudCard>
+                        @if (Repository.Root.HasReadme)
+                        {
+                            <MudCardContent>
+                                <MarkdownContent Content="@Repository.Root.RawReadme" />
+                            </MudCardContent>
+                        }
+                        else
+                        {
+                            <MudCardContent>No content for readme!</MudCardContent>
+                        }
+                    </MudCard>
+                </SectionContent>
+            </DocsPageSection>
+        </DocsPageContent>
+    }
+</DocsPage>
+
+@code {
+    [Parameter] public Repository? Repository { get; set; }
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

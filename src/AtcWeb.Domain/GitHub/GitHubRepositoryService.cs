@@ -48,6 +48,24 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
+        public async Task<Repository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaData = false, CancellationToken cancellationToken = default)
+        {
+            var (isSuccessful, gitHubRepository) = await gitHubApiClient.GetAtcRepositoryByName(repositoryName, cancellationToken);
+            if (!isSuccessful || gitHubRepository is null)
+            {
+                return null;
+            }
+
+            var repository = new Repository(gitHubRepository);
+
+            if (populateMetaData)
+            {
+                await repository.Load(gitHubApiClient, gitHubHtmlClient, gitHubRawClient, cancellationToken);
+            }
+
+            return repository;
+        }
+
         public async Task<List<GitHubContributor>> GetContributorsAsync(CancellationToken cancellationToken = default)
         {
             var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
