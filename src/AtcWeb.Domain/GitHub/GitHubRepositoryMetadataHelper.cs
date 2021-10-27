@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Clients;
@@ -12,15 +13,15 @@ namespace AtcWeb.Domain.GitHub
     public static class GitHubRepositoryMetadataHelper
     {
         public static async Task<RootMetadata> LoadRoot(
-            GitHubHtmlClient gitHubHtmlClient,
+            GitHubApiClient gitHubApiClient,
             GitHubRawClient gitHubRawClient,
             string repositoryName,
             string defaultBranchName,
             CancellationToken cancellationToken)
         {
-            if (gitHubHtmlClient is null)
+            if (gitHubApiClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubHtmlClient));
+                throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
             if (gitHubRawClient is null)
@@ -30,20 +31,19 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new RootMetadata();
 
-            var (isSuccessfulHtmlLandingPage, htmlLandingPage) = await gitHubHtmlClient.GetHtmlAtcCode(repositoryName, cancellationToken);
-            if (isSuccessfulHtmlLandingPage)
+            var (isSuccessfulFoldersAndFiles, foldersAndFiles) = await gitHubApiClient.GetRootPaths(repositoryName, cancellationToken);
+            if (isSuccessfulFoldersAndFiles)
             {
-                Console.WriteLine($"#LP-OK - {repositoryName}"); // TODO: Remove-debug
-                data.Test = htmlLandingPage
-                    .DocumentNode
-                    .SelectSingleNode("//body")
-                    .OuterHtml;
-            }
-
-            var (isSuccessfulReadme, rawReadme) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, "README.md", cancellationToken);
-            if (isSuccessfulReadme)
-            {
-                data.RawReadme = rawReadme;
+                ////data.PathStructure = foldersAndFiles;
+                ////var gitHubReadme = foldersAndFiles.Find(x => "README.md".Equals(x.Path, StringComparison.OrdinalIgnoreCase));
+                ////if (gitHubReadme is not null)
+                ////{
+                ////    var (isSuccessfulReadme, rawReadme) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, gitHubReadme.Path, cancellationToken);
+                ////    if (isSuccessfulReadme)
+                ////    {
+                ////        data.RawReadme = rawReadme;
+                ////    }
+                ////}
             }
 
             return data;
@@ -51,6 +51,7 @@ namespace AtcWeb.Domain.GitHub
 
         public static async Task<WorkflowMetadata> LoadWorkflow(
             GitHubRawClient gitHubRawClient,
+            RootMetadata rootMetadata,
             string repositoryName,
             string defaultBranchName,
             CancellationToken cancellationToken)
@@ -85,6 +86,7 @@ namespace AtcWeb.Domain.GitHub
 
         public static async Task<CodingRulesMetadata> LoadCodingRules(
             GitHubRawClient gitHubRawClient,
+            RootMetadata rootMetadata,
             string repositoryName,
             string defaultBranchName,
             CancellationToken cancellationToken)
@@ -119,6 +121,7 @@ namespace AtcWeb.Domain.GitHub
 
         public static async Task<DotnetMetadata> LoadDotnet(
             GitHubRawClient gitHubRawClient,
+            RootMetadata rootMetadata,
             string repositoryName,
             string defaultBranchName,
             CancellationToken cancellationToken)

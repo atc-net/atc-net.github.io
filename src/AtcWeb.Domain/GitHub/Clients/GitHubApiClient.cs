@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -126,6 +127,47 @@ namespace AtcWeb.Domain.GitHub.Clients
             catch
             {
                 return (isSuccessful: false, new List<GitHubContributor>());
+            }
+        }
+
+        public async Task<(bool isSuccessful, List<GitHubPath>)> GetRootPaths(string repositoryName, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
+                var result = await httpClient.GetFromJsonAsync<List<GitHubPath>>(
+                    $"/repos/atc-net/{repositoryName}/contents",
+                    jsonSerializerOptions,
+                    cancellationToken);
+
+                return result is null
+                    ? (isSuccessful: false, new List<GitHubPath>())
+                    : (isSuccessful: true, result);
+            }
+            catch
+            {
+                return (isSuccessful: false, new List<GitHubPath>());
+            }
+        }
+
+        [SuppressMessage("Design", "CA1054:URI-like parameters should not be strings", Justification = "OK.")]
+        public async Task<(bool isSuccessful, List<GitHubPath>)> GetTreePaths(string gitApiUrl, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
+                var result = await httpClient.GetFromJsonAsync<GitHubThree>(
+                    gitApiUrl,
+                    jsonSerializerOptions,
+                    cancellationToken);
+
+                return result is null
+                    ? (isSuccessful: false, new List<GitHubPath>())
+                    : (isSuccessful: true, result.GitHubPaths);
+            }
+            catch
+            {
+                return (isSuccessful: false, new List<GitHubPath>());
             }
         }
     }

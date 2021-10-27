@@ -77,5 +77,49 @@ namespace AtcWeb.Domain.Tests.Services
                 .And
                 .HaveCountGreaterThan(1);
         }
+
+        [Theory, AutoNSubstituteData]
+        public async Task GetRootPaths(
+            [Frozen] IHttpClientFactory httpClientFactory,
+            [Frozen] IMemoryCache memoryCache,
+            CancellationToken cancellationToken)
+        {
+            // Arrange
+            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetRootPaths("atc", cancellationToken);
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubPaths
+                .Should()
+                .NotBeEmpty()
+                .And
+                .HaveCountGreaterThan(1);
+        }
+
+        [Theory, AutoNSubstituteData]
+        public async Task GetTreePaths(
+            [Frozen] IHttpClientFactory httpClientFactory,
+            [Frozen] IMemoryCache memoryCache,
+            CancellationToken cancellationToken)
+        {
+            // Arrange
+            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetTreePaths("https://api.github.com/repos/atc-net/atc/git/trees/3bed1d2b6788adc65eb4255605fc8783aa9818ff", cancellationToken);
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubPaths
+                .Should()
+                .NotBeEmpty()
+                .And
+                .HaveCountGreaterThan(1);
+        }
     }
 }
