@@ -22,4 +22,10 @@
     <ProjectReference Include="..\AtcWeb.Domain\AtcWeb.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Pages\Repository\Atc - Copy.razor.cs">
+      <DependentUpon>Atc.razor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

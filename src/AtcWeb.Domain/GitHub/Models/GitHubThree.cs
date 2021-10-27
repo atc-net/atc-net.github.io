@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using AtcWeb.Domain.GitHub.Models;
 
 namespace AtcWeb.Domain.GitHub.Models
 {

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using AtcWeb.Domain.GitHub.Clients;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub.Models
@@ -29,7 +26,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{gitHubRepository.Name}.svg?logo=github")),
             };
 
-            FoldersAndFiles = new DirectoryMetadata();
+            FoldersAndFiles = new DirectoryItem();
             Root = new RootMetadata();
             Workflow = new WorkflowMetadata();
             CodingRules = new CodingRulesMetadata();
@@ -38,21 +35,23 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public GitHubRepository BaseData { get; }
 
+        public string Name => BaseData.Name;
+
         public string DefaultBranchName { get; }
 
         public List<(string Group, string Key, Uri Url)> Badges { get; }
 
         public string Description { get; private set; }
 
-        public DirectoryMetadata FoldersAndFiles { get; set; }
+        public DirectoryItem FoldersAndFiles { get; set; }
 
-        public RootMetadata Root { get; private set; }
+        public RootMetadata Root { get; set; }
 
-        public WorkflowMetadata Workflow { get; private set; }
+        public WorkflowMetadata Workflow { get; set; }
 
-        public CodingRulesMetadata CodingRules { get; private set; }
+        public CodingRulesMetadata CodingRules { get; set; }
 
-        public DotnetMetadata Dotnet { get; private set; }
+        public DotnetMetadata Dotnet { get; set; }
 
         public bool HasRootReadme => Root?.HasReadme ?? false;
 
@@ -76,100 +75,73 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool HasDotnetDirectoryBuildPropsTest => Dotnet?.HasDirectoryBuildPropsTest ?? false;
 
-        ////public Task Load(
-        ////    GitHubApiClient gitHubApiClient,
-        ////    GitHubRawClient gitHubRawClient,
-        ////    CancellationToken cancellationToken)
-        ////{
-        ////    if (gitHubApiClient is null)
-        ////    {
-        ////        throw new ArgumentNullException(nameof(gitHubApiClient));
-        ////    }
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
+        public void SetBadges()
+        {
+            if (HasWorkflowPreIntegration)
+            {
+                Badges.Add((
+                    "Build Status",
+                    "Pre-Integration",
+                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Pre-Integration/badge.svg")));
+            }
 
-        ////    if (gitHubRawClient is null)
-        ////    {
-        ////        throw new ArgumentNullException(nameof(gitHubRawClient));
-        ////    }
+            if (HasWorkflowPostIntegration)
+            {
+                Badges.Add((
+                    "Build Status",
+                    "Post-Integration",
+                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Post-Integration/badge.svg")));
+            }
 
-        ////    return InvokeLoad(gitHubApiClient, gitHubRawClient, cancellationToken);
-        ////}
+            if (HasWorkflowRelease)
+            {
+                Badges.Add((
+                    "Build Status",
+                    "Release",
+                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Release/badge.svg")));
+            }
 
-        ////[SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-        ////[SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
-        ////private async Task InvokeLoad(
-        ////    GitHubApiClient gitHubApiClient,
-        ////    GitHubRawClient gitHubRawClient,
-        ////    CancellationToken cancellationToken)
-        ////{
-        ////    Description = "Coming soon...";
-        ////    ////FoldersAndFiles = GitHubRepositoryHelper.GetFoldersAndFiles(gitHubApiClient);
-        ////    ////Root = await GitHubRepositoryMetadataHelper.LoadRoot(gitHubApiClient, gitHubRawClient, BaseData.Name, DefaultBranchName, cancellationToken);
-        ////    ////Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(gitHubRawClient, Root, BaseData.Name, DefaultBranchName, cancellationToken);
-        ////    ////CodingRules = await GitHubRepositoryMetadataHelper.LoadCodingRules(gitHubRawClient, Root, BaseData.Name, DefaultBranchName, cancellationToken);
-        ////    ////Dotnet = await GitHubRepositoryMetadataHelper.LoadDotnet(gitHubRawClient, Root, BaseData.Name, DefaultBranchName, cancellationToken);
+            if (HasWorkflowPostIntegration && HasDotnetSolution)
+            {
+                Badges.Add((
+                    "Packages",
+                    "Github Version",
+                    new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=github&message=latest")));
+            }
 
-        ////    ////if (HasWorkflowPreIntegration)
-        ////    ////{
-        ////    ////    Badges.Add((
-        ////    ////        "Build Status",
-        ////    ////        "Pre-Integration",
-        ////    ////        new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Pre-Integration/badge.svg")));
-        ////    ////}
+            if (HasWorkflowRelease && HasDotnetSolution)
+            {
+                Badges.Add((
+                    "Packages",
+                    "NuGet Version",
+                    new Uri($"https://img.shields.io/nuget/v/{BaseData.Name}.svg?logo=nuget")));
 
-        ////    ////if (HasWorkflowPostIntegration)
-        ////    ////{
-        ////    ////    Badges.Add((
-        ////    ////        "Build Status",
-        ////    ////        "Post-Integration",
-        ////    ////        new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Post-Integration/badge.svg")));
-        ////    ////}
+                Badges.Add((
+                    "Code Quality",
+                    "Maintainability Rating",
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=sqale_rating")));
 
-        ////    ////if (HasWorkflowRelease)
-        ////    ////{
-        ////    ////    Badges.Add((
-        ////    ////        "Build Status",
-        ////    ////        "Release",
-        ////    ////        new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Release/badge.svg")));
-        ////    ////}
+                Badges.Add((
+                    "Code Quality",
+                    "Reliability Rating",
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=reliability_rating")));
 
-        ////    ////// TODO: IF
-        ////    ////if (HasWorkflowPreIntegration)
-        ////    ////{
-        ////    ////    Badges.Add((
-        ////    ////        "Packages",
-        ////    ////        "Github Version",
-        ////    ////        new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=github&message=latest")));
+                Badges.Add((
+                    "Code Quality",
+                    "Security Rating",
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=security_rating")));
 
-        ////    ////    Badges.Add((
-        ////    ////        "Packages",
-        ////    ////        "NuGet Version",
-        ////    ////        new Uri($"https://img.shields.io/nuget/v/{BaseData.Name}.svg?logo=nuget")));
+                Badges.Add((
+                    "Code Quality",
+                    "Bugs",
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=bugs")));
 
-        ////    ////    Badges.Add((
-        ////    ////        "Code Quality",
-        ////    ////        "Maintainability Rating",
-        ////    ////        new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=sqale_rating")));
-
-        ////    ////    Badges.Add((
-        ////    ////        "Code Quality",
-        ////    ////        "Reliability Rating",
-        ////    ////        new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=reliability_rating")));
-
-        ////    ////    Badges.Add((
-        ////    ////        "Code Quality",
-        ////    ////        "Security Rating",
-        ////    ////        new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=security_rating")));
-
-        ////    ////    Badges.Add((
-        ////    ////        "Code Quality",
-        ////    ////        "Bugs",
-        ////    ////        new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=bugs")));
-
-        ////    ////    Badges.Add((
-        ////    ////        "Code Quality",
-        ////    ////        "Vulnerabilities",
-        ////    ////        new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=vulnerabilities")));
-        ////    ////}
-        ////}
+                Badges.Add((
+                    "Code Quality",
+                    "Vulnerabilities",
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=vulnerabilities")));
+            }
+        }
     }
 }

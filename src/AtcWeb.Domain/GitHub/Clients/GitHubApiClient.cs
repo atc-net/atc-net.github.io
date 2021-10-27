@@ -30,6 +30,8 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubRepository>)> GetAtcRepositories(CancellationToken cancellationToken)
         {
+            // TODO: Add memoryCache
+            // TODO: Change to dictionary
             if (memoryCache.TryGetValue(CacheConstants.CacheKeyRepositories, out List<GitHubRepository> data))
             {
                 return (isSuccessful: true, data);
@@ -48,6 +50,12 @@ namespace AtcWeb.Domain.GitHub.Clients
                     return (isSuccessful: false, new List<GitHubRepository>());
                 }
 
+                result = result
+                    .Where(x =>
+                        !x.Name.Equals("atc-dummy", StringComparison.Ordinal) &&
+                        !x.Name.Equals("atc-template-dotnet-package", StringComparison.Ordinal))
+                    .ToList();
+
                 if (result.Count > 0)
                 {
                     memoryCache.Set(CacheConstants.CacheKeyRepositories, result);
@@ -59,6 +67,21 @@ namespace AtcWeb.Domain.GitHub.Clients
             {
                 return (isSuccessful: false, new List<GitHubRepository>());
             }
+        }
+
+        public async Task<(bool isSuccessful, GitHubRepository?)> GetAtcRepositoryByName(string repositoryName, CancellationToken cancellationToken)
+        {
+            var (isSuccessful, gitHubRepositories) = await GetAtcRepositories(cancellationToken);
+            if (!isSuccessful)
+            {
+                return (isSuccessful: false, null);
+            }
+
+            var gitHubRepository = gitHubRepositories.SingleOrDefault(x => x.Name.Equals(repositoryName, StringComparison.OrdinalIgnoreCase));
+
+            return gitHubRepository is null
+                ? (isSuccessful: false, null)
+                : (isSuccessful: true, gitHubRepository);
         }
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributors(CancellationToken cancellationToken)
@@ -112,6 +135,7 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepository(string repositoryName, CancellationToken cancellationToken)
         {
+            // TODO: Add memoryCache
             try
             {
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
@@ -132,6 +156,7 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubPath>)> GetRootPaths(string repositoryName, CancellationToken cancellationToken)
         {
+            // TODO: Add memoryCache
             try
             {
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
@@ -151,13 +176,14 @@ namespace AtcWeb.Domain.GitHub.Clients
         }
 
         [SuppressMessage("Design", "CA1054:URI-like parameters should not be strings", Justification = "OK.")]
-        public async Task<(bool isSuccessful, List<GitHubPath>)> GetTreePaths(string gitApiUrl, CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubPath>)> GetTreePaths(string apiUrl, CancellationToken cancellationToken)
         {
+            // TODO: Add memoryCache
             try
             {
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
                 var result = await httpClient.GetFromJsonAsync<GitHubThree>(
-                    gitApiUrl,
+                    apiUrl,
                     jsonSerializerOptions,
                     cancellationToken);
 

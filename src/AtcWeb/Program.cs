@@ -6,6 +6,7 @@ using AtcWeb.Domain.GitHub;
 using AtcWeb.Domain.GitHub.Clients;
 using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 
@@ -18,6 +19,12 @@ namespace AtcWeb
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddScoped(_ => new DefaultBrowserOptionsMessageHandler
+            {
+                DefaultBrowserRequestCache = BrowserRequestCache.NoStore,
+                DefaultBrowserRequestMode = BrowserRequestMode.NoCors,
+            });
 
             builder.Services.AddHttpClient(HttpClientConstants.GitHubApiClient, httpClient =>
             {

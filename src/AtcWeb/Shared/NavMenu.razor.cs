@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using AtcWeb.Domain.GitHub;
 using AtcWeb.Extensions;
 using AtcWeb.Models;
 using Microsoft.AspNetCore.Components;
@@ -10,13 +13,20 @@ namespace AtcWeb.Shared
         private string? section;
         private string? componentLink;
 
+        protected List<Domain.GitHub.Models.Repository>? repositories;
+
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
-        protected override void OnInitialized()
+        [Inject]
+        protected GitHubRepositoryService RepositoryService { get; set; }
+
+        protected override async Task OnInitializedAsync()
         {
+            repositories = await RepositoryService.GetRepositoriesAsync();
+
             Refresh();
-            base.OnInitialized();
+            await base.OnInitializedAsync();
         }
 
         public void Refresh()

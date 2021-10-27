@@ -10,6 +10,8 @@ namespace AtcWeb.Domain.GitHub
 {
     public class GitHubRepositoryService
     {
+        private const int MaxLevelDepth = 3;
+        private readonly List<string> limitToRootSubFolders = new List<string> { "src", "test" };
         private readonly GitHubApiClient gitHubApiClient;
         private readonly GitHubRawClient gitHubRawClient;
 
@@ -27,7 +29,7 @@ namespace AtcWeb.Domain.GitHub
                 : new List<GitHubContributor>();
         }
 
-        public async Task<List<Repository>> GetRepositoriesAsync(CancellationToken cancellationToken = default)
+        public async Task<List<Repository>> GetRepositoriesAsync(bool populateMetaData = false, CancellationToken cancellationToken = default)
         {
             var data = new List<Repository>();
             var (isSuccessfulRepositories, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
@@ -38,10 +40,12 @@ namespace AtcWeb.Domain.GitHub
 
             foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name).Take(1)) // TODO: TAKE(1) !!!!
             {
-                var repository = new Repository(gitHubRepository)
+                var repository = new Repository(gitHubRepository);
+
+                if (populateMetaData)
                 {
-                    FoldersAndFiles = await GetDirectoryMetadata(gitHubRepository.Name, cancellationToken),
-                };
+                    await PopulateMetaData(repository, gitHubRepository, cancellationToken);
+                }
 
                 data.Add(repository);
             }
@@ -49,15 +53,33 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
-        private async Task<DirectoryMetadata> GetDirectoryMetadata(string repositoryName, CancellationToken cancellationToken)
+        public async Task<Repository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaData = false, CancellationToken cancellationToken = default)
+        {
+            var (isSuccessful, gitHubRepository) = await gitHubApiClient.GetAtcRepositoryByName(repositoryName, cancellationToken);
+            if (!isSuccessful || gitHubRepository is null)
+            {
+                return null;
+            }
+
+            var repository = new Repository(gitHubRepository);
+
+            if (populateMetaData)
+            {
+                await PopulateMetaData(repository, gitHubRepository, cancellationToken);
+            }
+
+            return repository;
+        }
+
+        private async Task<DirectoryItem> GetDirectoryMetadata(string repositoryName, int maxLevelDepth, IReadOnlyList<string> limitToRootSubFolders, CancellationToken cancellationToken)
         {
             var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetRootPaths(repositoryName, cancellationToken);
             if (!isSuccessful)
             {
-                return new DirectoryMetadata();
+                return new DirectoryItem();
             }
 
-            var directoryMetadata = new DirectoryMetadata();
+            var directoryItemRoot = new DirectoryItem();
             foreach (var gitHubPath in gitHubPaths)
             {
                 if (gitHubPath.IsDirectory)
@@ -65,26 +87,27 @@ namespace AtcWeb.Domain.GitHub
                     var directoryItem = new DirectoryItem
                     {
                         Name = gitHubPath.Name,
-                        Directories = await GetDirectories(gitHubPath.Url, cancellationToken),
                     };
 
-                    directoryMetadata.Directories.Add(directoryItem);
+                    if (maxLevelDepth > 1 && limitToRootSubFolders.Contains(gitHubPath.Name, StringComparer.OrdinalIgnoreCase))
+                    {
+                        directoryItem.Directories = await GetDirectories(gitHubPath.RootUrl, maxLevelDepth, 2, cancellationToken);
+                    }
+
+                    directoryItemRoot.Directories.Add(directoryItem);
                 }
                 else if (gitHubPath.IsFile)
                 {
-                    var fileItem = new FileItem
-                    {
-                        Name = gitHubPath.Name,
-                    };
+                    var fileItem = new FileItem { Name = gitHubPath.Name, };
 
-                    directoryMetadata.Files.Add(fileItem);
+                    directoryItemRoot.Files.Add(fileItem);
                 }
             }
 
-            return directoryMetadata;
+            return directoryItemRoot;
         }
 
-        private async Task<List<DirectoryItem>> GetDirectories(string url, CancellationToken cancellationToken)
+        private async Task<List<DirectoryItem>> GetDirectories(string url, int maxLevelDepth, int currentLevelDepth, CancellationToken cancellationToken)
         {
             var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetTreePaths(url, cancellationToken);
             if (!isSuccessful)
@@ -102,8 +125,11 @@ namespace AtcWeb.Domain.GitHub
 
                 if (gitHubPath.IsDirectory)
                 {
-                    directoryItem.Directories = await GetDirectories(gitHubPath.Url, cancellationToken);
-                    directoryItems.Add(directoryItem);
+                    if (maxLevelDepth >= currentLevelDepth)
+                    {
+                        var subDirectoryItems = await GetDirectories(gitHubPath.TreeUrl, maxLevelDepth, currentLevelDepth + 1, cancellationToken);
+                        directoryItem.Directories.AddRange(subDirectoryItems);
+                    }
                 }
                 else if (gitHubPath.IsFile)
                 {
@@ -114,9 +140,50 @@ namespace AtcWeb.Domain.GitHub
 
                     directoryItem.Files.Add(fileItem);
                 }
+
+                directoryItems.Add(directoryItem);
             }
 
             return directoryItems;
+        }
+
+        private async Task PopulateMetaData(Repository repository, GitHubRepository gitHubRepository, CancellationToken cancellationToken)
+        {
+            repository.FoldersAndFiles = await GetDirectoryMetadata(
+                gitHubRepository.Name,
+                MaxLevelDepth,
+                limitToRootSubFolders,
+                cancellationToken);
+
+            repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
+                gitHubRawClient,
+                repository.FoldersAndFiles,
+                repository.Name,
+                repository.DefaultBranchName,
+                cancellationToken);
+
+            repository.Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(
+                gitHubRawClient,
+                repository.FoldersAndFiles,
+                repository.Name,
+                repository.DefaultBranchName,
+                cancellationToken);
+
+            repository.CodingRules = await GitHubRepositoryMetadataHelper.LoadCodingRules(
+                gitHubRawClient,
+                repository.FoldersAndFiles,
+                repository.Name,
+                repository.DefaultBranchName,
+                cancellationToken);
+
+            repository.Dotnet = await GitHubRepositoryMetadataHelper.LoadDotnet(
+                gitHubRawClient,
+                repository.FoldersAndFiles,
+                repository.Name,
+                repository.DefaultBranchName,
+                cancellationToken);
+
+            repository.SetBadges();
         }
     }
 }

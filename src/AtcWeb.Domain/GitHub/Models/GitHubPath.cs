@@ -9,7 +9,10 @@ namespace AtcWeb.Domain.GitHub.Models
         public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("git_url")]
-        public string Url { get; set; } = string.Empty;
+        public string RootUrl { get; set; } = string.Empty;
+
+        [JsonPropertyName("url")]
+        public string TreeUrl { get; set; } = string.Empty;
 
         public string Type { get; set; } = string.Empty;
 
@@ -22,6 +25,6 @@ namespace AtcWeb.Domain.GitHub.Models
         public bool IsFile => "file".Equals(Type, StringComparison.Ordinal) || "blob".Equals(Type, StringComparison.Ordinal);
 
         public override string ToString()
-            => $"{nameof(Name)}: {Name}, {nameof(Url)}: {Url}, {nameof(Type)}: {Type}, {nameof(Sha)}: {Sha}, {nameof(Size)}: {Size}, {nameof(IsDirectory)}: {IsDirectory}, {nameof(IsFile)}: {IsFile}";
+            => $"{nameof(Name)}: {Name}, {nameof(Type)}: {Type}, {nameof(Size)}: {Size}, {nameof(IsDirectory)}: {IsDirectory}";
     }
 }

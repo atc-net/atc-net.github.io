@@ -98,7 +98,22 @@
                             }
                         </MudCard>
                         <MudCard>
-                            @*<MudCardContent> @repository.Root.Test</MudCardContent>*@
+                            <MudCardContent>
+                                <ul>
+                                    @foreach (var d1 in repository.FoldersAndFiles.Directories)
+                                    {
+                                        <li>@d1.Name</li>
+                                        @foreach (var d2 in d1.Directories)
+                                        {
+                                            <li>- @d2.Name</li>
+                                            @foreach (var d3 in d2.Directories)
+                                            {
+                                                <li>-- @d3.Name</li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </MudCardContent>
                         </MudCard>
                     </SectionContent>
                 </DocsPageSection>

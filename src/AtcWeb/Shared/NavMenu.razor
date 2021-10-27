@@ -1,4 +1,4 @@
-﻿<MudNavMenu Class="atc-navmenu">
+<MudNavMenu Class="atc-navmenu">
     <div class="docs-nav-fader"></div>
 
     <MudNavGroup Title="Introduction"
@@ -11,22 +11,30 @@
         <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
     </MudNavGroup>
 
-    <MudNavLink Href="/repository/atc" Icon="@Icons.Filled.AcUnit">atc</MudNavLink>
-    <MudNavLink Href="/repository/atc-autoformatter" Icon="@Icons.Filled.AcUnit">atc-autoformatter</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-azure-options</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-coding-rules</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-coding-rules-updater</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos-eventstore</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-cosmos-sql-api-repository</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-dataplatform</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-docs</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-iot-digitaltwin</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-rest-api-generator</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-rest-client</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-snippets</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-template-dotnet-package</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-test</MudNavLink>
-    <MudNavLink Href="/" Icon="@Icons.Filled.AcUnit">atc-wpf</MudNavLink>
+    @if (repositories is not null)
+    {
+        foreach (var repository in repositories.OrderBy(x => x.BaseData.Name))
+        {
+            var href = $"/repository/{@repository.BaseData.Name}";
+            var icon = Icons.Filled.DeviceUnknown;
+
+            switch (@repository.BaseData.Language)
+            {
+                case "C#":
+                    icon = Icons.Filled.Code;
+                    break;
+
+                case "PowerShell":
+                    icon = Icons.Filled.Description;
+                    break;
+
+                case "Python":
+                    icon = Icons.Filled.RestoreFromTrash;
+                    break;
+            }
+
+            <MudNavLink Href="@href" Icon="@icon">@repository.BaseData.Name</MudNavLink>
+        }
+    }
 
 </MudNavMenu>
