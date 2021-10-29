@@ -11,6 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Xunit;
 
+// ReSharper disable RedundantNullableFlowAttribute
 namespace AtcWeb.Domain.Tests.Services
 {
     public class GitHubApiIntegrationTests
@@ -103,7 +104,7 @@ namespace AtcWeb.Domain.Tests.Services
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetRootPaths(
+        public async Task GetAtcAllPathsByRepository(
             [NotNull][Frozen] IHttpClientFactory httpClientFactory,
             [Frozen] IMemoryCache memoryCache,
             [NotNull] HttpClient httpClient,
@@ -119,36 +120,7 @@ namespace AtcWeb.Domain.Tests.Services
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetRootPaths("atc", cancellationToken);
-
-            // Assert
-            Assert.True(isSuccessful);
-
-            gitHubPaths
-                .Should()
-                .NotBeEmpty()
-                .And
-                .HaveCountGreaterThan(1);
-        }
-
-        [Theory, AutoNSubstituteData]
-        public async Task GetTreePaths(
-            [NotNull][Frozen] IHttpClientFactory httpClientFactory,
-            [Frozen] IMemoryCache memoryCache,
-            [NotNull] HttpClient httpClient,
-            CancellationToken cancellationToken)
-        {
-            // Arrange
-            SetupHttpClient(httpClient);
-
-            httpClientFactory
-                .CreateClient(HttpClientConstants.GitHubApiClient)
-                .Returns(httpClient);
-
-            var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
-
-            // Act
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetTreePaths("https://api.github.com/repos/atc-net/atc/git/trees/3bed1d2b6788adc65eb4255605fc8783aa9818ff", cancellationToken);
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepository("atc", "master", cancellationToken);
 
             // Assert
             Assert.True(isSuccessful);

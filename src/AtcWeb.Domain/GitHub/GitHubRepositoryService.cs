@@ -10,8 +10,6 @@ namespace AtcWeb.Domain.GitHub
 {
     public class GitHubRepositoryService
     {
-        private const int MaxLevelDepth = 3;
-        private readonly List<string> limitToRootSubFolders = new List<string> { "src", "test" };
         private readonly GitHubApiClient gitHubApiClient;
         private readonly GitHubRawClient gitHubRawClient;
 
@@ -38,7 +36,7 @@ namespace AtcWeb.Domain.GitHub
                 return data;
             }
 
-            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name).Take(1)) // TODO: TAKE(1) !!!!
+            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
             {
                 var repository = new Repository(gitHubRepository);
 
@@ -71,114 +69,45 @@ namespace AtcWeb.Domain.GitHub
             return repository;
         }
 
-        private async Task<DirectoryItem> GetDirectoryMetadata(string repositoryName, int maxLevelDepth, IReadOnlyList<string> limitToRootSubFolders, CancellationToken cancellationToken)
+        private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetRootPaths(repositoryName, cancellationToken);
-            if (!isSuccessful)
-            {
-                return new DirectoryItem();
-            }
-
-            var directoryItemRoot = new DirectoryItem();
-            foreach (var gitHubPath in gitHubPaths)
-            {
-                if (gitHubPath.IsDirectory)
-                {
-                    var directoryItem = new DirectoryItem
-                    {
-                        Name = gitHubPath.Name,
-                    };
-
-                    if (maxLevelDepth > 1 && limitToRootSubFolders.Contains(gitHubPath.Name, StringComparer.OrdinalIgnoreCase))
-                    {
-                        directoryItem.Directories = await GetDirectories(gitHubPath.RootUrl, maxLevelDepth, 2, cancellationToken);
-                    }
-
-                    directoryItemRoot.Directories.Add(directoryItem);
-                }
-                else if (gitHubPath.IsFile)
-                {
-                    var fileItem = new FileItem { Name = gitHubPath.Name, };
-
-                    directoryItemRoot.Files.Add(fileItem);
-                }
-            }
-
-            return directoryItemRoot;
-        }
-
-        private async Task<List<DirectoryItem>> GetDirectories(string url, int maxLevelDepth, int currentLevelDepth, CancellationToken cancellationToken)
-        {
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetTreePaths(url, cancellationToken);
-            if (!isSuccessful)
-            {
-                return new List<DirectoryItem>();
-            }
-
-            var directoryItems = new List<DirectoryItem>();
-            foreach (var gitHubPath in gitHubPaths)
-            {
-                var directoryItem = new DirectoryItem
-                {
-                    Name = gitHubPath.Name,
-                };
-
-                if (gitHubPath.IsDirectory)
-                {
-                    if (maxLevelDepth >= currentLevelDepth)
-                    {
-                        var subDirectoryItems = await GetDirectories(gitHubPath.TreeUrl, maxLevelDepth, currentLevelDepth + 1, cancellationToken);
-                        directoryItem.Directories.AddRange(subDirectoryItems);
-                    }
-                }
-                else if (gitHubPath.IsFile)
-                {
-                    var fileItem = new FileItem
-                    {
-                        Name = gitHubPath.Name,
-                    };
-
-                    directoryItem.Files.Add(fileItem);
-                }
-
-                directoryItems.Add(directoryItem);
-            }
-
-            return directoryItems;
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepository(repositoryName, defaultBranchName, cancellationToken);
+            return isSuccessful
+                ? gitHubPaths
+                : new List<GitHubPath>();
         }
 
         private async Task PopulateMetaData(Repository repository, GitHubRepository gitHubRepository, CancellationToken cancellationToken)
         {
-            repository.FoldersAndFiles = await GetDirectoryMetadata(
+            repository.FolderAndFilePaths = await GetDirectoryMetadata(
                 gitHubRepository.Name,
-                MaxLevelDepth,
-                limitToRootSubFolders,
+                repository.DefaultBranchName,
                 cancellationToken);
 
             repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
                 gitHubRawClient,
-                repository.FoldersAndFiles,
+                repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
             repository.Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(
                 gitHubRawClient,
-                repository.FoldersAndFiles,
+                repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
             repository.CodingRules = await GitHubRepositoryMetadataHelper.LoadCodingRules(
                 gitHubRawClient,
-                repository.FoldersAndFiles,
+                repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
             repository.Dotnet = await GitHubRepositoryMetadataHelper.LoadDotnet(
                 gitHubRawClient,
-                repository.FoldersAndFiles,
+                repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);

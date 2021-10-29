@@ -26,7 +26,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{gitHubRepository.Name}.svg?logo=github")),
             };
 
-            FoldersAndFiles = new DirectoryItem();
+            FolderAndFilePaths = new List<GitHubPath>();
             Root = new RootMetadata();
             Workflow = new WorkflowMetadata();
             CodingRules = new CodingRulesMetadata();
@@ -43,7 +43,7 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Description { get; private set; }
 
-        public DirectoryItem FoldersAndFiles { get; set; }
+        public List<GitHubPath> FolderAndFilePaths { get; set; }
 
         public RootMetadata Root { get; set; }
 

@@ -39,9 +39,9 @@ namespace AtcWeb.Domain.GitHub.Clients
                 memoryCache.Set(cacheKey, result);
                 return (isSuccessful: true, result);
             }
-            catch
+            catch (Exception ex)
             {
-                return (isSuccessful: false, string.Empty);
+                return (isSuccessful: false, ex.Message);
             }
         }
     }

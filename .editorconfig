@@ -495,6 +495,7 @@ dotnet_diagnostic.CA1051.severity = none            # For Now - Do not declare v
 dotnet_diagnostic.CA1056.severity = none            # For Now - Change to System.Uri
 dotnet_diagnostic.CA1716.severity = none            # For Now
 dotnet_diagnostic.CA1819.severity = none            # For Now
+dotnet_diagnostic.CA2227.severity = none            # For Now - Read-only property setter
 dotnet_diagnostic.CA2234.severity = none            # For Now
 
 dotnet_diagnostic.SA1401.severity = none            # For Now - FieldsMustBePrivate (hard in Blazor Project)
@@ -508,4 +509,6 @@ dotnet_diagnostic.MA0048.severity = none            # For Now - File name must m
 
 dotnet_diagnostic.IDE1006.severity = none           # For Now
 
-dotnet_diagnostic.CS8618.severity = none            # For Now (hard in Blazor Project)
+dotnet_diagnostic.CS8618.severity = none            # For Now - (hard in Blazor Project)
+
+dotnet_diagnostic.S1075.severity = none             # For Now - Hardcoded Uri

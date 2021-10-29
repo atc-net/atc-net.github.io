@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -154,36 +153,14 @@ namespace AtcWeb.Domain.GitHub.Clients
             }
         }
 
-        public async Task<(bool isSuccessful, List<GitHubPath>)> GetRootPaths(string repositoryName, CancellationToken cancellationToken)
-        {
-            // TODO: Add memoryCache
-            try
-            {
-                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
-                var result = await httpClient.GetFromJsonAsync<List<GitHubPath>>(
-                    $"/repos/atc-net/{repositoryName}/contents",
-                    jsonSerializerOptions,
-                    cancellationToken);
-
-                return result is null
-                    ? (isSuccessful: false, new List<GitHubPath>())
-                    : (isSuccessful: true, result);
-            }
-            catch
-            {
-                return (isSuccessful: false, new List<GitHubPath>());
-            }
-        }
-
-        [SuppressMessage("Design", "CA1054:URI-like parameters should not be strings", Justification = "OK.")]
-        public async Task<(bool isSuccessful, List<GitHubPath>)> GetTreePaths(string apiUrl, CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubPath>)> GetAtcAllPathsByRepository(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
             // TODO: Add memoryCache
             try
             {
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
                 var result = await httpClient.GetFromJsonAsync<GitHubThree>(
-                    apiUrl,
+                    $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=1",
                     jsonSerializerOptions,
                     cancellationToken);
 
