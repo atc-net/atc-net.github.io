@@ -71,7 +71,7 @@ namespace AtcWeb.Domain.GitHub
 
         private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepository(repositoryName, defaultBranchName, cancellationToken);
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName(repositoryName, defaultBranchName, cancellationToken);
             return isSuccessful
                 ? gitHubPaths
                 : new List<GitHubPath>();

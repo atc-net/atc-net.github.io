@@ -91,7 +91,7 @@ namespace AtcWeb.Domain.Tests.Services
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepository("atc", cancellationToken);
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepositoryByName("atc", cancellationToken);
 
             // Assert
             Assert.True(isSuccessful);
@@ -120,7 +120,7 @@ namespace AtcWeb.Domain.Tests.Services
             var gitHubApiClient = new GitHubApiClient(httpClientFactory, memoryCache);
 
             // Act
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepository("atc", "master", cancellationToken);
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName("atc", "master", cancellationToken);
 
             // Assert
             Assert.True(isSuccessful);

@@ -495,6 +495,7 @@ dotnet_diagnostic.CA1051.severity = none            # For Now - Do not declare v
 dotnet_diagnostic.CA1056.severity = none            # For Now - Change to System.Uri
 dotnet_diagnostic.CA1716.severity = none            # For Now
 dotnet_diagnostic.CA1819.severity = none            # For Now
+dotnet_diagnostic.CA2007.severity = none            # Do not directly await a Task
 dotnet_diagnostic.CA2227.severity = none            # For Now - Read-only property setter
 dotnet_diagnostic.CA2234.severity = none            # For Now
 
@@ -504,6 +505,7 @@ dotnet_diagnostic.SA1611.severity = none            # For Now
 dotnet_diagnostic.SA1615.severity = none            # For Now
 dotnet_diagnostic.SA1649.severity = none            # For Now - File name should match first type name (hard in Blazor Project)
 
+dotnet_diagnostic.MA0004.severity = none            # Use Task.ConfigureAwait(false)
 dotnet_diagnostic.MA0016.severity = none            # For Now - Prefer return collection abstraction instead of implementation
 dotnet_diagnostic.MA0048.severity = none            # For Now - File name must match type name
 

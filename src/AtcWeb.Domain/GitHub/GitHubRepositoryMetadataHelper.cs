@@ -163,6 +163,7 @@ namespace AtcWeb.Domain.GitHub
                     defaultBranchName,
                     fileSolutionFile.Path,
                     cancellationToken);
+
                 if (isSuccessfulSolution)
                 {
                     data.RawSolution = rawSolution;

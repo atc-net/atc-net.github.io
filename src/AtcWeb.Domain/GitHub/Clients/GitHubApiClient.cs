@@ -29,6 +29,7 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubRepository>)> GetAtcRepositories(CancellationToken cancellationToken)
         {
+            // TODO: Add Locks
             // TODO: Add memoryCache
             // TODO: Change to dictionary
             if (memoryCache.TryGetValue(CacheConstants.CacheKeyRepositories, out List<GitHubRepository> data))
@@ -98,7 +99,7 @@ namespace AtcWeb.Domain.GitHub.Clients
                     {
                         foreach (var gitHubRepository in gitHubRepositories)
                         {
-                            var (isSuccessfulContributors, gitHubContributors) = await GetAtcContributorsByRepository(gitHubRepository.Name, cancellationToken);
+                            var (isSuccessfulContributors, gitHubContributors) = await GetAtcContributorsByRepositoryByName(gitHubRepository.Name, cancellationToken);
                             if (!isSuccessfulContributors)
                             {
                                 continue;
@@ -132,8 +133,9 @@ namespace AtcWeb.Domain.GitHub.Clients
             }
         }
 
-        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepository(string repositoryName, CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepositoryByName(string repositoryName, CancellationToken cancellationToken)
         {
+            // TODO: Add Locks
             // TODO: Add memoryCache
             try
             {
@@ -153,14 +155,15 @@ namespace AtcWeb.Domain.GitHub.Clients
             }
         }
 
-        public async Task<(bool isSuccessful, List<GitHubPath>)> GetAtcAllPathsByRepository(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
+        public async Task<(bool isSuccessful, List<GitHubPath>)> GetAtcAllPathsByRepositoryByName(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
+            // TODO: Add Locks
             // TODO: Add memoryCache
             try
             {
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
                 var result = await httpClient.GetFromJsonAsync<GitHubThree>(
-                    $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=1",
+                    $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=true",
                     jsonSerializerOptions,
                     cancellationToken);
 
