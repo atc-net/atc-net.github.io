@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -29,22 +30,19 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubRepository>)> GetAtcRepositories(CancellationToken cancellationToken)
         {
-            // TODO: Add Locks
-            // TODO: Add memoryCache
-            // TODO: Change to dictionary
-            if (memoryCache.TryGetValue(CacheConstants.CacheKeyRepositories, out List<GitHubRepository> data))
-            {
-                return (isSuccessful: true, data);
-            }
+            ////await LockObject.WaitAsync(cancellationToken);
 
             try
             {
-                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
-                var result = await httpClient.GetFromJsonAsync<List<GitHubRepository>>(
-                    "/orgs/atc-net/repos",
-                    jsonSerializerOptions,
-                    cancellationToken);
+                const string url = "/orgs/atc-net/repos";
+                const string cacheKey = CacheConstants.CacheKeyRepositories;
+                if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepository> data))
+                {
+                    return (isSuccessful: true, data);
+                }
 
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
+                var result = await httpClient.GetFromJsonAsync<List<GitHubRepository>>(url, jsonSerializerOptions, cancellationToken);
                 if (result is null)
                 {
                     return (isSuccessful: false, new List<GitHubRepository>());
@@ -56,16 +54,16 @@ namespace AtcWeb.Domain.GitHub.Clients
                         !x.Name.Equals("atc-template-dotnet-package", StringComparison.Ordinal))
                     .ToList();
 
-                if (result.Count > 0)
-                {
-                    memoryCache.Set(CacheConstants.CacheKeyRepositories, result);
-                }
-
+                memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
                 return (isSuccessful: true, result);
             }
             catch
             {
                 return (isSuccessful: false, new List<GitHubRepository>());
+            }
+            finally
+            {
+                ////LockObject.Release();
             }
         }
 
@@ -80,48 +78,49 @@ namespace AtcWeb.Domain.GitHub.Clients
             var gitHubRepository = gitHubRepositories.SingleOrDefault(x => x.Name.Equals(repositoryName, StringComparison.OrdinalIgnoreCase));
 
             return gitHubRepository is null
-                ? (isSuccessful: false, null)
+                ? (isSuccessful: false, gitHubRepository: null)
                 : (isSuccessful: true, gitHubRepository);
         }
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributors(CancellationToken cancellationToken)
         {
-            await LockObject.WaitAsync(cancellationToken);
+            ////await LockObject.WaitAsync(cancellationToken);
 
             try
             {
-                var cacheEntry = await memoryCache.GetOrCreate(CacheConstants.CacheKeyContributors, async entry =>
+                const string cacheKey = CacheConstants.CacheKeyContributors;
+                if (memoryCache.TryGetValue(cacheKey, out List<GitHubContributor> data))
                 {
-                    var result = new List<GitHubContributor>();
+                    return (isSuccessful: true, data);
+                }
 
-                    var (isSuccessful, gitHubRepositories) = await GetAtcRepositories(cancellationToken);
-                    if (isSuccessful)
-                    {
-                        foreach (var gitHubRepository in gitHubRepositories)
+                var bag = new ConcurrentBag<GitHubContributor>();
+
+                var (isSuccessful, gitHubRepositories) = await GetAtcRepositories(cancellationToken);
+                if (isSuccessful)
+                {
+                    var tasks = gitHubRepositories
+                        .Select(async gitHubRepository =>
                         {
                             var (isSuccessfulContributors, gitHubContributors) = await GetAtcContributorsByRepositoryByName(gitHubRepository.Name, cancellationToken);
-                            if (!isSuccessfulContributors)
+                            if (isSuccessfulContributors)
                             {
-                                continue;
-                            }
-
-                            foreach (var gitHubContributor in gitHubContributors)
-                            {
-                                if (result.FirstOrDefault(x => x.Id.Equals(gitHubContributor.Id)) is null &&
-                                    !gitHubContributor.Name.Equals("ATCBot", StringComparison.Ordinal))
+                                foreach (var gitHubContributor in gitHubContributors
+                                    .Where(gitHubContributor =>
+                                        bag.FirstOrDefault(x => x.Id.Equals(gitHubContributor.Id)) is null &&
+                                        !gitHubContributor.Name.Equals("ATCBot", StringComparison.Ordinal)))
                                 {
-                                    result.Add(gitHubContributor);
+                                    bag.Add(gitHubContributor);
                                 }
                             }
-                        }
-                    }
+                        });
 
-                    entry.SetSlidingExpiration(CacheConstants.SlidingExpiration);
-                    entry.AbsoluteExpirationRelativeToNow = CacheConstants.AbsoluteExpirationRelativeToNow;
-                    return result;
-                });
+                    // TODO: ATC-WhenAll
+                    await Task.WhenAll(tasks);
+                }
 
-                return (isSuccessful: true, cacheEntry);
+                memoryCache.Set(cacheKey, bag.ToList(), CacheConstants.AbsoluteExpirationRelativeToNow);
+                return (isSuccessful: true, bag.ToList());
             }
             catch
             {
@@ -129,51 +128,73 @@ namespace AtcWeb.Domain.GitHub.Clients
             }
             finally
             {
-                LockObject.Release();
+                ////LockObject.Release();
             }
         }
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepositoryByName(string repositoryName, CancellationToken cancellationToken)
         {
-            // TODO: Add Locks
-            // TODO: Add memoryCache
+            ////await LockObject.WaitAsync(cancellationToken);
+
             try
             {
-                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
-                var result = await httpClient.GetFromJsonAsync<List<GitHubContributor>>(
-                    $"/repos/atc-net/{repositoryName}/contributors",
-                    jsonSerializerOptions,
-                    cancellationToken);
+                var url = $"/repos/atc-net/{repositoryName}/contributors";
+                var cacheKey = $"{CacheConstants.CacheKeyContributors}_{url}";
+                if (memoryCache.TryGetValue(cacheKey, out List<GitHubContributor> data))
+                {
+                    return (isSuccessful: true, data);
+                }
 
-                return result is null
-                    ? (isSuccessful: false, new List<GitHubContributor>())
-                    : (isSuccessful: true, result);
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
+                var result = await httpClient.GetFromJsonAsync<List<GitHubContributor>>(url, jsonSerializerOptions, cancellationToken);
+                if (result is null)
+                {
+                    return (isSuccessful: false, new List<GitHubContributor>());
+                }
+
+                memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
+                return (isSuccessful: true, result);
             }
             catch
             {
                 return (isSuccessful: false, new List<GitHubContributor>());
             }
+            finally
+            {
+                ////LockObject.Release();
+            }
         }
 
         public async Task<(bool isSuccessful, List<GitHubPath>)> GetAtcAllPathsByRepositoryByName(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
-            // TODO: Add Locks
-            // TODO: Add memoryCache
+            ////await LockObject.WaitAsync(cancellationToken);
+
             try
             {
-                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
-                var result = await httpClient.GetFromJsonAsync<GitHubThree>(
-                    $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=true",
-                    jsonSerializerOptions,
-                    cancellationToken);
+                var url = $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=true";
+                var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
+                if (memoryCache.TryGetValue(cacheKey, out List<GitHubPath> data))
+                {
+                    return (isSuccessful: true, data);
+                }
 
-                return result is null
-                    ? (isSuccessful: false, new List<GitHubPath>())
-                    : (isSuccessful: true, result.GitHubPaths);
+                var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubApiClient);
+                var result = await httpClient.GetFromJsonAsync<GitHubThree>(url, jsonSerializerOptions, cancellationToken);
+                if (result is null)
+                {
+                    return (isSuccessful: false, new List<GitHubPath>());
+                }
+
+                memoryCache.Set(cacheKey, result.GitHubPaths, CacheConstants.AbsoluteExpirationRelativeToNow);
+                return (isSuccessful: true, result.GitHubPaths);
             }
             catch
             {
                 return (isSuccessful: false, new List<GitHubPath>());
+            }
+            finally
+            {
+                ////LockObject.Release();
             }
         }
     }

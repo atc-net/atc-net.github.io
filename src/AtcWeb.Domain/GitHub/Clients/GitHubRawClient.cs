@@ -9,6 +9,7 @@ namespace AtcWeb.Domain.GitHub.Clients
 {
     public class GitHubRawClient
     {
+        private static readonly SemaphoreSlim LockObject = new SemaphoreSlim(1, 1);
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMemoryCache memoryCache;
 
@@ -20,16 +21,17 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, string)> GetRawAtcCodeFile(string repositoryName, string defaultBranchName, string filePath, CancellationToken cancellationToken)
         {
-            // TODO: Add Locks
-            var url = $"/atc-net/{repositoryName}/{defaultBranchName}/{filePath}";
-            var cacheKey = $"{CacheConstants.CacheKeyCodeFile}_{url}";
-            if (memoryCache.TryGetValue(cacheKey, out string data))
-            {
-                return (isSuccessful: true, data);
-            }
+            ////await LockObject.WaitAsync(cancellationToken);
 
             try
             {
+                var url = $"/atc-net/{repositoryName}/{defaultBranchName}/{filePath}";
+                var cacheKey = $"{CacheConstants.CacheKeyCodeFile}_{url}";
+                if (memoryCache.TryGetValue(cacheKey, out string data))
+                {
+                    return (isSuccessful: true, data);
+                }
+
                 var httpClient = httpClientFactory.CreateClient(HttpClientConstants.GitHubRawClient);
                 var result = await httpClient.GetStringAsync(url, cancellationToken);
                 if (string.IsNullOrEmpty(result))
@@ -37,12 +39,16 @@ namespace AtcWeb.Domain.GitHub.Clients
                     return (isSuccessful: false, string.Empty);
                 }
 
-                memoryCache.Set(cacheKey, result);
+                memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
                 return (isSuccessful: true, result);
             }
             catch (Exception ex)
             {
                 return (isSuccessful: false, ex.Message);
+            }
+            finally
+            {
+                ////LockObject.Release();
             }
         }
     }

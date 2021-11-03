@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.336" />
+    <PackageReference Include="Atc" Version="1.1.338" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
     <PackageReference Include="HtmlSanitizer" Version="6.0.441" />
     <PackageReference Include="Markdig" Version="0.26.0" />
@@ -14,18 +14,12 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.11.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-    <PackageReference Include="MudBlazor" Version="5.1.5" />
+    <PackageReference Include="MudBlazor" Version="5.2.0" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AtcWeb.Domain\AtcWeb.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Pages\Repository\Atc - Copy.razor.cs">
-      <DependentUpon>Atc.razor.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
 
 </Project>

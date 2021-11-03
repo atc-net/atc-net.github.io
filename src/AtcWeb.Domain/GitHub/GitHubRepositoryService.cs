@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -29,14 +30,16 @@ namespace AtcWeb.Domain.GitHub
 
         public async Task<List<Repository>> GetRepositoriesAsync(bool populateMetaData = false, CancellationToken cancellationToken = default)
         {
-            var data = new List<Repository>();
+            var bag = new ConcurrentBag<Repository>();
             var (isSuccessfulRepositories, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
             if (!isSuccessfulRepositories)
             {
-                return data;
+                return bag.ToList();
             }
 
-            foreach (var gitHubRepository in gitHubRepositories.OrderBy(x => x.Name))
+            var tasks = gitHubRepositories
+                .OrderBy(x => x.Name)
+                .Select(async gitHubRepository =>
             {
                 var repository = new Repository(gitHubRepository);
 
@@ -45,10 +48,13 @@ namespace AtcWeb.Domain.GitHub
                     await PopulateMetaData(repository, gitHubRepository, cancellationToken);
                 }
 
-                data.Add(repository);
-            }
+                bag.Add(repository);
+            });
 
-            return data;
+            // TODO: ATC-WhenAll
+            await Task.WhenAll(tasks);
+
+            return bag.ToList();
         }
 
         public async Task<Repository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaData = false, CancellationToken cancellationToken = default)
@@ -84,33 +90,49 @@ namespace AtcWeb.Domain.GitHub
                 repository.DefaultBranchName,
                 cancellationToken);
 
-            repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
+            var taskRoot = GitHubRepositoryMetadataHelper.LoadRoot(
                 gitHubRawClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
-            repository.Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(
+            var taskWorkflow = GitHubRepositoryMetadataHelper.LoadWorkflow(
                 gitHubRawClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
-            repository.CodingRules = await GitHubRepositoryMetadataHelper.LoadCodingRules(
+            var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
                 gitHubRawClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
 
-            repository.Dotnet = await GitHubRepositoryMetadataHelper.LoadDotnet(
+            var taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
                 gitHubRawClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
                 repository.DefaultBranchName,
                 cancellationToken);
+
+            var tasks = new List<Task>
+            {
+                taskRoot,
+                taskWorkflow,
+                taskCodingRules,
+                taskDotnet,
+            };
+
+            // TODO: ATC-WhenAll
+            await Task.WhenAll(tasks);
+
+            repository.Root = await taskRoot;
+            repository.Workflow = await taskWorkflow;
+            repository.CodingRules = await taskCodingRules;
+            repository.Dotnet = await taskDotnet;
 
             repository.SetBadges();
         }

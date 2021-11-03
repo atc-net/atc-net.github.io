@@ -15,7 +15,7 @@
         }
         else
         {
-            foreach (var repository in repositories)
+            foreach (var repository in repositories.OrderBy(x => x.Name))
             {
                 <DocsPageSection>
                     <SectionHeader Title="@repository.BaseData.Name">
@@ -97,7 +97,7 @@
                                 <MudCardContent>No content for readme!</MudCardContent>
                             }
                         </MudCard>
-                        <MudCard>
+                        @*<MudCard>
                             <MudCardContent>
                                 <ul>
                                     @foreach (var path in repository.FolderAndFilePaths.OrderBy(x => x.Path))
@@ -106,7 +106,7 @@
                                     }
                                 </ul>
                             </MudCardContent>
-                        </MudCard>
+                        </MudCard>*@
                     </SectionContent>
                 </DocsPageSection>
             }
