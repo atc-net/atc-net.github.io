@@ -25,7 +25,6 @@ namespace AtcWeb.Domain.Tests.GitHub
             [NotNull] HttpClient httpClient,
             CancellationToken cancellationToken)
         {
-
             // Arrange
             GitHubTestHttpClients.SetupRawHttpClient(httpClient);
 
