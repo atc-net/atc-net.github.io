@@ -22,69 +22,7 @@
                         <SubTitle>@repository.BaseData.Description</SubTitle>
                         <Description>@repository.Description</Description>
                     </SectionHeader>
-                    <SectionContent AutoMarginContent="false" FullWidth="true" DarkenBackground="true">
-                        <MudSimpleTable>
-                            <thead>
-                                <tr>
-                                    <th style="width: 25%">General Project Info</th>
-                                    <th style="width: 25%">Packages</th>
-                                    <th style="width: 25%">Build Status</th>
-                                    <th style="width: 25%">Code Quality</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "General Project Info"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Packages"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Build Status"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Code Quality"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </MudSimpleTable>
-                        <ul>
-                            <li>HasRootReadme: @repository.HasRootReadme</li>
-
-                            <li>HasWorkflowPreIntegration: @repository.HasWorkflowPreIntegration</li>
-                            <li>HasWorkflowPostIntegration: @repository.HasWorkflowPostIntegration</li>
-                            <li>HasWorkflowRelease: @repository.HasWorkflowRelease</li>
-
-                            <li>HasCodingRulesEditorConfigRoot: @repository.HasCodingRulesEditorConfigRoot</li>
-                            <li>HasCodingRulesEditorConfigSrc: @repository.HasCodingRulesEditorConfigSrc</li>
-                            <li>HasCodingRulesEditorConfigTest: @repository.HasCodingRulesEditorConfigTest</li>
-
-                            <li>HasDotnetSolution: @repository.HasDotnetSolution</li>
-                            <li>HasDotnetDirectoryBuildPropsRoot: @repository.HasDotnetDirectoryBuildPropsRoot</li>
-                            <li>HasDotnetDirectoryBuildPropsSrc: @repository.HasDotnetDirectoryBuildPropsSrc</li>
-                            <li>HasDotnetDirectoryBuildPropsTest: @repository.HasDotnetDirectoryBuildPropsTest</li>
-                        </ul>
+                    <SectionContent AutoMarginContent="false" FullWidth="true">
                         <MudCard>
                             @if (repository.Root.HasReadme)
                             {
@@ -94,19 +32,9 @@
                             }
                             else
                             {
-                                <MudCardContent>No content for readme!</MudCardContent>
+                                <MudCardContent>There is no readme.md in this repository yes, sorry.</MudCardContent>
                             }
                         </MudCard>
-                        @*<MudCard>
-                            <MudCardContent>
-                                <ul>
-                                    @foreach (var path in repository.FolderAndFilePaths.OrderBy(x => x.Path))
-                                    {
-                                        <li>@path.Path</li>
-                                    }
-                                </ul>
-                            </MudCardContent>
-                        </MudCard>*@
                     </SectionContent>
                 </DocsPageSection>
             }

@@ -1,4 +1,3 @@
-using AtcWeb.Extensions;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -62,12 +61,7 @@ namespace AtcWeb.Shared
         protected override void OnInitialized()
         {
             currentTheme = defaultTheme;
-
-            // If not home page, the navbar starts open
-            if (!NavigationManager.IsHomePage())
-            {
-                drawerOpen = true;
-            }
+            drawerOpen = true;
         }
 
         protected override void OnAfterRender(bool firstRender)

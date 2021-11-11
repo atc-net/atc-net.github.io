@@ -7,5 +7,7 @@ namespace AtcWeb.Domain
         public const string GitHubHtmlClient = nameof(GitHubHtmlClient);
 
         public const string GitHubRawClient = nameof(GitHubRawClient);
+
+        public const int MaxResponseContentBufferSize = 10240000;
     }
 }

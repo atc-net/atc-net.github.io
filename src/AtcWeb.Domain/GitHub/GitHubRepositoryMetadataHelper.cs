@@ -33,7 +33,7 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new RootMetadata();
 
-            data.RawReadme = await GetFileByPath(
+            data.RawReadme = await GetFileByPathAndEnsureFullLinks(
                 gitHubRawClient,
                 foldersAndFiles,
                 repositoryName,
@@ -211,6 +211,31 @@ namespace AtcWeb.Domain.GitHub
                 var (isSuccessful, rawFileContent) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, gitHubFile.Path, cancellationToken);
                 if (isSuccessful)
                 {
+                    return rawFileContent;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static async Task<string> GetFileByPathAndEnsureFullLinks(
+            GitHubRawClient gitHubRawClient,
+            List<GitHubPath> foldersAndFiles,
+            string repositoryName,
+            string defaultBranchName,
+            string path,
+            CancellationToken cancellationToken)
+        {
+            var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
+            if (gitHubFile is not null)
+            {
+                var (isSuccessful, rawFileContent) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, gitHubFile.Path, cancellationToken);
+                if (isSuccessful)
+                {
+                    rawFileContent = rawFileContent
+                        .Replace("](src/", $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/src/", StringComparison.Ordinal)
+                        .Replace("](docs/", $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/docs/", StringComparison.Ordinal);
+
                     return rawFileContent;
                 }
             }

@@ -16,7 +16,6 @@ namespace AtcWeb.Domain.GitHub.Clients
 {
     public class GitHubApiClient
     {
-        private static readonly SemaphoreSlim LockObject = new SemaphoreSlim(1, 1);
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMemoryCache memoryCache;
         private readonly JsonSerializerOptions jsonSerializerOptions;
@@ -30,8 +29,6 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubRepository>)> GetAtcRepositories(CancellationToken cancellationToken)
         {
-            ////await LockObject.WaitAsync(cancellationToken);
-
             try
             {
                 const string url = "/orgs/atc-net/repos";
@@ -61,10 +58,6 @@ namespace AtcWeb.Domain.GitHub.Clients
             {
                 return (isSuccessful: false, new List<GitHubRepository>());
             }
-            finally
-            {
-                ////LockObject.Release();
-            }
         }
 
         public async Task<(bool isSuccessful, GitHubRepository?)> GetAtcRepositoryByName(string repositoryName, CancellationToken cancellationToken)
@@ -84,8 +77,6 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributors(CancellationToken cancellationToken)
         {
-            ////await LockObject.WaitAsync(cancellationToken);
-
             try
             {
                 const string cacheKey = CacheConstants.CacheKeyContributors;
@@ -126,16 +117,10 @@ namespace AtcWeb.Domain.GitHub.Clients
             {
                 return (isSuccessful: false, new List<GitHubContributor>());
             }
-            finally
-            {
-                ////LockObject.Release();
-            }
         }
 
         public async Task<(bool isSuccessful, List<GitHubContributor>)> GetAtcContributorsByRepositoryByName(string repositoryName, CancellationToken cancellationToken)
         {
-            ////await LockObject.WaitAsync(cancellationToken);
-
             try
             {
                 var url = $"/repos/atc-net/{repositoryName}/contributors";
@@ -159,16 +144,10 @@ namespace AtcWeb.Domain.GitHub.Clients
             {
                 return (isSuccessful: false, new List<GitHubContributor>());
             }
-            finally
-            {
-                ////LockObject.Release();
-            }
         }
 
         public async Task<(bool isSuccessful, List<GitHubPath>)> GetAtcAllPathsByRepositoryByName(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
         {
-            ////await LockObject.WaitAsync(cancellationToken);
-
             try
             {
                 var url = $"/repos/atc-net/{repositoryName}/git/trees/{defaultBranchName}?recursive=true";
@@ -191,10 +170,6 @@ namespace AtcWeb.Domain.GitHub.Clients
             catch
             {
                 return (isSuccessful: false, new List<GitHubPath>());
-            }
-            finally
-            {
-                ////LockObject.Release();
             }
         }
     }

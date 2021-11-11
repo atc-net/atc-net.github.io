@@ -1,0 +1,77 @@
+@page "/support/repository-overview"
+
+@inherits RepositoryOverviewBase
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="Repository overview"
+                    SubTitle="This is the overview of all atc repositories.">
+    </DocsPageHeader>
+    <DocsPageContent>
+        @if (repositories is null)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            </MudGrid>
+        }
+        else
+        {
+            foreach (var repository in repositories.OrderBy(x => x.Name))
+            {
+                <DocsPageSection>
+                    <SectionHeader Title="@repository.BaseData.Name">
+                        <SubTitle>@repository.BaseData.Description</SubTitle>
+                        <Description>@repository.Description</Description>
+                    </SectionHeader>
+                    <SectionContent AutoMarginContent="false" FullWidth="true">
+                        <MudSimpleTable>
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">General Project Info</th>
+                                    <th style="width: 25%">Packages</th>
+                                    <th style="width: 25%">Build Status</th>
+                                    <th style="width: 25%">Code Quality</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "General Project Info"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Packages"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Build Status"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Code Quality"))
+                                            {
+                                                <li><img src="@url" alt="@key" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </MudSimpleTable>
+                    </SectionContent>
+                </DocsPageSection>
+            }
+        }
+    </DocsPageContent>
+</DocsPage>

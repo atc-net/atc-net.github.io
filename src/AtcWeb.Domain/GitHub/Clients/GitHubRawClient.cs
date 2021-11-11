@@ -9,7 +9,6 @@ namespace AtcWeb.Domain.GitHub.Clients
 {
     public class GitHubRawClient
     {
-        private static readonly SemaphoreSlim LockObject = new SemaphoreSlim(1, 1);
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMemoryCache memoryCache;
 
@@ -21,8 +20,6 @@ namespace AtcWeb.Domain.GitHub.Clients
 
         public async Task<(bool isSuccessful, string)> GetRawAtcCodeFile(string repositoryName, string defaultBranchName, string filePath, CancellationToken cancellationToken)
         {
-            ////await LockObject.WaitAsync(cancellationToken);
-
             try
             {
                 var url = $"/atc-net/{repositoryName}/{defaultBranchName}/{filePath}";
@@ -45,10 +42,6 @@ namespace AtcWeb.Domain.GitHub.Clients
             catch (Exception ex)
             {
                 return (isSuccessful: false, ex.Message);
-            }
-            finally
-            {
-                ////LockObject.Release();
             }
         }
     }

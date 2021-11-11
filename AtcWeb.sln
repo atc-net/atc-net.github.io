@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31727.386
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtcWeb", "src\AtcWeb\AtcWeb.csproj", "{C782A745-EC52-4B67-831C-03BDD4342072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtcWeb.Domain", "src\AtcWeb.Domain\AtcWeb.Domain.csproj", "{26F5ED3B-FE3E-42E0-8B4F-48F4C0962354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtcWeb.Domain", "src\AtcWeb.Domain\AtcWeb.Domain.csproj", "{26F5ED3B-FE3E-42E0-8B4F-48F4C0962354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtcWeb.Domain.Tests", "test\AtcWeb.Domain.Tests\AtcWeb.Domain.Tests.csproj", "{00574116-E506-4F71-895A-B503A0DE6FAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtcWeb.Domain.Tests", "test\AtcWeb.Domain.Tests\AtcWeb.Domain.Tests.csproj", "{00574116-E506-4F71-895A-B503A0DE6FAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
