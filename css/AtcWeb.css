@@ -138,6 +138,9 @@ atc-appbar-band {
   bottom: 0;
   right: 0; }
 
+.markdown a {
+  color: var(--mud-palette-primary); }
+
 .atc-codeblock {
   height: 100%;
   background-color: var(--mud-palette-black);
