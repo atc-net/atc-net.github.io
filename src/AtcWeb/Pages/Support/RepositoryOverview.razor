@@ -1,5 +1,6 @@
 @page "/support/repository-overview"
 
+@using AtcWeb.Data
 @inherits RepositoryOverviewBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
@@ -69,7 +70,22 @@
                                 </tr>
                             </tbody>
                         </MudSimpleTable>
-                    </SectionContent>
+
+                        <MudText Class="mt-4" Typo="Typo.h5">Responsible members</MudText>
+                        <MudList>
+                            @foreach (var member in RepositoryMetadata.GetResponsibleMembersByName(repository.Name))
+                            {
+                                <MudListItem Icon="@Icons.Filled.SupervisorAccount">@member</MudListItem>
+                            }
+                        </MudList>
+                        @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(repository.Name))
+                        {
+                            <MudChip Color="Color.Error">
+                                We are missing a member or too - to take some responsibility for this repository
+                            </MudChip>
+                        }
+
+                        </SectionContent>
                 </DocsPageSection>
             }
         }
