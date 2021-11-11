@@ -44,3 +44,4 @@
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+dotnet_diagnostic.CS8618.severity = none            # For Now - Non-nullable property
