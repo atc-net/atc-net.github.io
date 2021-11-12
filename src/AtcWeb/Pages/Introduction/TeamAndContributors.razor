@@ -1,4 +1,4 @@
-﻿@page "/introduction/team-and-contributors"
+@page "/introduction/team-and-contributors"
 
 @inherits TeamAndContributorsBase
 
@@ -8,21 +8,7 @@
     </DocsPageHeader>
     <DocsPageContent>
         <DocsPageSection>
-            <MudGrid Justify="Justify.Center">
-                @if (contributors is null)
-                {
-                    <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
-                }
-                else
-                {
-                    @foreach (var contributor in contributors.OrderBy(x => x.Name))
-                    {
-                        <MudItem xs="12" md="6">
-                            <GitHubContributor Name="@contributor.Name" AvatarLink="@contributor.AvatarUrl" GithubLink="@contributor.Url"/>
-                        </MudItem>
-                    }
-                }
-            </MudGrid>
+            <GitHubContributorGrid Contributors="Contributors" />
         </DocsPageSection>
     </DocsPageContent>
 </DocsPage>

@@ -1,5 +1,5 @@
 @using AtcWeb.Domain.GitHub.Models
-@using AtcWeb.Data
+@using AtcWeb.Domain.Data
 
 @inherits DocsPageRepositoryBase
 
@@ -8,8 +8,8 @@
     {
         <MudGrid Justify="Justify.Center">
             <MudProgressCircular Color="Color.Primary"
-                             Size="Size.Medium"
-                             Indeterminate="true" />
+                                 Size="Size.Medium"
+                                 Indeterminate="true" />
         </MudGrid>
     }
     else
@@ -45,17 +45,11 @@
             <DocsPageSection>
                 <SectionHeader Title="Responsible members" />
                 <SectionContent FullWidth="true">
-                    <MudList>
-                        @foreach (var member in RepositoryMetadata.GetResponsibleMembersByName(Repository.Name))
-                        {
-                            <MudListItem Icon="@Icons.Filled.SupervisorAccount">@member</MudListItem>
-                        }
-                    </MudList>
-
+                    <GitHubContributorGrid Contributors="Repository.ResponsibleMembers" />
                     @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(Repository.Name))
                     {
                         <MudChip Color="Color.Error">
-                            We are missing a member or too - to take some responsibility for this repository
+                            We are missing a member or two to take responsibility for this repository.
                         </MudChip>
                     }
                 </SectionContent>

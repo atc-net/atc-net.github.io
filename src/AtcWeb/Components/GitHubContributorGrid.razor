@@ -1,0 +1,22 @@
+<MudGrid Justify="Justify.Center">
+    @if (Contributors is null)
+    {
+        <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+    }
+    else
+    {
+        @foreach (var contributor in Contributors.OrderBy(x => x.Name))
+        {
+            <MudItem xs="12" md="6">
+                <GitHubContributorItem Name="@contributor.Name"
+                                       AvatarLink="@contributor.AvatarUrl"
+                                       GithubLink="@contributor.Url"/>
+            </MudItem>
+        }
+    }
+</MudGrid>
+
+@code {
+    [Parameter]
+    public List<AtcWeb.Domain.GitHub.Models.GitHubContributor>? Contributors { get; set; }
+}

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AtcWeb.Domain.Data;
 using AtcWeb.Domain.GitHub.Clients;
 using AtcWeb.Domain.GitHub.Models;
 
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace AtcWeb.Domain.GitHub
 {
     public class GitHubRepositoryService
@@ -28,6 +30,23 @@ namespace AtcWeb.Domain.GitHub
                 : new List<GitHubContributor>();
         }
 
+        public async Task<List<GitHubContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName, CancellationToken cancellationToken = default)
+        {
+            var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
+            var gitHubContributors = await GetContributorsAsync(cancellationToken);
+            var data = new List<GitHubContributor>();
+            foreach (var memberName in memberNames.OrderBy(x => x))
+            {
+                var gitHubContributor = gitHubContributors.Find(x => x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+                if (gitHubContributor is not null)
+                {
+                    data.Add(gitHubContributor);
+                }
+            }
+
+            return data;
+        }
+
         public async Task<List<Repository>> GetRepositoriesAsync(bool populateMetaData = false, CancellationToken cancellationToken = default)
         {
             var bag = new ConcurrentBag<Repository>();
@@ -42,6 +61,8 @@ namespace AtcWeb.Domain.GitHub
                 .Select(async gitHubRepository =>
             {
                 var repository = new Repository(gitHubRepository);
+
+                repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name, cancellationToken);
 
                 if (populateMetaData)
                 {
@@ -66,6 +87,8 @@ namespace AtcWeb.Domain.GitHub
             }
 
             var repository = new Repository(gitHubRepository);
+
+            repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name, cancellationToken);
 
             if (populateMetaData)
             {

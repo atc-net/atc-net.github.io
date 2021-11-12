@@ -43,6 +43,8 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Description { get; private set; }
 
+        public List<GitHubContributor> ResponsibleMembers { get; set; }
+
         public List<GitHubPath> FolderAndFilePaths { get; set; }
 
         public RootMetadata Root { get; set; }

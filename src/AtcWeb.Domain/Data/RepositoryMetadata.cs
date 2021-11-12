@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AtcWeb.Data
+namespace AtcWeb.Domain.Data
 {
     public static class RepositoryMetadata
     {
