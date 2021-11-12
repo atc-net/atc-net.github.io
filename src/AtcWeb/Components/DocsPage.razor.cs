@@ -11,7 +11,7 @@ namespace AtcWeb.Components
     public partial class DocsPage : ComponentBase
     {
         private readonly Queue<DocsSectionLink> bufferedSections = new ();
-        private MudPageContentNavigation contentNavigation;
+        private MudPageContentNavigation? contentNavigation;
 
         [Inject]
         private NavigationManager NavigationManager { get; set; }
@@ -20,13 +20,13 @@ namespace AtcWeb.Components
         public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         private bool contentDrawerOpen = true;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (firstRender && contentNavigation is not null)
             {
                 await contentNavigation.ScrollToSection(new Uri(NavigationManager.Uri));
             }
@@ -47,7 +47,7 @@ namespace AtcWeb.Components
 
                 if (contentNavigation.Sections.FirstOrDefault(x => x.Id == section.Id) == default)
                 {
-                    contentNavigation.AddSection(item.Title, item.Id, false);
+                    contentNavigation.AddSection(item.Title, item.Id, forceUpdate: false);
                 }
             }
 

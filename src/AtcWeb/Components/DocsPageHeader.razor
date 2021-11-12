@@ -1,15 +1,15 @@
-﻿<div class="docs-page-header mb-12">
+<div class="docs-page-header mb-12">
     <MudText Typo="@Typo.h3">@Title</MudText>
     <MudText>@GetSubTitle() @Description</MudText>
 </div>
 
 @code
 {
-    [Parameter] public string Title { get; set; }
+    [Parameter] public string? Title { get; set; }
 
-    [Parameter] public string SubTitle { get; set; }
+    [Parameter] public string? SubTitle { get; set; }
 
-    [Parameter] public RenderFragment Description { get; set; }
+    [Parameter] public RenderFragment? Description { get; set; }
 
     string GetTitle() => $"..:: {Title} ::..";
 

@@ -511,6 +511,4 @@ dotnet_diagnostic.MA0048.severity = none            # For Now - File name must m
 
 dotnet_diagnostic.IDE1006.severity = none           # For Now
 
-dotnet_diagnostic.CS8618.severity = none            # For Now - (hard in Blazor Project)
-
 dotnet_diagnostic.S1075.severity = none             # For Now - Hardcoded Uri

@@ -1,16 +1,16 @@
-﻿@using MudBlazor.Utilities
+@using MudBlazor.Utilities
 <div @ref="@SectionReference" id="@GetSectionId()" class="@Classname">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
         <MudText Typo="Typo.h4">@Title</MudText>
     }
 
-    @if (SubTitle != null)
+    @if (SubTitle is not null)
     {
         <MudText Typo="Typo.h6">@SubTitle</MudText>
     }
 
-    @if (Description != null)
+    @if (Description is not null)
     {
         <MudText>@Description</MudText>
     }
@@ -18,22 +18,22 @@
 
 @code {
 
-    [CascadingParameter] private DocsPage DocsPage { get; set; }
+    [CascadingParameter] private DocsPage? DocsPage { get; set; }
 
     protected string Classname =>
         new CssBuilder("docs-section-header")
             .AddClass(Class)
             .Build();
 
-    [Parameter] public string Class { get; set; }
+    [Parameter] public string? Class { get; set; }
 
-    [Parameter] public string Title { get; set; }
+    [Parameter] public string? Title { get; set; }
 
-    [Parameter] public RenderFragment SubTitle { get; set; }
+    [Parameter] public RenderFragment? SubTitle { get; set; }
 
-    [Parameter] public RenderFragment Description { get; set; }
+    [Parameter] public RenderFragment? Description { get; set; }
 
-    public DocsSectionLink Section { get; set; }
+    public DocsSectionLink? Section { get; set; }
 
     public ElementReference SectionReference;
 
@@ -54,7 +54,10 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        if (firstRender && DocsPage != null && !string.IsNullOrWhiteSpace(Title))
+        if (firstRender &&
+            DocsPage is not null &&
+            !string.IsNullOrWhiteSpace(Title) &&
+            Section is not null)
         {
             DocsPage.AddSection(Section);
         }
@@ -62,7 +65,7 @@
 
     private string GetSectionId()
     {
-        return Section == null
+        return Section is null
             ? Guid.NewGuid().ToString()
             : Section.Id;
     }

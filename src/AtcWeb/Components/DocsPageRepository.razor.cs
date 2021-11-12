@@ -9,6 +9,6 @@ namespace AtcWeb.Components
         public Repository? Repository { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
     }
 }

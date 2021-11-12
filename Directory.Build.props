@@ -18,7 +18,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1573,1591,1712,CA1014,CS8618</NoWarn>
+    <NoWarn>1573,1591,1712,CA1014</NoWarn>
 
     <!-- Used by code coverage -->
     <DebugType>full</DebugType>
@@ -38,8 +38,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.0.0-6.final" />
-    <PackageReference Include="Microsoft.Net.Compilers" Version="4.0.0-6.final">
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -53,7 +53,7 @@
     <!-- <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="All" /><PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="All" /> -->
     <PackageReference Include="SecurityCodeScan.VS2019" Version="5.2.1" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.30.0.37606" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.31.0.39249" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
