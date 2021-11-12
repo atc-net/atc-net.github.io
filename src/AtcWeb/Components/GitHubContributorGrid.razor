@@ -9,6 +9,7 @@
         {
             <MudItem xs="12" md="6">
                 <GitHubContributorItem Name="@contributor.Name"
+                                       Title="@ItemTitle"
                                        AvatarLink="@contributor.AvatarUrl"
                                        GithubLink="@contributor.Url"/>
             </MudItem>
@@ -19,4 +20,7 @@
 @code {
     [Parameter]
     public List<Domain.GitHub.Models.GitHubContributor>? Contributors { get; set; }
+
+    [Parameter]
+    public string ItemTitle { get; set; } = "Contributor";
 }

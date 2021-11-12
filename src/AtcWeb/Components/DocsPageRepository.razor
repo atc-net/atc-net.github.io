@@ -45,7 +45,8 @@
             <DocsPageSection>
                 <SectionHeader Title="Responsible members" />
                 <SectionContent FullWidth="true">
-                    <GitHubContributorGrid Contributors="Repository.ResponsibleMembers" />
+                    <GitHubContributorGrid Contributors="Repository.ResponsibleMembers"
+                                           ItemTitle="Responsible member" />
                     @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(Repository.Name))
                     {
                         <MudChip Color="Color.Error">

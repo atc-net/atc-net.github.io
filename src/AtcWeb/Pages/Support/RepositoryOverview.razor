@@ -73,7 +73,8 @@
                         </MudSimpleTable>
 
                         <MudText Class="mt-4" Typo="Typo.h5">Responsible members</MudText>
-                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers" />
+                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
+                                               ItemTitle="Responsible member" />
                         @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(repository.Name))
                         {
                             <MudChip Color="Color.Error">

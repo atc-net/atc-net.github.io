@@ -5,10 +5,13 @@
         </CardHeaderAvatar>
         <CardHeaderContent>
             <MudText Typo="Typo.body1">@Name</MudText>
-            <MudText Typo="Typo.body2">@Contributor</MudText>
+            <MudText Typo="Typo.body2">@Title</MudText>
         </CardHeaderContent>
         <CardHeaderActions>
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Link="@GithubLink" Color="Color.Dark" Target="_blank"/>
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
+                           Link="@GithubLink"
+                           Color="Color.Dark"
+                           Target="_blank"/>
         </CardHeaderActions>
     </MudCardHeader>
     @if (ChildContent != null)
@@ -31,7 +34,7 @@
     public string Name { get; set; } = string.Empty;
 
     [Parameter]
-    public string Contributor { get; set; } = "Contributor";
+    public string Title { get; set; } = "Contributor";
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
