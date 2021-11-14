@@ -29,7 +29,7 @@ namespace AtcWeb.Domain.GitHub
         public async Task<(bool isSuccessful, GitHubApiRateLimits?)> GetAtcApiRateLimits()
         {
             var gitHubApiStatusService = new GitHubApiStatusService(
-                new AuthenticationHeaderValue("bearer", HttpClientConstants.AtcAccessToken),
+                new AuthenticationHeaderValue("bearer", HttpClientConstants.AtcAccessToken.Base64Decode()),
                 new System.Net.Http.Headers.ProductHeaderValue(HttpClientConstants.AtcOrganizationName));
 
             try

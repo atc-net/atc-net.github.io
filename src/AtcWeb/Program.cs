@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AtcWeb.Domain;
 using AtcWeb.Domain.GitHub;
@@ -25,7 +26,7 @@ namespace AtcWeb
 
             builder.Services.AddScoped<IGitHubClient>(_ =>
             {
-                var tokenAuth = new Credentials(HttpClientConstants.AtcAccessToken);
+                var tokenAuth = new Credentials(HttpClientConstants.AtcAccessToken.Base64Decode());
                 var gitHubClient = new GitHubClient(new ProductHeaderValue(HttpClientConstants.AtcOrganizationName))
                 {
                     Credentials = tokenAuth,
