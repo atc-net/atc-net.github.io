@@ -1,4 +1,3 @@
-using System;
 using Octokit;
 
 namespace AtcWeb.Domain.Tests.GitHub
