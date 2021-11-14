@@ -20,7 +20,7 @@ namespace AtcWeb.Domain.Data
             Tuple.Create("atc-cosmos-eventstore", "LarsSkovslund"),
             Tuple.Create("atc-cosmos-sql-api-repository", "davidkallesen"),
             Tuple.Create("atc-cosmos-sql-api-repository", "perkops"),
-            Tuple.Create("atc-data-platform", "mrmasterplan"),
+            Tuple.Create("atc-dataplatform", "mrmasterplan"),
             Tuple.Create("atc-docs", "davidkallesen"),
             Tuple.Create("atc-docs", "perkops"),
             Tuple.Create("atc-iot-digital-twin", "perkops"),
