@@ -7,7 +7,7 @@ namespace AtcWeb.Pages.Repository
     public class RepositoryComponentBase : ComponentBase
     {
         private readonly string repositoryName;
-        protected Domain.GitHub.Models.Repository? repository;
+        protected Domain.GitHub.Models.AtcRepository? repository;
 
         [Inject]
         protected GitHubRepositoryService RepositoryService { get; set; }

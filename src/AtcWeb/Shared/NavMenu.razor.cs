@@ -13,7 +13,7 @@ namespace AtcWeb.Shared
         private string? section;
         private string? componentLink;
 
-        protected List<Domain.GitHub.Models.Repository>? repositories;
+        protected List<Domain.GitHub.Models.AtcRepository>? repositories;
 
         [Inject]
         private NavigationManager NavigationManager { get; set; }

@@ -1,16 +1,11 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Atc.Test;
 using AtcWeb.Domain.GitHub;
-using AtcWeb.Domain.GitHub.Clients;
 using AtcWeb.Domain.GitHub.Models;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
-using NSubstitute;
 using Xunit;
 
 // ReSharper disable RedundantNullableFlowAttribute
@@ -20,19 +15,11 @@ namespace AtcWeb.Domain.Tests.GitHub
     {
         [Theory, AutoNSubstituteData]
         public async Task LoadRoot(
-            [NotNull][Frozen] IHttpClientFactory httpClientFactory,
-            [Frozen] IMemoryCache memoryCache,
-            [NotNull] HttpClient httpClient,
-            CancellationToken cancellationToken)
+            [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            GitHubTestHttpClients.SetupRawHttpClient(httpClient);
-
-            httpClientFactory
-                .CreateClient(HttpClientConstants.GitHubRawClient)
-                .Returns(httpClient);
-
-            var gitHubRawClient = new GitHubRawClient(httpClientFactory, memoryCache);
+            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
+            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
             var filesAndFolders = new List<GitHubPath>
             {
                 new GitHubPath
@@ -43,7 +30,7 @@ namespace AtcWeb.Domain.Tests.GitHub
             };
 
             // Act
-            var actual = await GitHubRepositoryMetadataHelper.LoadRoot(gitHubRawClient, filesAndFolders, "atc", "master", cancellationToken);
+            var actual = await GitHubRepositoryMetadataHelper.LoadRoot(gitHubApiClient, filesAndFolders, "atc", "master");
 
             // Assert
             actual

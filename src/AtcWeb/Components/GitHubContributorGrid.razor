@@ -1,3 +1,5 @@
+@using Octokit
+
 <MudGrid Justify="Justify.Center">
     @if (Contributors is null)
     {
@@ -5,10 +7,10 @@
     }
     else
     {
-        @foreach (var contributor in Contributors.OrderBy(x => x.Name))
+        @foreach (var contributor in Contributors.OrderBy(x => x.Login))
         {
             <MudItem xs="12" md="6">
-                <GitHubContributorItem Name="@contributor.Name"
+                <GitHubContributorItem Name="@contributor.Login"
                                        Title="@ItemTitle"
                                        AvatarLink="@contributor.AvatarUrl"
                                        GithubLink="@contributor.Url"/>
@@ -19,7 +21,7 @@
 
 @code {
     [Parameter]
-    public List<Domain.GitHub.Models.GitHubContributor>? Contributors { get; set; }
+    public List<RepositoryContributor>? Contributors { get; set; }
 
     [Parameter]
     public string ItemTitle { get; set; } = "Contributor";

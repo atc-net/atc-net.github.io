@@ -1,29 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Octokit;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub.Models
 {
-    public class Repository
+    public class AtcRepository
     {
-        public Repository(GitHubRepository gitHubRepository)
+        public AtcRepository(Repository repository)
         {
-            this.BaseData = gitHubRepository ?? throw new ArgumentNullException(nameof(gitHubRepository));
+            this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
             this.DefaultBranchName = "main";
-            if (gitHubRepository.Name.Equals("atc", StringComparison.Ordinal) ||
-                gitHubRepository.Name.Equals("atc-autoformatter", StringComparison.Ordinal))
+            if (repository.Name.Equals("atc", StringComparison.Ordinal) ||
+                repository.Name.Equals("atc-autoformatter", StringComparison.Ordinal))
             {
                 this.DefaultBranchName = "master";
             }
 
             this.Badges = new List<(string Group, string Key, Uri Url)>
             {
-                ("General Project Info", "Github top language", new Uri($"https://img.shields.io/github/languages/top/atc-net/{gitHubRepository.Name}")),
-                ("General Project Info", "Github stars", new Uri($"https://img.shields.io/github/stars/atc-net/{gitHubRepository.Name}")),
-                ("General Project Info", "Github forks", new Uri($"https://img.shields.io/github/forks/atc-net/{gitHubRepository.Name}")),
-                ("General Project Info", "Github size", new Uri($"https://img.shields.io/github/repo-size/atc-net/{gitHubRepository.Name}")),
-                ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{gitHubRepository.Name}.svg?logo=github")),
+                ("General Project Info", "Github top language", new Uri($"https://img.shields.io/github/languages/top/atc-net/{repository.Name}")),
+                ("General Project Info", "Github stars", new Uri($"https://img.shields.io/github/stars/atc-net/{repository.Name}")),
+                ("General Project Info", "Github forks", new Uri($"https://img.shields.io/github/forks/atc-net/{repository.Name}")),
+                ("General Project Info", "Github size", new Uri($"https://img.shields.io/github/repo-size/atc-net/{repository.Name}")),
+                ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{repository.Name}.svg?logo=github")),
             };
 
             FolderAndFilePaths = new List<GitHubPath>();
@@ -33,7 +34,7 @@ namespace AtcWeb.Domain.GitHub.Models
             Dotnet = new DotnetMetadata();
         }
 
-        public GitHubRepository BaseData { get; }
+        public Repository BaseData { get; }
 
         public string Name => BaseData.Name;
 
@@ -43,7 +44,7 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Description { get; private set; }
 
-        public List<GitHubContributor> ResponsibleMembers { get; set; }
+        public List<RepositoryContributor> ResponsibleMembers { get; set; }
 
         public List<GitHubPath> FolderAndFilePaths { get; set; }
 

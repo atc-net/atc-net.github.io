@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
-using AtcWeb.Domain.GitHub.Clients;
 using AtcWeb.Domain.GitHub.Models;
 
 // ReSharper disable InvertIf
@@ -15,15 +13,14 @@ namespace AtcWeb.Domain.GitHub
     public static class GitHubRepositoryMetadataHelper
     {
         public static async Task<RootMetadata> LoadRoot(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
-            string defaultBranchName,
-            CancellationToken cancellationToken)
+            string defaultBranchName)
         {
-            if (gitHubRawClient is null)
+            if (gitHubApiClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubRawClient));
+                throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
             if (foldersAndFiles is null)
@@ -34,26 +31,23 @@ namespace AtcWeb.Domain.GitHub
             var data = new RootMetadata();
 
             data.RawReadme = await GetFileByPathAndEnsureFullLinks(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 defaultBranchName,
-                "README.md",
-                cancellationToken);
+                "README.md");
 
             return data;
         }
 
         public static async Task<WorkflowMetadata> LoadWorkflow(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
-            string repositoryName,
-            string defaultBranchName,
-            CancellationToken cancellationToken)
+            string repositoryName)
         {
-            if (gitHubRawClient is null)
+            if (gitHubApiClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubRawClient));
+                throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
             if (foldersAndFiles is null)
@@ -64,42 +58,34 @@ namespace AtcWeb.Domain.GitHub
             var data = new WorkflowMetadata();
 
             data.RawPreIntegration = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                ".github/workflows/pre-integration.yml",
-                cancellationToken);
+                ".github/workflows/pre-integration.yml");
 
             data.RawPostIntegration = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                ".github/workflows/post-integration.yml",
-                cancellationToken);
+                ".github/workflows/post-integration.yml");
 
             data.RawRelease = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                ".github/workflows/release.yml",
-                cancellationToken);
+                ".github/workflows/release.yml");
 
             return data;
         }
 
         public static async Task<CodingRulesMetadata> LoadCodingRules(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
-            string repositoryName,
-            string defaultBranchName,
-            CancellationToken cancellationToken)
+            string repositoryName)
         {
-            if (gitHubRawClient is null)
+            if (gitHubApiClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubRawClient));
+                throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
             if (foldersAndFiles is null)
@@ -110,42 +96,34 @@ namespace AtcWeb.Domain.GitHub
             var data = new CodingRulesMetadata();
 
             data.RawEditorConfigRoot = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                ".editorconfig",
-                cancellationToken);
+                ".editorconfig");
 
             data.RawEditorConfigSrc = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "src/.editorconfig",
-                cancellationToken);
+                "src/.editorconfig");
 
             data.RawEditorConfigTest = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "test/.editorconfig",
-                cancellationToken);
+                "test/.editorconfig");
 
             return data;
         }
 
         public static async Task<DotnetMetadata> LoadDotnet(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
-            string repositoryName,
-            string defaultBranchName,
-            CancellationToken cancellationToken)
+            string repositoryName)
         {
-            if (gitHubRawClient is null)
+            if (gitHubApiClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubRawClient));
+                throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
             if (foldersAndFiles is null)
@@ -158,11 +136,9 @@ namespace AtcWeb.Domain.GitHub
             var fileSolutionFile = foldersAndFiles.Find(x => x.IsFile && "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
             if (fileSolutionFile is not null)
             {
-                var (isSuccessfulSolution, rawSolution) = await gitHubRawClient.GetRawAtcCodeFile(
+                var (isSuccessfulSolution, rawSolution) = await gitHubApiClient.GetRawAtcCodeFile(
                     repositoryName,
-                    defaultBranchName,
-                    fileSolutionFile.Path,
-                    cancellationToken);
+                    fileSolutionFile.Path);
 
                 if (isSuccessfulSolution)
                 {
@@ -171,44 +147,36 @@ namespace AtcWeb.Domain.GitHub
             }
 
             data.RawDirectoryBuildPropsRoot = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "Directory.Build.props",
-                cancellationToken);
+                "Directory.Build.props");
 
             data.RawDirectoryBuildPropsSrc = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "src/Directory.Build.props",
-                cancellationToken);
+                "src/Directory.Build.props");
 
             data.RawDirectoryBuildPropsTest = await GetFileByPath(
-                gitHubRawClient,
+                gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "test/Directory.Build.props",
-                cancellationToken);
+                "test/Directory.Build.props");
 
             return data;
         }
 
         private static async Task<string> GetFileByPath(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
-            string defaultBranchName,
-            string path,
-            CancellationToken cancellationToken)
+            string path)
         {
             var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
             if (gitHubFile is not null)
             {
-                var (isSuccessful, rawFileContent) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, gitHubFile.Path, cancellationToken);
+                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
                 if (isSuccessful)
                 {
                     return rawFileContent;
@@ -219,17 +187,16 @@ namespace AtcWeb.Domain.GitHub
         }
 
         private static async Task<string> GetFileByPathAndEnsureFullLinks(
-            GitHubRawClient gitHubRawClient,
+            GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string defaultBranchName,
-            string path,
-            CancellationToken cancellationToken)
+            string path)
         {
             var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
             if (gitHubFile is not null)
             {
-                var (isSuccessful, rawFileContent) = await gitHubRawClient.GetRawAtcCodeFile(repositoryName, defaultBranchName, gitHubFile.Path, cancellationToken);
+                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
                 if (isSuccessful)
                 {
                     rawFileContent = rawFileContent

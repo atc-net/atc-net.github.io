@@ -1,0 +1,67 @@
+@page "/support/api-rate-limits"
+
+@inherits ApiRateLimitsBase
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="GitHub API rate limits"
+                    SubTitle="This is the overview of GitHub API rate limits.">
+    </DocsPageHeader>
+    <DocsPageContent>
+        @if (rateLimits is null)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            </MudGrid>
+        }
+        else
+        {
+            <DocsPageSection>
+                <SectionHeader Title="Rate limits" />
+                <SectionContent AutoMarginContent="true" FullWidth="false">
+                    <MudSimpleTable>
+                        <thead>
+                            <tr>
+                                <th>Info</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Rate limit
+                                </td>
+                                <td>
+                                    @rateLimits.RestApi.RateLimit
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Remaining request count
+                                </td>
+                                <td>
+                                    @rateLimits.RestApi.RemainingRequestCount
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Reset time
+                                </td>
+                                <td>
+                                    @rateLimits.RestApi.RateLimitReset_DateTime
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Reset time remaining
+                                </td>
+                                <td>
+                                    @rateLimits.RestApi.RateLimitReset_TimeRemaining
+                                </td>
+                            </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </SectionContent>
+            </DocsPageSection>
+        }
+    </DocsPageContent>
+</DocsPage>

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AtcWeb.Domain.Data;
-using AtcWeb.Domain.GitHub.Clients;
 using AtcWeb.Domain.GitHub.Models;
+using GitHubApiStatus;
+using Octokit;
 
 // ReSharper disable LoopCanBeConvertedToQuery
 namespace AtcWeb.Domain.GitHub
@@ -14,30 +14,36 @@ namespace AtcWeb.Domain.GitHub
     public class GitHubRepositoryService
     {
         private readonly GitHubApiClient gitHubApiClient;
-        private readonly GitHubRawClient gitHubRawClient;
 
-        public GitHubRepositoryService(GitHubApiClient gitHubApiClient, GitHubRawClient gitHubRawClient)
+        public GitHubRepositoryService(GitHubApiClient gitHubApiClient)
         {
             this.gitHubApiClient = gitHubApiClient ?? throw new ArgumentNullException(nameof(gitHubApiClient));
-            this.gitHubRawClient = gitHubRawClient ?? throw new ArgumentNullException(nameof(gitHubRawClient));
         }
 
-        public async Task<List<GitHubContributor>> GetContributorsAsync(CancellationToken cancellationToken = default)
+        public async Task<GitHubApiRateLimits?> GetApiRateLimitsAsync()
         {
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors(cancellationToken);
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcApiRateLimits();
             return isSuccessful
                 ? gitHubContributors
-                : new List<GitHubContributor>();
+                : null;
         }
 
-        public async Task<List<GitHubContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName, CancellationToken cancellationToken = default)
+        public async Task<List<RepositoryContributor>> GetContributorsAsync()
+        {
+            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors();
+            return isSuccessful
+                ? gitHubContributors
+                : new List<RepositoryContributor>();
+        }
+
+        public async Task<List<RepositoryContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName)
         {
             var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
-            var gitHubContributors = await GetContributorsAsync(cancellationToken);
-            var data = new List<GitHubContributor>();
+            var gitHubContributors = await GetContributorsAsync();
+            var data = new List<RepositoryContributor>();
             foreach (var memberName in memberNames.OrderBy(x => x))
             {
-                var gitHubContributor = gitHubContributors.Find(x => x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+                var gitHubContributor = gitHubContributors.Find(x => x.Login.Equals(memberName, StringComparison.OrdinalIgnoreCase));
                 if (gitHubContributor is not null)
                 {
                     data.Add(gitHubContributor);
@@ -47,29 +53,27 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
-        public async Task<List<Repository>> GetRepositoriesAsync(bool populateMetaData = false, CancellationToken cancellationToken = default)
+        public async Task<List<AtcRepository>> GetRepositoriesAsync(bool populateMetaData = false)
         {
-            var bag = new ConcurrentBag<Repository>();
-            var (isSuccessfulRepositories, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories(cancellationToken);
+            var bag = new ConcurrentBag<AtcRepository>();
+            var (isSuccessfulRepositories, repositories) = await gitHubApiClient.GetAtcRepositories();
             if (!isSuccessfulRepositories)
             {
                 return bag.ToList();
             }
 
-            var tasks = gitHubRepositories
+            var tasks = repositories
                 .OrderBy(x => x.Name)
-                .Select(async gitHubRepository =>
+                .Select(async repository =>
             {
-                var repository = new Repository(gitHubRepository);
-
-                repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name, cancellationToken);
+                var atcRepository = new AtcRepository(repository);
 
                 if (populateMetaData)
                 {
-                    await PopulateMetaData(repository, gitHubRepository, cancellationToken);
+                    await PopulateMetaData(atcRepository, repository);
                 }
 
-                bag.Add(repository);
+                bag.Add(atcRepository);
             });
 
             // TODO: ATC-WhenAll
@@ -78,68 +82,60 @@ namespace AtcWeb.Domain.GitHub
             return bag.ToList();
         }
 
-        public async Task<Repository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaData = false, CancellationToken cancellationToken = default)
+        public async Task<AtcRepository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaData = false)
         {
-            var (isSuccessful, gitHubRepository) = await gitHubApiClient.GetAtcRepositoryByName(repositoryName, cancellationToken);
-            if (!isSuccessful || gitHubRepository is null)
+            var (isSuccessful, repository) = await gitHubApiClient.GetAtcRepositoryByName(repositoryName);
+            if (!isSuccessful || repository is null)
             {
                 return null;
             }
 
-            var repository = new Repository(gitHubRepository);
-
-            repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name, cancellationToken);
+            var atcRepository = new AtcRepository(repository);
 
             if (populateMetaData)
             {
-                await PopulateMetaData(repository, gitHubRepository, cancellationToken);
+                await PopulateMetaData(atcRepository, repository);
             }
 
-            return repository;
+            return atcRepository;
         }
 
-        private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName, CancellationToken cancellationToken)
+        private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName)
         {
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName(repositoryName, defaultBranchName, cancellationToken);
+            var (isSuccessful, gitHubPath) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName(repositoryName, defaultBranchName);
             return isSuccessful
-                ? gitHubPaths
+                ? gitHubPath
                 : new List<GitHubPath>();
         }
 
-        private async Task PopulateMetaData(Repository repository, GitHubRepository gitHubRepository, CancellationToken cancellationToken)
+        private async Task PopulateMetaData(AtcRepository repository, Repository gitHubRepository)
         {
+            repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
+
             repository.FolderAndFilePaths = await GetDirectoryMetadata(
                 gitHubRepository.Name,
-                repository.DefaultBranchName,
-                cancellationToken);
+                repository.DefaultBranchName);
 
             var taskRoot = GitHubRepositoryMetadataHelper.LoadRoot(
-                gitHubRawClient,
+                gitHubApiClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
-                repository.DefaultBranchName,
-                cancellationToken);
+                repository.DefaultBranchName);
 
             var taskWorkflow = GitHubRepositoryMetadataHelper.LoadWorkflow(
-                gitHubRawClient,
+                gitHubApiClient,
                 repository.FolderAndFilePaths,
-                repository.Name,
-                repository.DefaultBranchName,
-                cancellationToken);
+                repository.Name);
 
             var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
-                gitHubRawClient,
+                gitHubApiClient,
                 repository.FolderAndFilePaths,
-                repository.Name,
-                repository.DefaultBranchName,
-                cancellationToken);
+                repository.Name);
 
             var taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
-                gitHubRawClient,
+                gitHubApiClient,
                 repository.FolderAndFilePaths,
-                repository.Name,
-                repository.DefaultBranchName,
-                cancellationToken);
+                repository.Name);
 
             var tasks = new List<Task>
             {

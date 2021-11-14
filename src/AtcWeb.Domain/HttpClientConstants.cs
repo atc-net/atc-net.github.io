@@ -2,12 +2,9 @@ namespace AtcWeb.Domain
 {
     public static class HttpClientConstants
     {
-        public const string GitHubApiClient = nameof(GitHubApiClient);
+        // Bad but: https://github.com/dotnet/aspnetcore/issues/23620
+        public const string AtcAccessToken = "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";
 
-        public const string GitHubHtmlClient = nameof(GitHubHtmlClient);
-
-        public const string GitHubRawClient = nameof(GitHubRawClient);
-
-        public const int MaxResponseContentBufferSize = 10240000;
+        public const string AtcOrganizationName = "atc-net";
     }
 }

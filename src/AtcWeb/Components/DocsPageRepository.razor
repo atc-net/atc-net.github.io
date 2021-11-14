@@ -45,13 +45,16 @@
             <DocsPageSection>
                 <SectionHeader Title="Responsible members" />
                 <SectionContent FullWidth="true">
-                    <GitHubContributorGrid Contributors="Repository.ResponsibleMembers"
-                                           ItemTitle="Responsible member" />
                     @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(Repository.Name))
                     {
                         <MudChip Color="Color.Error">
                             We are missing a member or two to take responsibility for this repository.
                         </MudChip>
+                    }
+                    else
+                    {
+                        <GitHubContributorGrid Contributors="Repository.ResponsibleMembers"
+                                               ItemTitle="Responsible member" />
                     }
                 </SectionContent>
             </DocsPageSection>

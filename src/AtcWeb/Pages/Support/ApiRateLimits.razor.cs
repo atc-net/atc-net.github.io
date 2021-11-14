@@ -1,22 +1,20 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub;
-using AtcWeb.Domain.GitHub.Models;
+using GitHubApiStatus;
 using Microsoft.AspNetCore.Components;
-using Octokit;
 
-namespace AtcWeb.Pages.Introduction
+namespace AtcWeb.Pages.Support
 {
-    public class TeamAndContributorsBase : ComponentBase
+    public class ApiRateLimitsBase : ComponentBase
     {
-        protected List<RepositoryContributor>? Contributors { get; set; }
+        protected GitHubApiRateLimits? rateLimits;
 
         [Inject]
         protected GitHubRepositoryService RepositoryService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            Contributors = await RepositoryService.GetContributorsAsync();
+            rateLimits = await RepositoryService.GetApiRateLimitsAsync();
 
             await base.OnInitializedAsync();
         }
