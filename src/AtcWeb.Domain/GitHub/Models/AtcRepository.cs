@@ -12,8 +12,7 @@ namespace AtcWeb.Domain.GitHub.Models
         {
             this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
             this.DefaultBranchName = "main";
-            if (repository.Name.Equals("atc", StringComparison.Ordinal) ||
-                repository.Name.Equals("atc-autoformatter", StringComparison.Ordinal))
+            if (repository.Name.Equals("atc", StringComparison.Ordinal))
             {
                 this.DefaultBranchName = "master";
             }
