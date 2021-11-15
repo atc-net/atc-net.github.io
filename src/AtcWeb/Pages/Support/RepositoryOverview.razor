@@ -73,20 +73,13 @@
                             </tbody>
                         </MudSimpleTable>
 
-                        @if (RepositoryMetadata.HasNotRequiredResponsibleMembersByName(repository.Name))
-                        {
-                            <MudChip Color="Color.Error">
-                                We are missing a member or two to take responsibility for this repository.
-                            </MudChip>
-                        }
-                        else
-                        {
-                            <MudText Class="mt-4" Typo="Typo.h5">Responsible members</MudText>
-                            <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
-                                                   ItemTitle="Responsible member" />
-                        }
+                        <MudText Class="my-4" Typo="Typo.h5">Responsible members</MudText>
+                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
+                                               RepositoryName="@repository.Name"
+                                               ItemTitle="Responsible member"
+                                               Justify="Justify.FlexStart" />
 
-                        </SectionContent>
+                    </SectionContent>
                 </DocsPageSection>
             }
         }

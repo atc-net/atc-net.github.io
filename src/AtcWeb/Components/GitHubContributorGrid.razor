@@ -1,6 +1,7 @@
 @using Octokit
+@using AtcWeb.Domain.Data
 
-<MudGrid Justify="Justify.Center">
+<MudGrid Justify="@Justify">
     @if (Contributors is null)
     {
         <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
@@ -16,10 +17,27 @@
                                        GithubLink="@contributor.Url"/>
             </MudItem>
         }
+
+        @if (!string.IsNullOrEmpty(RepositoryName) &&
+             RepositoryMetadata.HasNotRequiredResponsibleMembersByName(RepositoryName))
+        {
+            var itemClass = $"d-flex {Justify.FlexStart.GetDescription()}";
+            <MudItem xs="12" md="12" Class="@itemClass">
+                <MudChip Color="Color.Error">
+                    We are missing a member or two to take responsibility for this repository.
+                </MudChip>
+            </MudItem>
+        }
     }
 </MudGrid>
 
 @code {
+    [Parameter]
+    public Justify Justify { get; set; } = Justify.Center;
+
+    [Parameter]
+    public string? RepositoryName { get; set; }
+
     [Parameter]
     public List<RepositoryContributor>? Contributors { get; set; }
 
