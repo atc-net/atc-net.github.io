@@ -38,6 +38,19 @@ namespace AtcWeb.Domain.Data
             Tuple.Create("atc-wpf", "davidkallesen"),
         };
 
+        public static string[] GetRepositoryNamesWithResponsibleMembers()
+        {
+            var list = new List<string>();
+            foreach (var item in ResponsibleMembers.Where(item => !list.Contains(item.Item1, StringComparer.Ordinal)))
+            {
+                list.Add(item.Item1);
+            }
+
+            return list
+                .OrderBy(x => x)
+                .ToArray();
+        }
+
         public static string[] GetResponsibleMembersByName(string name)
         {
             if (string.IsNullOrEmpty(name))

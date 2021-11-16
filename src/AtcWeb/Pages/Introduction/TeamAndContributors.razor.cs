@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub;
-using AtcWeb.Domain.GitHub.Models;
 using Microsoft.AspNetCore.Components;
 using Octokit;
 

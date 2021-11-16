@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub;
 using Microsoft.AspNetCore.Components;
 
-namespace AtcWeb.Pages.Support
+namespace AtcWeb.Pages.Introduction
 {
-    public class RepositoryOverviewBase : ComponentBase
+    public class GeneralRulesAndGuidelinesBase : ComponentBase
     {
         protected List<Domain.GitHub.Models.AtcRepository>? Repositories;
 

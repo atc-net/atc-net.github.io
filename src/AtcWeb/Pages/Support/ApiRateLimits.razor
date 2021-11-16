@@ -7,7 +7,7 @@
                     SubTitle="This is the overview of GitHub API rate limits.">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (rateLimits is null)
+        @if (RateLimits is null)
         {
             <MudGrid Justify="Justify.Center">
                 <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
@@ -31,7 +31,7 @@
                                     Rate limit
                                 </td>
                                 <td>
-                                    @rateLimits.RestApi.RateLimit
+                                    @RateLimits.RestApi.RateLimit
                                 </td>
                             </tr>
                             <tr>
@@ -39,7 +39,7 @@
                                     Remaining request count
                                 </td>
                                 <td>
-                                    @rateLimits.RestApi.RemainingRequestCount
+                                    @RateLimits.RestApi.RemainingRequestCount
                                 </td>
                             </tr>
                             <tr>
@@ -47,7 +47,7 @@
                                     Reset time
                                 </td>
                                 <td>
-                                    @rateLimits.RestApi.RateLimitReset_DateTime
+                                    @RateLimits.RestApi.RateLimitReset_DateTime
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +55,7 @@
                                     Reset time remaining
                                 </td>
                                 <td>
-                                    @rateLimits.RestApi.RateLimitReset_TimeRemaining
+                                    @RateLimits.RestApi.RateLimitReset_TimeRemaining
                                 </td>
                             </tr>
                         </tbody>

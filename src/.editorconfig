@@ -45,3 +45,4 @@
 # Custom - Code Analyzers Rules
 ##########################################
 dotnet_diagnostic.CS8618.severity = none            # For Now - Non-nullable property
+dotnet_diagnostic.SA1306.severity = none            # Blazor protected members in [File].razor.cs to [File].razor

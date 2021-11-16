@@ -7,14 +7,14 @@ namespace AtcWeb.Pages.Introduction
 {
     public class RepositoryOverviewBase : ComponentBase
     {
-        protected List<Domain.GitHub.Models.AtcRepository>? repositories;
+        protected List<Domain.GitHub.Models.AtcRepository>? Repositories;
 
         [Inject]
         protected GitHubRepositoryService RepositoryService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            repositories = await RepositoryService.GetRepositoriesAsync(populateMetaData: true);
+            Repositories = await RepositoryService.GetRepositoriesAsync(populateMetaData: true);
 
             await base.OnInitializedAsync();
         }

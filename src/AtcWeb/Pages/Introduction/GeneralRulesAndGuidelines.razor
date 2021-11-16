@@ -1,0 +1,68 @@
+@page "/introduction/general-rules-and-guidelines"
+
+@inherits GeneralRulesAndGuidelinesBase
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="General Rules and Guidelines for ATC-Net organisation"
+                    SubTitle="- minutes of the meeting 22-01-2021 extended with some already existing ATC-team work">
+    </DocsPageHeader>
+    <DocsPageContent>
+        <DocsPageSection>
+            <SectionHeader Title="Introduction" />
+            <SectionContent>
+                <p>
+                    The ATC-Net organization has a list of repositories. All these repositories are split up and managed by people from the core team, referred to as ATC-team.
+                </p>
+
+                <ul style="list-style-type:square">
+                    <li>All repositories are free for use and possible to contribute to - ATC-Net use <b>MIT license</b>.</li>
+                    <li>Each repository is managed by one or more people from the ATC-team, referred to as Repo-Responsible (GitHub Role is Admin).</li>
+                    <li>Everyone can contribute to a repository by making a pull-request, referred to as PR.</li>
+                </ul>
+
+                <p>
+                    The process for creating a new repository, must go through the ATC-team. In this process there are important steps that have to be defined, like repository naming,
+                    purpose and who should be Repo-Admins. The repository setup should follow a ATC repository template with some settings.
+                    This process and repository template is under 'construction', but for now som parts can be found under snippets for atc-github-setup.
+                </p>
+            </SectionContent>
+        </DocsPageSection>
+        <DocsPageSection>
+            <SectionHeader Title="What does it mean to be a Repo-Responsible" />
+            <SectionContent>
+                <p>
+                    The meaning of a Repo-Responsible, is just that the person(s) takes responsibility for driving the repository and ensuring the common ATC-Rules,
+                    settings and git-workflows are in a acceptable form / in sync with the ATC-team knowledge and attitudes.
+                </p>
+
+                <ul style="list-style-type:square">
+                    <li>Ensure a process is enabled, like <b>PR</b>.</li>
+                    <li>Ensure <b>beta</b> Nuget-packages is stored in GitHub <a href="https://github.com/orgs/atc-net/packages">Packages-Repository</a> for dotnet projects.</li>
+                    <li>Ensure <b>release</b> Nuget-packages is stored in Nuget.org <a href="https://www.nuget.org/packages?q=atc-net">Packages-Repository</a> for dotnet projects.</li>
+                </ul>
+            </SectionContent>
+        </DocsPageSection>
+        <DocsPageSection>
+            <SectionHeader Title="Repo-Responsible" />
+            <SectionContent>
+                @if (Repositories is null)
+                {
+                    <MudGrid Justify="Justify.Center">
+                        <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                    </MudGrid>
+                }
+                else
+                {
+                    foreach (var repository in Repositories.OrderBy(x => x.Name))
+                    {
+                        <MudText Class="my-4" Typo="Typo.h5">@repository.BaseData.Name</MudText>
+                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
+                                               RepositoryName="@repository.Name"
+                                               ItemTitle="Responsible member"
+                                               Justify="Justify.FlexStart" />
+                    }
+                }
+            </SectionContent>
+        </DocsPageSection>
+    </DocsPageContent>
+</DocsPage>

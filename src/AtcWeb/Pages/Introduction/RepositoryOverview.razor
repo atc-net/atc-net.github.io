@@ -7,7 +7,7 @@
                     SubTitle="This is the overview of all atc repositories.">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (repositories is null)
+        @if (Repositories is null)
         {
             <MudGrid Justify="Justify.Center">
                 <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
@@ -15,7 +15,7 @@
         }
         else
         {
-            foreach (var repository in repositories.OrderBy(x => x.Name))
+            foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
                 <DocsPageSection>
                     <SectionHeader Title="@repository.BaseData.Name">

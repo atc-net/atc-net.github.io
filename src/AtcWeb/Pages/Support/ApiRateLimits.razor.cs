@@ -7,14 +7,14 @@ namespace AtcWeb.Pages.Support
 {
     public class ApiRateLimitsBase : ComponentBase
     {
-        protected GitHubApiRateLimits? rateLimits;
+        protected GitHubApiRateLimits? RateLimits;
 
         [Inject]
         protected GitHubRepositoryService RepositoryService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            rateLimits = await RepositoryService.GetApiRateLimitsAsync();
+            RateLimits = await RepositoryService.GetApiRateLimitsAsync();
 
             await base.OnInitializedAsync();
         }
