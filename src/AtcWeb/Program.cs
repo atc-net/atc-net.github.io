@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AtcWeb.Domain;
 using AtcWeb.Domain.GitHub;
+using AtcWeb.State;
 using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
@@ -43,6 +44,8 @@ namespace AtcWeb
                 sanitizer.AllowedAttributes.Add("class");
                 return sanitizer;
             });
+
+            builder.Services.AddSingleton<StateContainer>();
 
             builder.Services.AddMemoryCache();
 
