@@ -200,8 +200,18 @@ namespace AtcWeb.Domain.GitHub
                 if (isSuccessful)
                 {
                     rawFileContent = rawFileContent
-                        .Replace("](src/", $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/src/", StringComparison.Ordinal)
-                        .Replace("](docs/", $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/docs/", StringComparison.Ordinal);
+                        .Replace(
+                            "](src/",
+                            $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/src/",
+                            StringComparison.Ordinal)
+                        .Replace(
+                            "](docs/",
+                            $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/docs/",
+                            StringComparison.Ordinal)
+                        .Replace(
+                            $"https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/",
+                            $"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/",
+                            StringComparison.Ordinal);
 
                     return rawFileContent;
                 }

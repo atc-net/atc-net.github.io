@@ -37,11 +37,13 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Name => BaseData.Name;
 
+        public string Description => BaseData.Description;
+
+        public string Url => $"https://github.com/atc-net/{Name}";
+
         public string DefaultBranchName { get; }
 
         public List<(string Group, string Key, Uri Url)> Badges { get; }
-
-        public string Description { get; private set; }
 
         public List<RepositoryContributor> ResponsibleMembers { get; set; }
 
@@ -85,7 +87,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Build Status",
                     "Pre-Integration",
-                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Pre-Integration/badge.svg")));
+                    new Uri($"{Url}/workflows/Pre-Integration/badge.svg")));
             }
 
             if (HasWorkflowPostIntegration)
@@ -93,7 +95,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Build Status",
                     "Post-Integration",
-                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Post-Integration/badge.svg")));
+                    new Uri($"{Url}/workflows/Post-Integration/badge.svg")));
             }
 
             if (HasWorkflowRelease)
@@ -101,7 +103,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Build Status",
                     "Release",
-                    new Uri($"https://github.com/atc-net/{BaseData.Name}/workflows/Release/badge.svg")));
+                    new Uri($"{Url}/workflows/Release/badge.svg")));
             }
 
             if (HasWorkflowPostIntegration && HasDotnetSolution)

@@ -1,5 +1,43 @@
-.markdown a {
-  color: var(--mud-palette-primary);
+.markdown {
+  & a {
+    color: var(--mud-palette-primary);
+  }
+
+  & p {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+
+  & ul {
+    padding-left: 2em;
+  }
+
+  & ul li {
+    list-style-type: disc;
+  }
+
+  & pre {
+    height: 100%;
+    margin: 8px 0px 8px 0px;
+    padding: 16px;
+    border-radius: 6px;
+    color: #ededed;
+    background-color: var(--mud-palette-dark);
+    direction: ltr;
+    overflow: auto;
+    font-size: 85%;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  & p code {
+    margin: 0;
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    color: #ededed;
+    background-color: var(--mud-palette-dark);
+    font-size: 85%;
+  }
 }
 
 .atc-codeblock {

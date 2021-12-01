@@ -5,8 +5,7 @@
                  Icon="@Icons.Material.Filled.School"
                  Expanded="@(section == "introduction")"
                  ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/introduction/what-is-atc">What is ATC</MudNavLink>
-        <MudNavLink Href="/introduction/how-it-started">How it started</MudNavLink>
+        <MudNavLink Href="/introduction/about-atc">About ATC</MudNavLink>
         <MudNavLink Href="/introduction/team-and-contributors">Team & Contributors</MudNavLink>
         <MudNavLink Href="/introduction/general-rules-and-guidelines">General rules and guidelines</MudNavLink>
         <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
@@ -14,27 +13,22 @@
 
     @if (repositories is not null)
     {
-        foreach (var repository in repositories.OrderBy(x => x.BaseData.Name))
+        foreach (var repository in repositories.OrderBy(x => x.Name))
         {
-            var href = $"/repository/{@repository.BaseData.Name}";
-            var icon = Icons.Filled.DeviceUnknown;
+            var href = $"/repository/{repository.Name}";
 
-            switch (@repository.BaseData.Language)
+            var icon = repository.BaseData.Language switch
             {
-                case "C#":
-                    icon = Icons.Filled.Code;
-                    break;
+                "C#" => Icons.Filled.Code,
+                "PowerShell" => Icons.Filled.Description,
+                "Python" => Icons.Filled.RestoreFromTrash,
+                _ => Icons.Filled.DeviceUnknown
+                };
 
-                case "PowerShell":
-                    icon = Icons.Filled.Description;
-                    break;
-
-                case "Python":
-                    icon = Icons.Filled.RestoreFromTrash;
-                    break;
-            }
-
-            <MudNavLink Href="@href" Icon="@icon">@repository.BaseData.Name</MudNavLink>
+            <MudNavLink Href="@href"
+                        Icon="@icon">
+                @repository.Name
+            </MudNavLink>
         }
     }
 

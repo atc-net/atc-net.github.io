@@ -1,3 +1,4 @@
+using System;
 using Ganss.XSS;
 using Markdig;
 using Microsoft.AspNetCore.Components;
@@ -37,7 +38,12 @@ namespace AtcWeb.Components
 
             var html = Markdown.ToHtml(markdownContent, markdownPipeline);
 
-            var sanitizedHtml = HtmlSanitizer.Sanitize(html);
+            var sanitizedHtml = HtmlSanitizer
+                    .Sanitize(html)
+                    .Replace(
+                        "<img src=\"https://raw.githubusercontent.com/",
+                        "<img style='height: 100%; width: 100%; object-fit: contain' src=\"https://raw.githubusercontent.com/",
+                        StringComparison.Ordinal);
 
             return new MarkupString(sanitizedHtml);
         }

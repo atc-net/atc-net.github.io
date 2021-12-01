@@ -22,7 +22,20 @@
 }
 
 .docs-page-section {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
+
+  & p {
+    margin-bottom: 16px;
+  }
+
+  & p:last-child {
+    margin-bottom: 0px;
+  }
+
+  & ul li {
+    margin-left: 16px;
+    list-style-type: disc;
+  }
 }
 
 .docs-code {
