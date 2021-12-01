@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.347" />
+    <PackageReference Include="Atc" Version="1.1.349" />
     <PackageReference Include="GitHubApiStatus.Extensions" Version="2.0.2" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />

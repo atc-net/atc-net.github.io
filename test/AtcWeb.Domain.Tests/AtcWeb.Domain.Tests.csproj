@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\src\AtcWeb\AtcWeb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="NSubstitute.Analyzers.CSharp" Version="1.0.15" />
+  </ItemGroup>
+
 </Project>
