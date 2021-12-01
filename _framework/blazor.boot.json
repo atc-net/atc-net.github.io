@@ -9,9 +9,9 @@
     "assembly": {
       "AngleSharp.Css.dll": "sha256-ZzhKje\/bUW5ZGz19I1fvrloGML8+NzslmuOM33XO\/fg=",
       "AngleSharp.dll": "sha256-fJcyDblaO8\/mJ5RkUdiseQvBvxjmBHPshIgB\/TLinT0=",
-      "Atc.dll": "sha256-EN0LdLfCIf1NB7Q4eDFKGiTIWEX0jv\/yFd7KQ8+WiGE=",
-      "AtcWeb.dll": "sha256-idt2zI5\/1YBxcJ1yWwcUX81oY01udyz8ebQmztJOS7I=",
-      "AtcWeb.Domain.dll": "sha256-jed8i0TVafLGfXFDjY5JDhNAtWPFBHqBMjkyOp5PwBo=",
+      "Atc.dll": "sha256-VvUW1f0CcMGL9OfvtBare6KlijxsfGBQ2Ghkmwwlc6M=",
+      "AtcWeb.dll": "sha256-ecjtZUfSMCvrn9wH5Asny7v6ZzeoJ6cP41\/Nn+NhsGQ=",
+      "AtcWeb.Domain.dll": "sha256-1yyNHm1cKzVS8L14zJpVKN6ptwARnQjuX6C3dVZJbj8=",
       "GitHubApiStatus.dll": "sha256-LUQjawD4dYlBzdRj3hDAVGifx\/SX5ShMjc7EI7lKeyE=",
       "GitHubApiStatus.Extensions.dll": "sha256-6TDrM4JneRzTZm7Nc0xh64Wkk92d6F3YJd7Ys6l5X2w=",
       "HtmlAgilityPack.dll": "sha256-Zo7h\/GJHb8xdAgZocCuDiCqsXxIZamSCxOW\/YM8jHk0=",
@@ -191,10 +191,10 @@
         "cs\/Microsoft.CodeAnalysis.VisualBasic.resources.dll": "sha256-0Bp1Cdg99+ENta7TENQls3cMGy5h0RKFZrukS2MO1Xo="
       },
       "da-DK": {
-        "da-DK\/Atc.resources.dll": "sha256-FZeQ\/p+I9W9+3Kz+gjDgB0R8MBQXeaV2yFBoDopB6uo="
+        "da-DK\/Atc.resources.dll": "sha256-yH\/xYvMQsrsgoSEBNY0kF561DxjOAWMxZWqnUK9IrRU="
       },
       "de-DE": {
-        "de-DE\/Atc.resources.dll": "sha256-Mu57hl6T0pYCjsrDKAuUdmuTMUOaKzHnjmoAeECyJ0I="
+        "de-DE\/Atc.resources.dll": "sha256-oWWVLqxTqgq\/\/8bimH6eQuR2oJzI9jRVu1VXUf4KkEc="
       },
       "de": {
         "de\/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-B941ClASgH8x02ZT9nlryhQBOCEA6HkgzOt48Gt5f9U=",
