@@ -7,14 +7,15 @@
                     SubTitle="- minutes of the meeting 22-01-2021 extended with some already existing ATC-team work">
     </DocsPageHeader>
     <DocsPageContent>
+
         <DocsPageSection>
-            <SectionHeader Title="Introduction" />
+            <SectionHeader Title="Introduction"/>
             <SectionContent>
                 <p>
                     The ATC-Net organization has a list of repositories. All these repositories are split up and managed by people from the core team, referred to as ATC-team.
                 </p>
 
-                <ul style="list-style-type:square">
+                <ul style="list-style-type: square">
                     <li>All repositories are free for use and possible to contribute to - ATC-Net use <b>MIT license</b>.</li>
                     <li>Each repository is managed by one or more people from the ATC-team, referred to as Repo-Responsible (GitHub Role is Admin).</li>
                     <li>Everyone can contribute to a repository by making a pull-request, referred to as PR.</li>
@@ -27,42 +28,50 @@
                 </p>
             </SectionContent>
         </DocsPageSection>
+
         <DocsPageSection>
-            <SectionHeader Title="What does it mean to be a Repo-Responsible" />
+            <SectionHeader Title="What does it mean to be a Repo-Responsible"/>
             <SectionContent>
                 <p>
                     The meaning of a Repo-Responsible, is just that the person(s) takes responsibility for driving the repository and ensuring the common ATC-Rules,
                     settings and git-workflows are in a acceptable form / in sync with the ATC-team knowledge and attitudes.
                 </p>
 
-                <ul style="list-style-type:square">
+                <ul style="list-style-type: square">
                     <li>Ensure a process is enabled, like <b>PR</b>.</li>
                     <li>Ensure <b>beta</b> Nuget-packages is stored in GitHub <a href="https://github.com/orgs/atc-net/packages">Packages-Repository</a> for dotnet projects.</li>
                     <li>Ensure <b>release</b> Nuget-packages is stored in Nuget.org <a href="https://www.nuget.org/packages?q=atc-net">Packages-Repository</a> for dotnet projects.</li>
                 </ul>
             </SectionContent>
         </DocsPageSection>
+
         <DocsPageSection>
-            <SectionHeader Title="Repo-Responsible" />
+            <SectionHeader Title="Repo-Responsible"/>
             <SectionContent>
                 @if (Repositories is null)
                 {
                     <MudGrid Justify="Justify.Center">
-                        <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                        <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true"/>
                     </MudGrid>
                 }
                 else
                 {
                     foreach (var repository in Repositories.OrderBy(x => x.Name))
                     {
-                        <MudText Class="my-4" Typo="Typo.h5">@repository.BaseData.Name</MudText>
+                        <MudLink Class="my-4"
+                                 Typo="Typo.h5"
+                                 Href="@repository.Url"
+                                 Target="_blank">
+                            @repository.Name
+                        </MudLink>
                         <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
                                                RepositoryName="@repository.Name"
                                                ItemTitle="Responsible member"
-                                               Justify="Justify.FlexStart" />
+                                               Justify="Justify.FlexStart"/>
                     }
                 }
             </SectionContent>
         </DocsPageSection>
+
     </DocsPageContent>
 </DocsPage>

@@ -18,9 +18,8 @@
             foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
                 <DocsPageSection>
-                    <SectionHeader Title="@repository.BaseData.Name">
-                        <SubTitle>@repository.BaseData.Description</SubTitle>
-                        <Description>@repository.Description</Description>
+                    <SectionHeader Title="@repository.Name">
+                        <SubTitle>@repository.Description</SubTitle>
                     </SectionHeader>
                     <SectionContent AutoMarginContent="false" FullWidth="true">
                         <MudCard>
