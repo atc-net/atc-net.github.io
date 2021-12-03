@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace AtcWeb.Domain.GitHub
 {
     public static class GitHubRepositoryMetadataDotnetHelper
     {
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         public static async Task<List<DotnetProject>> GetProjects(
             GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,

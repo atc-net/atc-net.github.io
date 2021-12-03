@@ -46,7 +46,6 @@ namespace AtcWeb.Domain.GitHub
             string defaultBranchName,
             string path)
         {
-
             if (gitHubApiClient is null)
             {
                 throw new ArgumentNullException(nameof(gitHubApiClient));
