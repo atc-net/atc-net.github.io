@@ -1,5 +1,6 @@
 @using AtcWeb.Domain.GitHub.Models
 @using AtcWeb.Domain.Data
+@using AtcWeb.Styles
 
 @inherits DocsPageRepositoryBase
 
@@ -14,8 +15,20 @@
     }
     else
     {
-        <DocsPageHeader Title="@Repository.Name"
-                    SubTitle="@Repository.Description"></DocsPageHeader>
+        var iconSrc = ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language);
+
+        <DocsPageHeader Title="@Repository.Name">
+            <Description>
+                <MudElement HtmlTag="div"
+                            Class="d-flex items-center">
+                    <img src="@iconSrc" width="22" height="22" alt="$repository.BaseData.Language" />
+                    <MudText Class="ml-2"
+                             Inline="true">
+                        @Repository.Description
+                    </MudText>
+                </MudElement>
+            </Description>
+        </DocsPageHeader>
         <DocsPageContent>
             <DocsPageSection>
                 <SectionHeader Title="Welcome" />

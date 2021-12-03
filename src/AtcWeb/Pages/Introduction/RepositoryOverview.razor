@@ -1,5 +1,7 @@
 @page "/introduction/repository-overview"
 
+@using AtcWeb.Styles
+
 @inherits RepositoryOverviewBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
@@ -17,9 +19,20 @@
         {
             foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
+                var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
+
                 <DocsPageSection>
                     <SectionHeader Title="@repository.Name">
-                        <SubTitle>@repository.Description</SubTitle>
+                        <SubTitle>
+                            <MudElement HtmlTag="div"
+                                        Class="d-flex items-center">
+                                <img src="@iconSrc" width="22" height="22" alt="$repository.BaseData.Language" />
+                                <MudText Class="ml-2"
+                                         Inline="true">
+                                    @repository.Description
+                                </MudText>
+                            </MudElement>
+                        </SubTitle>
                     </SectionHeader>
                     <SectionContent AutoMarginContent="false" FullWidth="true">
                         <MudCard>

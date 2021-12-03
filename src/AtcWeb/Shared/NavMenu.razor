@@ -1,3 +1,4 @@
+@using AtcWeb.Styles
 <MudNavMenu Class="atc-navmenu">
     <div class="docs-nav-fader"></div>
 
@@ -16,19 +17,18 @@
         foreach (var repository in repositories.OrderBy(x => x.Name))
         {
             var href = $"/repository/{repository.Name}";
+            var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
 
-            var icon = repository.BaseData.Language switch
-            {
-                "C#" => Icons.Filled.Code,
-                "PowerShell" => Icons.Filled.Description,
-                "Python" => Icons.Filled.RestoreFromTrash,
-                _ => Icons.Filled.DeviceUnknown
-                };
-
-            <MudNavLink Href="@href"
-                        Icon="@icon">
-                @repository.Name
-            </MudNavLink>
+            <MudElement HtmlTag="div"
+                        Class="mud-nav-item mud-ripple d-flex items-center">
+                <a href="@href" class="mud-nav-link">
+                    <img src="@iconSrc" width="22" height="22" />
+                    <MudText Class="mud-nav-link-text"
+                             Inline="true">
+                        @repository.Name
+                    </MudText>
+                </a>
+            </MudElement>
         }
     }
 
