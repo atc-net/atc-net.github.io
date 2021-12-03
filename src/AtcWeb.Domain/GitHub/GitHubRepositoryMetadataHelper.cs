@@ -4,8 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
 
-// ReSharper disable InvertIf
-// ReSharper disable UseNullPropagation
+// ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer
 namespace AtcWeb.Domain.GitHub
 {
@@ -30,7 +29,7 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new RootMetadata();
 
-            data.RawReadme = await GetFileByPathAndEnsureFullLinks(
+            data.RawReadme = await GitHubRepositoryMetadataFileHelper.GetFileByPathAndEnsureFullLinks(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
@@ -57,19 +56,19 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new WorkflowMetadata();
 
-            data.RawPreIntegration = await GetFileByPath(
+            data.RawPreIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 ".github/workflows/pre-integration.yml");
 
-            data.RawPostIntegration = await GetFileByPath(
+            data.RawPostIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 ".github/workflows/post-integration.yml");
 
-            data.RawRelease = await GetFileByPath(
+            data.RawRelease = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
@@ -95,19 +94,19 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new CodingRulesMetadata();
 
-            data.RawEditorConfigRoot = await GetFileByPath(
+            data.RawEditorConfigRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 ".editorconfig");
 
-            data.RawEditorConfigSrc = await GetFileByPath(
+            data.RawEditorConfigSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 "src/.editorconfig");
 
-            data.RawEditorConfigTest = await GetFileByPath(
+            data.RawEditorConfigTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
@@ -146,78 +145,33 @@ namespace AtcWeb.Domain.GitHub
                 }
             }
 
-            data.RawDirectoryBuildPropsRoot = await GetFileByPath(
+            data.RawDirectoryBuildPropsRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 "Directory.Build.props");
 
-            data.RawDirectoryBuildPropsSrc = await GetFileByPath(
+            data.RawDirectoryBuildPropsSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 "src/Directory.Build.props");
 
-            data.RawDirectoryBuildPropsTest = await GetFileByPath(
+            data.RawDirectoryBuildPropsTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
                 "test/Directory.Build.props");
 
+            data.Projects = await GitHubRepositoryMetadataDotnetHelper.GetProjects(
+                gitHubApiClient,
+                foldersAndFiles,
+                repositoryName,
+                data.RawDirectoryBuildPropsRoot,
+                data.RawDirectoryBuildPropsSrc,
+                data.RawDirectoryBuildPropsTest);
+
             return data;
-        }
-
-        private static async Task<string> GetFileByPath(
-            GitHubApiClient gitHubApiClient,
-            List<GitHubPath> foldersAndFiles,
-            string repositoryName,
-            string path)
-        {
-            var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
-            if (gitHubFile is not null)
-            {
-                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
-                if (isSuccessful)
-                {
-                    return rawFileContent;
-                }
-            }
-
-            return string.Empty;
-        }
-
-        private static async Task<string> GetFileByPathAndEnsureFullLinks(
-            GitHubApiClient gitHubApiClient,
-            List<GitHubPath> foldersAndFiles,
-            string repositoryName,
-            string defaultBranchName,
-            string path)
-        {
-            var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
-            if (gitHubFile is not null)
-            {
-                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
-                if (isSuccessful)
-                {
-                    rawFileContent = rawFileContent
-                        .Replace(
-                            "](src/",
-                            $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/src/",
-                            StringComparison.Ordinal)
-                        .Replace(
-                            "](docs/",
-                            $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/docs/",
-                            StringComparison.Ordinal)
-                        .Replace(
-                            $"https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/",
-                            $"https://raw.githubusercontent.com/atc-net/{repositoryName}/{defaultBranchName}/",
-                            StringComparison.Ordinal);
-
-                    return rawFileContent;
-                }
-            }
-
-            return string.Empty;
         }
     }
 }

@@ -1,0 +1,24 @@
+@using System.Collections
+@using Atc.Data.Models
+
+@if (PackageReferences is not null)
+{
+    <MudSimpleTable>
+        <tbody>
+            @foreach (var packageReference in PackageReferences)
+            {
+                <tr>
+                    <td>@packageReference.Key</td>
+                    <td width="80px">@packageReference.Value</td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+
+    [Parameter]
+    public List<KeyValueItem>? PackageReferences { get; set; }
+
+}

@@ -1,100 +1,109 @@
 .atc-brand {
-    margin: 32px 0 0;
-    padding: 0px;
+  margin: 32px 0 0;
+  padding: 0px;
 
-    &:hover {
-        cursor: pointer;
-        color: var(--mud-palette-primary);
-        transition: color 250ms cubic-bezier(.4,0,.2,1) 0ms,box-shadow 250ms cubic-bezier(.4,0,.2,1) 0ms,border 250ms cubic-bezier(.4,0,.2,1) 0ms;
-    }
+  &:hover {
+    cursor: pointer;
+    color: var(--mud-palette-primary);
+    transition: color 250ms cubic-bezier(.4,0,.2,1) 0ms,box-shadow 250ms cubic-bezier(.4,0,.2,1) 0ms,border 250ms cubic-bezier(.4,0,.2,1) 0ms;
+  }
 }
 
 atc-appbar-band {
-    background-image: url(../../wwwroot/images/Logo.png);
-    background-repeat: no-repeat;
-    background-position: top right;
-    overflow: hidden;
+  background-image: url(../../wwwroot/images/Logo.png);
+  background-repeat: no-repeat;
+  background-position: top right;
+  overflow: hidden;
 }
 
 @media (max-width:600px) {
-    .atc-appbar-band {
-        background-position: 14px 0px;
-    }
+  .atc-appbar-band {
+    background-position: 14px 0px;
+  }
 }
 
 .atc-appbar-brand-text {
-    letter-spacing: 0.5rem;
-    font-weight: 300;
-    margin-left: 12px;
-    font-size: 24px;
-    user-select: none;
+  letter-spacing: 0.5rem;
+  font-weight: 300;
+  margin-left: 12px;
+  font-size: 24px;
+  user-select: none;
 }
 
 @media (max-width:400px) {
-    .atc-appbar-brand-text {
-        letter-spacing: 0.25rem;
-    }
+  .atc-appbar-brand-text {
+    letter-spacing: 0.25rem;
+  }
 }
 
 
 .atc-navmenu {
-    overflow: auto;
-    margin-bottom: 12px;
+  overflow: auto;
+  margin-bottom: 12px;
 }
 
 .docs-nav-fader {
-    display: block;
-    position: sticky;
-    top: 0;
-    height: 40px;
-    background-image: linear-gradient(to top,rgba(255,255,255,0),var(--mud-palette-drawer-background));
-    z-index: 100;
+  display: block;
+  position: sticky;
+  top: 0;
+  height: 40px;
+  background-image: linear-gradient(to top,rgba(255,255,255,0),var(--mud-palette-drawer-background));
+  z-index: 100;
 }
 
 .docs-nav-filler {
-    display: flex;
-    flex-grow: 1;
+  display: flex;
+  flex-grow: 1;
 }
 
 .atc-container + .atc-container {
-    margin-bottom: 128px;
+  margin-bottom: 128px;
 }
 
 
 .atc-main-content {
-    padding-top: 86px;
-    padding-bottom: 86px;
+  padding-top: 86px;
+  padding-bottom: 86px;
 }
 
 
 @media (min-width: 960px) {
-    .atc-main-content {
-        padding-top: 128px;
-        padding-bottom: 64px;
-        padding-left: 12px;
-    }
+  .atc-main-content {
+    padding-top: 128px;
+    padding-bottom: 64px;
+    padding-left: 12px;
+  }
 }
 
 
-.docs-list{
-    list-style:inside;
+.docs-list {
+  list-style: inside;
 }
 
 .docs-expand-wrapper {
-    color: var(--mud-palette-white);
-    background-color: var(--mud-palette-black);
+  color: var(--mud-palette-white);
+  background-color: var(--mud-palette-black);
 
-    .docs-default-theme {
-        .mud-expand-panel {
-            color: inherit;
-            background-color: inherit;
-            border: none !important;
+  .docs-default-theme {
+    .mud-expand-panel {
+      color: inherit;
+      background-color: inherit;
+      border: none !important;
 
-            .mud-expand-panel-text {
-                color: #988ef1;
-                font-weight: 500;
-                font-size: 1rem;
-            }
-        }
+      .mud-expand-panel-text {
+        color: #988ef1;
+        font-weight: 500;
+        font-size: 1rem;
+      }
     }
+  }
+}
+
+.atc-simple-table-clean {
+  & tr > td {
+    border: none;
+    margin: 0px !important;
+    padding: 0px !important;
+    border-bottom: 1px solid var(--mud-palette-table-lines) !important;
+  }
 }

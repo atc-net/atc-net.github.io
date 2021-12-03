@@ -87,6 +87,13 @@ atc-appbar-band {
   font-size: 1rem;
 }
 
+.atc-simple-table-clean tr > td {
+  border: none;
+  margin: 0px !important;
+  padding: 0px !important;
+  border-bottom: 1px solid var(--mud-palette-table-lines) !important;
+}
+
 #mudads {
   margin-bottom: 50px;
   min-height: 100px;

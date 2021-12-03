@@ -29,52 +29,12 @@
                     </SectionHeader>
                     <SectionContent AutoMarginContent="false" FullWidth="true">
 
-                        <MudSimpleTable>
-                            <thead>
-                                <tr>
-                                    <th style="width: 25%">General Project Info</th>
-                                    <th style="width: 25%">Packages</th>
-                                    <th style="width: 25%">Build Status</th>
-                                    <th style="width: 25%">Code Quality</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "General Project Info"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Packages"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Build Status"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul>
-                                            @foreach (var (_, key, url) in repository.Badges.Where(x => x.Group == "Code Quality"))
-                                            {
-                                                <li><img src="@url" alt="@key" /></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </MudSimpleTable>
+                        <RepositoryBadges Repository="@repository" />
+
+                        @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
+                        {
+                            <RepositoryDotNetProjects Repository="@repository" />
+                        }
 
                         <MudText Class="my-4" Typo="Typo.h5">Responsible members</MudText>
                         <GitHubContributorGrid Contributors="repository.ResponsibleMembers"

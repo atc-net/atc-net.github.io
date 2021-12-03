@@ -1,0 +1,58 @@
+@using AtcWeb.Domain.GitHub.Models
+
+@if (Repository is not null)
+{
+    <MudSimpleTable>
+        <thead>
+            <tr>
+                <th style="width: 25%">Project name</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Repository.Dotnet.Projects)
+            {
+                <tr>
+                    <td style="vertical-align:top">
+                        @project.Name
+                    </td>
+                    <td>
+                        <table class="atc-simple-table-clean">
+                            <tr>
+                                <td style="width: 35%">Target framework:</td>
+                                <td style="width: 65%">@project.TargetFramework</td>
+                            </tr>
+                            <tr>
+                                <td>Language version:</td>
+                                <td>@project.LangVersion</td>
+                            </tr>
+                            <tr>
+                                <td>Project type:</td>
+                                <td>@project.Type</td>
+                            </tr>
+                            <tr>
+                                <td>Generates package:</td>
+                                <td><MudCheckBox Dense="true"
+                                                 Size="Size.Small"
+                                                 Style="padding: 0;"
+                                                 Disabled="true"
+                                                 Checked="@project.IsPackage" /></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top">Package reference:</td>
+                                <td><RepositoryDotNetProjectPackageReferences PackageReferences="@project.PackageReferences" /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+
+    [Parameter]
+    public AtcRepository? Repository { get; set; }
+
+}

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace AtcWeb.Domain.GitHub.Models
 {
     public class DotnetMetadata
@@ -17,5 +19,7 @@ namespace AtcWeb.Domain.GitHub.Models
         public bool HasDirectoryBuildPropsSrc => !string.IsNullOrEmpty(RawDirectoryBuildPropsSrc);
 
         public bool HasDirectoryBuildPropsTest => !string.IsNullOrEmpty(RawDirectoryBuildPropsTest);
+
+        public List<DotnetProject> Projects { get; set; } = new List<DotnetProject>();
     }
 }
