@@ -19,14 +19,7 @@
 
         <DocsPageHeader Title="@Repository.Name">
             <Description>
-                <MudElement HtmlTag="div"
-                            Class="d-flex items-center">
-                    <img src="@iconSrc" width="22" height="22" alt="$repository.BaseData.Language" />
-                    <MudText Class="ml-2"
-                             Inline="true">
-                        @Repository.Description
-                    </MudText>
-                </MudElement>
+                <RepositoryDescription Repository="@Repository" />
             </Description>
         </DocsPageHeader>
         <DocsPageContent>

@@ -2,7 +2,7 @@ namespace AtcWeb.Styles
 {
     public static class ImageHelper
     {
-        public static object GetProgramIconPathForLanguage(string language)
+        public static string GetProgramIconPathForLanguage(string language)
             => language switch
             {
                 "C#" => "images/programs/csharp.svg",

@@ -24,14 +24,7 @@
                 <DocsPageSection>
                     <SectionHeader Title="@repository.Name">
                         <SubTitle>
-                            <MudElement HtmlTag="div"
-                                        Class="d-flex items-center">
-                                <img src="@iconSrc" width="22" height="22" alt="$repository.BaseData.Language" />
-                                <MudText Class="ml-2"
-                                         Inline="true">
-                                    @repository.Description
-                                </MudText>
-                            </MudElement>
+                            <RepositoryDescription Repository="@repository" />
                         </SubTitle>
                     </SectionHeader>
                     <SectionContent AutoMarginContent="false" FullWidth="true">

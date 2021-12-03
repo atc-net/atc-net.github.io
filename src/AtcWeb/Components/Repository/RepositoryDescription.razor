@@ -1,0 +1,24 @@
+@using AtcWeb.Domain.GitHub.Models
+@using AtcWeb.Styles
+
+@if (Repository is not null)
+{
+    <MudElement HtmlTag="div"
+                Class="d-flex items-center">
+        <img src="@IconSrc" width="22" height="22" alt="Repository.BaseData.Language" />
+        <MudText Class="ml-2"
+                 Inline="true">
+            @Repository.Description
+        </MudText>
+    </MudElement>
+}
+
+@code {
+    [Parameter]
+    public AtcRepository? Repository { get; set; }
+
+    private string IconSrc
+        => Repository is null
+            ? string.Empty
+            : ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language);
+}
