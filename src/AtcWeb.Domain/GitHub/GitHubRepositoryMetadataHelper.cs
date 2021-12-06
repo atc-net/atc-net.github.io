@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
+using AtcWeb.Domain.Nuget;
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer

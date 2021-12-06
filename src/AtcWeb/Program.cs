@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AtcWeb.Domain;
 using AtcWeb.Domain.GitHub;
+using AtcWeb.Domain.Nuget;
 using AtcWeb.State;
 using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -37,6 +38,7 @@ namespace AtcWeb
             });
 
             builder.Services.AddScoped<GitHubApiClient>();
+            builder.Services.AddScoped<NugetApiClient>();
             builder.Services.AddScoped<GitHubRepositoryService>();
             builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(_ =>
             {

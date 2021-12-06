@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Atc.Data.Models;
 using AtcWeb.Domain.GitHub.Models;
 
 // ReSharper disable LoopCanBeConvertedToQuery
@@ -131,14 +130,14 @@ namespace AtcWeb.Domain.GitHub
             return "Library";
         }
 
-        private static List<KeyValueItem> GetAllPackageReferencesForCsproj(
+        private static List<DotnetNugetPackageVersionExtended> GetAllPackageReferencesForCsproj(
             string filePath,
             string projectRawCsproj,
             string rawDirectoryBuildPropsRoot,
             string rawDirectoryBuildPropsSrc,
             string rawDirectoryBuildPropsTest)
         {
-            var data = new List<KeyValueItem>();
+            var data = new List<DotnetNugetPackageVersionExtended>();
 
             data.AddRange(GetPackageReferencesForCsproj(projectRawCsproj));
 
@@ -159,13 +158,13 @@ namespace AtcWeb.Domain.GitHub
             }
 
             return data
-                .OrderBy(x => x.Key)
+                .OrderBy(x => x.PackageId)
                 .ToList();
         }
 
-        private static IEnumerable<KeyValueItem> GetPackageReferencesForCsproj(string rawCsproj)
+        private static IEnumerable<DotnetNugetPackageVersionExtended> GetPackageReferencesForCsproj(string rawCsproj)
         {
-            var data = new List<KeyValueItem>();
+            var data = new List<DotnetNugetPackageVersionExtended>();
             foreach (var line in rawCsproj.Split(Environment.NewLine))
             {
                 if (!line.Contains("<PackageReference ", StringComparison.Ordinal) ||
@@ -192,10 +191,13 @@ namespace AtcWeb.Domain.GitHub
                 var value = attributes[1]
                     .Replace("Version=", string.Empty, StringComparison.Ordinal)
                     .Replace("\"", string.Empty, StringComparison.Ordinal);
-                data.Add(new KeyValueItem(key, value));
+                if (Version.TryParse(value, out var version))
+                {
+                    data.Add(new DotnetNugetPackageVersionExtended(key, version, version));
+                }
             }
 
-            return data.OrderBy(x => x.Key);
+            return data.OrderBy(x => x.PackageId);
         }
 
         private static string GetSimpleXmlValueForCsproj(

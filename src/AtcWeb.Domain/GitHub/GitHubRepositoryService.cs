@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AtcWeb.Domain.Data;
 using AtcWeb.Domain.GitHub.Models;
+using AtcWeb.Domain.Nuget;
 using GitHubApiStatus;
 using Octokit;
 
@@ -14,10 +17,14 @@ namespace AtcWeb.Domain.GitHub
     public class GitHubRepositoryService
     {
         private readonly GitHubApiClient gitHubApiClient;
+        private readonly NugetApiClient nugetApiClient;
 
-        public GitHubRepositoryService(GitHubApiClient gitHubApiClient)
+        public GitHubRepositoryService(
+            GitHubApiClient gitHubApiClient,
+            NugetApiClient nugetApiClient)
         {
             this.gitHubApiClient = gitHubApiClient ?? throw new ArgumentNullException(nameof(gitHubApiClient));
+            this.nugetApiClient = nugetApiClient ?? throw new ArgumentNullException(nameof(nugetApiClient));
         }
 
         public async Task<GitHubApiRateLimits?> GetApiRateLimitsAsync()
@@ -108,6 +115,7 @@ namespace AtcWeb.Domain.GitHub
                 : new List<GitHubPath>();
         }
 
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         private async Task PopulateMetaData(AtcRepository repository, Repository gitHubRepository)
         {
             repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
@@ -154,6 +162,18 @@ namespace AtcWeb.Domain.GitHub
             repository.Dotnet = await taskDotnet;
 
             repository.SetBadges();
+
+            foreach (var dotnetProject in repository.Dotnet.Projects)
+            {
+                foreach (var nugetPackageVersion in dotnetProject.PackageReferences)
+                {
+                    var (isSuccessful, latestVersion) = await nugetApiClient.GetVersionForPackageId(nugetPackageVersion.PackageId, CancellationToken.None);
+                    if (isSuccessful)
+                    {
+                        nugetPackageVersion.NewestVersion = latestVersion;
+                    }
+                }
+            }
         }
     }
 }

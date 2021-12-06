@@ -17,6 +17,6 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool IsPackage { get; set; }
 
-        public List<KeyValueItem> PackageReferences { get; set; } = new List<KeyValueItem>();
+        public List<DotnetNugetPackageVersionExtended> PackageReferences { get; set; } = new List<DotnetNugetPackageVersionExtended>();
     }
 }
