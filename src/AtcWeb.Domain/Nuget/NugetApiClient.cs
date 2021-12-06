@@ -49,7 +49,15 @@ namespace AtcWeb.Domain.Nuget
             }
 
             var sa = packageId.Split('.', StringSplitOptions.RemoveEmptyEntries);
-            var (isSuccessful, nugetSearchResult) = await Search(sa.First(), cancellationToken);
+            var query = sa.First();
+            if (sa.Length > 1 && "Microsoft".Equals(query, StringComparison.Ordinal))
+            {
+                query = sa.Length == 3
+                    ? $"{sa[0]}.{sa[1]}.{sa[2]}"
+                    : $"{sa[0]}.{sa[1]}";
+            }
+
+            var (isSuccessful, nugetSearchResult) = await Search(query, cancellationToken);
             if (!isSuccessful)
             {
                 return (isSuccessful: false, new Version());
@@ -85,7 +93,7 @@ namespace AtcWeb.Domain.Nuget
                     BaseAddress = new Uri("https://azuresearch-usnc.nuget.org"),
                 };
 
-                var responseMessage = await httpClient.GetAsync($"/query?q={query}", cancellationToken);
+                var responseMessage = await httpClient.GetAsync($"/query?q={query}&take=1000&prerelease=false", cancellationToken);
                 if (!responseMessage.IsSuccessStatusCode)
                 {
                     return (isSuccessful: false, new NugetSearchResult());
