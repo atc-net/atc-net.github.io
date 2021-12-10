@@ -12,7 +12,13 @@
 </head>
 
 <body>
-  <div id="app">Loading...</div>
+  <div id="app" class="full-page-height">
+    <div class="atc-loader">
+      <img src="/images/atc-logo.svg" alt="ATC" width="300" height="300" />
+      <p class="py-2"><span class="fas fa-spin fa-spinner"></span></p>
+      <p>ATC-Web is loading...</p>
+    </div>
+  </div>
 
   <div id="blazor-error-ui">
     An unhandled error has occurred.
@@ -20,6 +26,7 @@
     <a class="dismiss">🗙</a>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js" crossorigin="anonymous"></script>
   <script src="_framework/blazor.webassembly.js"></script>
   <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>

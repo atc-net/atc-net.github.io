@@ -8,13 +8,14 @@
                    Position="DialogPosition.Center" />
 <MudSnackbarProvider />
 
-<MudSwipeArea OnSwipe="@OnSwipe">
+<MudSwipeArea OnSwipe="@OnSwipe" Class="full-page-height">
     <MudLayout>
         <MudAppBar Elevation="25">
             <MudIconButton Icon="@Icons.Material.Filled.Menu"
                            Color="Color.Inherit"
                            Edge="Edge.Start"
                            OnClick="@((e) => DrawerToggle())" />
+            <img src="/images/atc-logo.svg" alt="ATC" width="45" height="45" />
             <MudText Typo="Typo.h5"
                      Class="atc-appbar-brand-text d-none d-md-flex">ATC</MudText>
             <MudSpacer />
@@ -73,7 +74,11 @@
             </MudDrawerHeader>
             <NavMenu @ref="@navMenuRef" />
         </MudDrawer>
-        @Body
+
+        <div class="full-page-height">
+            @Body
+        </div>
+
         <MudScrollToTop TopOffset="400" Style="z-index:2000;">
             <MudFab Icon="@Icons.Material.Filled.KeyboardArrowUp"
                     Color="Color.Primary" />
