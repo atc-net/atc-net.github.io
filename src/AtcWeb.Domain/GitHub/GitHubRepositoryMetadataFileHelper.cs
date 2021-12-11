@@ -108,6 +108,7 @@ namespace AtcWeb.Domain.GitHub
             var lastLine = string.Empty;
             foreach (var line in lines)
             {
+                // Skip all until first "H1"
                 if (line.StartsWith("# ", StringComparison.Ordinal))
                 {
                     append = true;
@@ -115,6 +116,7 @@ namespace AtcWeb.Domain.GitHub
 
                 if (append)
                 {
+                    // Table - a Table need to start with a blank line in markdown to be valid.
                     if (line.StartsWith('|') &&
                         (lastLine.Trim().Length != 0 && !lastLine.StartsWith('|')))
                     {

@@ -19,7 +19,7 @@ namespace AtcWeb.Pages.Repository
 
         protected override async Task OnInitializedAsync()
         {
-            repository = await RepositoryService.GetRepositoryByNameAsync(repositoryName, true);
+            repository = await RepositoryService.GetRepositoryByNameAsync(repositoryName, populateMetaDataBase: true, populateMetaDataAdvanced: false);
             await base.OnInitializedAsync();
         }
     }
