@@ -30,6 +30,7 @@ atc-appbar-band {
 
 @media (max-width: 600px) {
   .atc-appbar-band {
+    background-position: 14px 0px;
   }
 }
 .atc-appbar-brand-text {
@@ -99,11 +100,43 @@ atc-appbar-band {
   font-size: 1rem;
 }
 
+.mud-simple-table > div > table thead > tr > th {
+  border: none;
+}
+.mud-simple-table > div > table tbody > tr > td {
+  border: none !important;
+}
+
+.mud-simple-table.mud-table-bordered > div > table thead > tr > th {
+  border: 1px groove var(--mud-palette-table-lines);
+}
+.mud-simple-table.mud-table-bordered > div > table tbody > tr > td {
+  border: 1px groove var(--mud-palette-table-lines) !important;
+}
+
 .atc-simple-table-clean tr > td {
   border: none;
   margin: 0px !important;
+  padding: 4px 0px !important;
+  border: none !important;
+}
+.atc-simple-table-clean.table-no-padding > tr > td {
   padding: 0px !important;
-  border-bottom: 1px solid var(--mud-palette-table-lines) !important;
+}
+
+.atc-simple-table-clean-bottom-line > tr > td {
+  border: none;
+  margin: 0px !important;
+  padding: 4px 0px !important;
+  border: none !important;
+  border-bottom: 1px groove var(--mud-palette-table-lines) !important;
+}
+
+.atc-simple-table-clean-bottom-line > tr:last-child > td {
+  border: none;
+  margin: 0px !important;
+  padding: 4px 0px !important;
+  border: none !important;
 }
 
 #mudads {
@@ -185,6 +218,9 @@ atc-appbar-band {
   right: 0;
 }
 
+.markdown h1, .markdown h2, .markdown h3, .markdown h4, .markdown h5, .markdown h6 {
+  margin-top: 16px;
+}
 .markdown a {
   color: var(--mud-palette-primary);
 }
@@ -200,7 +236,7 @@ atc-appbar-band {
 }
 .markdown pre {
   height: 100%;
-  margin: 8px 0px 8px 0px;
+  margin: 8px 0px;
   padding: 16px;
   border-radius: 6px;
   color: #ededed;
@@ -218,6 +254,17 @@ atc-appbar-band {
   color: #ededed;
   background-color: var(--mud-palette-dark);
   font-size: 85%;
+}
+.markdown table {
+  border: 1px groove var(--mud-palette-table-lines) !important;
+}
+.markdown table tr th {
+  padding: 8px;
+  border: 1px groove var(--mud-palette-table-lines);
+}
+.markdown table tr td {
+  padding: 8px;
+  border: 1px groove var(--mud-palette-table-lines);
 }
 
 .atc-codeblock {
