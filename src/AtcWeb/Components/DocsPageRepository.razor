@@ -15,8 +15,6 @@
     }
     else
     {
-        var iconSrc = ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language);
-
         <DocsPageHeader Title="@Repository.Name">
             <Description>
                 <RepositoryDescription Repository="@Repository" />
@@ -26,15 +24,15 @@
             <DocsPageSection>
                 <SectionHeader Title="Welcome" />
                 <SectionContent AutoMarginContent="false"
-                            FullWidth="true">
+                                FullWidth="true">
                     @ChildContent
                 </SectionContent>
             </DocsPageSection>
             <DocsPageSection>
                 <SectionHeader Title="Readme" />
                 <SectionContent AutoMarginContent="false"
-                            FullWidth="true">
-                    <MudCard>
+                                FullWidth="true">
+                    <MudCard Elevation="0">
                         @if (Repository.Root.HasReadme)
                         {
                             <MudCardContent>

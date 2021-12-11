@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
 
@@ -81,6 +82,52 @@ namespace AtcWeb.Domain.GitHub
             }
 
             return string.Empty;
+        }
+
+        public static async Task<string> GetReadMeFile(
+            GitHubApiClient gitHubApiClient,
+            List<GitHubPath> foldersAndFiles,
+            string repositoryName,
+            string defaultBranchName)
+        {
+            var rawText = await GetFileByPathAndEnsureFullLinks(
+                gitHubApiClient,
+                foldersAndFiles,
+                repositoryName,
+                defaultBranchName,
+                "README.md");
+
+            if (string.IsNullOrEmpty(rawText))
+            {
+                return rawText;
+            }
+
+            var lines = rawText.Split(Environment.NewLine);
+            var sb = new StringBuilder();
+            var append = false;
+            var lastLine = string.Empty;
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("# ", StringComparison.Ordinal))
+                {
+                    append = true;
+                }
+
+                if (append)
+                {
+                    if (line.StartsWith('|') &&
+                        (lastLine.Trim().Length != 0 && !lastLine.StartsWith('|')))
+                    {
+                        sb.AppendLine();
+                    }
+
+                    sb.AppendLine(line);
+                }
+
+                lastLine = line;
+            }
+
+            return sb.ToString();
         }
     }
 }

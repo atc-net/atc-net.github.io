@@ -1,0 +1,108 @@
+@using AtcWeb.Domain.GitHub.Models
+@using AtcWeb.State
+
+@if (StateContainer is not null &&
+     Repository is not null)
+{
+    <MudSimpleTable Bordered="true"
+                    Elevation="0">
+        <thead>
+            <tr>
+                <th style="width: 25%">Config level</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="vertical-align:top">
+                    Root
+                </td>
+                <td>
+                    @if (Repository.CodingRules.HasRoot)
+                    {
+                        if (Repository.CodingRules.IsLatestVersionRoot)
+                        {
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                        }
+                        else
+                        {
+                            <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionRoot()}' and latest version is '{CodingRulesMetadata.LatestVersionRoot}'")">
+                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                            </MudTooltip>
+                        }
+
+                        <RepositoryCodingRulesLocalSuppressRules LocalSuppressRules="@Repository.CodingRules.GetLocalSuppressRulesRoot()" />
+                    }
+                    else
+                    {
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td style="vertical-align:top">
+                    Src
+                </td>
+                <td>
+                    @if (Repository.CodingRules.HasSrc)
+                    {
+                        if (Repository.CodingRules.IsLatestVersionSrc)
+                        {
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                        }
+                        else
+                        {
+                            <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionSrc()}' and latest version is '{CodingRulesMetadata.LatestVersionSrc}'")">
+                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                            </MudTooltip>
+                        }
+
+                        <RepositoryCodingRulesLocalSuppressRules LocalSuppressRules="@Repository.CodingRules.GetLocalSuppressRulesSrc()" />
+                    }
+                    else
+                    {
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td style="vertical-align:top">
+                    Test
+                </td>
+                <td>
+                    @if (Repository.CodingRules.HasTest)
+                    {
+                        if (Repository.CodingRules.IsLatestVersionTest)
+                        {
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                        }
+                        else
+                        {
+                            <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionTest()}' and latest version is '{CodingRulesMetadata.LatestVersionTest}'")">
+                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                            </MudTooltip>
+                        }
+
+                        <RepositoryCodingRulesLocalSuppressRules LocalSuppressRules="@Repository.CodingRules.GetLocalSuppressRulesTest()" />
+                    }
+                    else
+                    {
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+
+    [Inject]
+    private StateContainer? StateContainer { get; set; }
+
+    [Parameter]
+    public AtcRepository? Repository { get; set; }
+
+}

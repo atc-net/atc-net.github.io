@@ -100,11 +100,52 @@ atc-appbar-band {
   }
 }
 
+.mud-simple-table > div > table {
+  thead > tr > th {
+    border: none;
+  }
+
+  tbody > tr > td {
+    border: none !important;
+  }
+}
+
+.mud-simple-table {
+  &.mud-table-bordered > div > table {
+    thead > tr > th {
+      border: 1px groove var(--mud-palette-table-lines);
+    }
+
+    tbody > tr > td {
+      border: 1px groove var(--mud-palette-table-lines) !important;
+    }
+  }
+}
+
 .atc-simple-table-clean {
-  & tr > td {
+  tr > td {
     border: none;
     margin: 0px !important;
-    padding: 0px !important;
-    border-bottom: 1px solid var(--mud-palette-table-lines) !important;
+    padding: 4px 0px !important;
+    border: none !important;
   }
+
+  &.table-no-padding > tr > td {
+    padding: 0px !important;
+  }
+}
+
+.atc-simple-table-clean-bottom-line > tr > td {
+  border: none;
+  margin: 0px !important;
+  padding: 4px 0px !important;
+  border: none !important;
+  border-bottom: 1px groove var(--mud-palette-table-lines) !important;
+}
+
+.atc-simple-table-clean-bottom-line > tr:last-child > td {
+  border: none;
+  margin: 0px !important;
+  padding: 4px 0px !important;
+  border: none !important;
 }

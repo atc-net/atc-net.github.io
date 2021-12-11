@@ -1,4 +1,5 @@
 using MudBlazor;
+using MudBlazor.Utilities;
 
 namespace AtcWeb.Styles
 {
@@ -20,39 +21,51 @@ namespace AtcWeb.Styles
         private static readonly Palette LightPalette = new Palette
         {
             // Use MudBlazor default colors
+            Surface = Colors.Grey.Lighten3,
         };
 
         private static readonly Palette DarkPalette = new Palette
         {
-            // TODO: Align with Colors.cs... Material.io
-            Primary = Colors.DeepPurple.Accent2,
-            Secondary = Colors.Grey.Lighten3,
             Black = "#27272F",
+            White = Colors.Shades.White,
+            Primary = "#AB74B5",
+            PrimaryContrastText = Colors.Shades.White,
+            Secondary = Colors.Grey.Lighten3,
+            SecondaryContrastText = Colors.Shades.White,
+            Tertiary = "#1EC8A5",
+            TertiaryContrastText = Colors.Shades.White,
+            Info = Colors.Blue.Default,
+            InfoContrastText = Colors.Shades.White,
+            Success = Colors.Green.Accent4,
+            SuccessContrastText = Colors.Shades.White,
+            Warning = Colors.Orange.Default,
+            WarningContrastText = Colors.Shades.White,
+            Error = Colors.Red.Default,
+            ErrorContrastText = Colors.Shades.White,
+            Dark = Colors.Grey.Darken3,
+            DarkContrastText = Colors.Shades.White,
+            TextPrimary = new MudColor(Colors.Shades.White).SetAlpha(0.50).ToString(MudColorOutputFormats.RGBA),
+            TextSecondary = new MudColor(Colors.Shades.White).SetAlpha(0.40).ToString(MudColorOutputFormats.RGBA),
+            TextDisabled = new MudColor(Colors.Shades.White).SetAlpha(0.20).ToString(MudColorOutputFormats.RGBA),
+            ActionDefault = new MudColor(Colors.Shades.White).SetAlpha(0.40).ToString(MudColorOutputFormats.RGBA),
+            ActionDisabled = new MudColor(Colors.Shades.White).SetAlpha(0.20).ToString(MudColorOutputFormats.RGBA),
+            ActionDisabledBackground = new MudColor(Colors.Shades.White).SetAlpha(0.12).ToString(MudColorOutputFormats.RGBA),
             Background = "#32333D",
-            BackgroundGrey = "#32333d",
-            Surface = "#373740",
+            BackgroundGrey = Colors.Grey.Lighten4,
+            Surface = "#27272F",
             DrawerBackground = "#27272F",
-            DrawerText = "rgba(255,255,255, 0.50)",
-            DrawerIcon = "rgba(255,255,255, 0.50)",
+            DrawerText = new MudColor(Colors.Shades.White).SetAlpha(0.50).ToString(MudColorOutputFormats.RGBA),
+            DrawerIcon = Colors.Grey.Darken2,
             AppbarBackground = "#27272F",
-            AppbarText = "rgba(255,255,255, 0.70)",
-            TextPrimary = "rgba(255,255,255, 0.70)",
-            TextSecondary = "rgba(255,255,255, 0.50)",
-            ActionDefault = "#adadb1",
-            ActionDisabled = "rgba(255,255,255, 0.26)",
-            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
-            Divider = "rgba(255,255,255, 0.12)",
-            DividerLight = "rgba(255,255,255, 0.06)",
-            TableLines = "rgba(255,255,255, 0.12)",
-            LinesDefault = "rgba(255,255,255, 0.12)",
-            LinesInputs = "rgba(255,255,255, 0.3)",
-            TextDisabled = "rgba(255,255,255, 0.2)",
-            PrimaryContrastText = "#ff0000",
-            Info = "#3299FF",
-            Success = "#0BBA83",
-            Warning = "#FFA800",
-            Error = "#F64E62",
-            Dark = "#27272F",
+            AppbarText = new MudColor(Colors.Shades.White).SetAlpha(0.70).ToString(MudColorOutputFormats.RGBA),
+            LinesDefault = new MudColor(Colors.Shades.White).SetAlpha(0.12).ToString(MudColorOutputFormats.RGBA),
+            LinesInputs = Colors.Grey.Lighten1,
+            TableLines = new MudColor(Colors.Grey.Lighten2).SetAlpha(1.0).ToString(MudColorOutputFormats.RGBA),
+            TableStriped = new MudColor(Colors.Shades.White).SetAlpha(0.02).ToString(MudColorOutputFormats.RGBA),
+            TableHover = new MudColor(Colors.Shades.White).SetAlpha(0.04).ToString(MudColorOutputFormats.RGBA),
+            Divider = Colors.Grey.Lighten2,
+            DividerLight = new MudColor(Colors.Shades.White).SetAlpha(0.8).ToString(MudColorOutputFormats.RGBA),
+
         };
 
         public static readonly MudTheme LightTheme = new MudTheme

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Atc.Data.Models;
+using AtcWeb.Domain.Data;
 
 namespace AtcWeb.Domain.GitHub.Models
 {
@@ -16,6 +16,10 @@ namespace AtcWeb.Domain.GitHub.Models
         public string Type { get; set; } = string.Empty;
 
         public bool IsPackage { get; set; }
+
+        public bool IsTargetFrameworkInLongTimeSupport => RepositoryMetadata.IsTargetFrameworkInLongTimeSupport(TargetFramework);
+
+        public bool IsLangVersionInAcceptedVersion => RepositoryMetadata.IsLangVersionInAcceptedVersion(LangVersion);
 
         public List<DotnetNugetPackageVersionExtended> PackageReferences { get; set; } = new List<DotnetNugetPackageVersionExtended>();
     }

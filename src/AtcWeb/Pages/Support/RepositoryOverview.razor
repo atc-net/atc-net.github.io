@@ -27,13 +27,24 @@
                             <RepositoryDescription Repository="@repository" />
                         </SubTitle>
                     </SectionHeader>
-                    <SectionContent AutoMarginContent="false" FullWidth="true">
+                    <SectionContent AutoMarginContent="false"
+                                    FullWidth="true">
 
                         <RepositoryBadges Repository="@repository" />
 
                         @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
                         {
-                            <RepositoryDotNetProjects Repository="@repository" />
+                            <div class="py-4">
+                                <RepositoryDotNetProjects Repository="@repository" />
+                            </div>
+                        }
+
+                        @if (!repository.Name.Equals("atc-docs") ||
+                             !repository.Name.Equals("atc-snippets"))
+                        {
+                            <div class="py-4">
+                                <RepositoryCodingRules Repository="@repository" />
+                            </div>
                         }
 
                         <MudText Class="my-4" Typo="Typo.h5">Responsible members</MudText>

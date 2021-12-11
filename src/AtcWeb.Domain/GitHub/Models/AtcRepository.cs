@@ -65,11 +65,11 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool HasWorkflowRelease => Workflow?.HasRelease ?? false;
 
-        public bool HasCodingRulesEditorConfigRoot => CodingRules?.HasEditorConfigRoot ?? false;
+        public bool HasCodingRulesEditorConfigRoot => CodingRules?.HasRoot ?? false;
 
-        public bool HasCodingRulesEditorConfigSrc => CodingRules?.HasEditorConfigSrc ?? false;
+        public bool HasCodingRulesEditorConfigSrc => CodingRules?.HasSrc ?? false;
 
-        public bool HasCodingRulesEditorConfigTest => CodingRules?.HasEditorConfigTest ?? false;
+        public bool HasCodingRulesEditorConfigTest => CodingRules?.HasTest ?? false;
 
         public bool HasDotnetSolution => Dotnet?.HasSolution ?? false;
 

@@ -72,5 +72,14 @@ namespace AtcWeb.Domain.Data
         {
             return GetResponsibleMembersByName(name).Length < 2;
         }
+
+        public static bool IsTargetFrameworkInLongTimeSupport(string targetFramework)
+            => !string.IsNullOrEmpty(targetFramework) && (
+               targetFramework.Contains("net6.0", StringComparison.OrdinalIgnoreCase) ||
+               targetFramework.Contains("netstandard2.1", StringComparison.OrdinalIgnoreCase));
+
+        public static bool IsLangVersionInAcceptedVersion(string langVersion)
+            => !string.IsNullOrEmpty(langVersion) &&
+               langVersion.Contains("10.0", StringComparison.OrdinalIgnoreCase);
     }
 }

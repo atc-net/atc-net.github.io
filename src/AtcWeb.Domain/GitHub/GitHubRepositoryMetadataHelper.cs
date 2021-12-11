@@ -30,12 +30,11 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new RootMetadata();
 
-            data.RawReadme = await GitHubRepositoryMetadataFileHelper.GetFileByPathAndEnsureFullLinks(
+            data.RawReadme = await GitHubRepositoryMetadataFileHelper.GetReadMeFile(
                 gitHubApiClient,
                 foldersAndFiles,
                 repositoryName,
-                defaultBranchName,
-                "README.md");
+                defaultBranchName);
 
             return data;
         }

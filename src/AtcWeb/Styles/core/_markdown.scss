@@ -1,4 +1,8 @@
 .markdown {
+  & h1, h2, h3, h4, h5, h6 {
+    margin-top: 16px;
+  }
+
   & a {
     color: var(--mud-palette-primary);
   }
@@ -18,7 +22,7 @@
 
   & pre {
     height: 100%;
-    margin: 8px 0px 8px 0px;
+    margin: 8px 0px;
     padding: 16px;
     border-radius: 6px;
     color: #ededed;
@@ -37,6 +41,21 @@
     color: #ededed;
     background-color: var(--mud-palette-dark);
     font-size: 85%;
+  }
+
+
+  & table {
+    border: 1px groove var(--mud-palette-table-lines) !important;
+
+    tr th {
+      padding: 8px;
+      border: 1px groove var(--mud-palette-table-lines);
+    }
+
+    tr td {
+      padding: 8px;
+      border: 1px groove var(--mud-palette-table-lines);
+    }
   }
 }
 

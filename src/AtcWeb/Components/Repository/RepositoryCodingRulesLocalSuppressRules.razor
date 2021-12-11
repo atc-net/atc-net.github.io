@@ -1,0 +1,42 @@
+@using Atc.Data.Models
+@using AtcWeb.State
+
+@if (StateContainer is not null)
+{
+    @if (LocalSuppressRules.Count > 0)
+    {
+        <MudTooltip Text="@($"{LocalSuppressRules.Count} Local suppress rules")">
+            <span style="color: @StateContainer.CurrentTheme.Palette.Success">
+                &nbsp;<i class="fa-regular fa-circle-check"></i>
+            </span>
+        </MudTooltip>
+
+        <table class="atc-simple-table-clean table-no-padding">
+            @foreach (var suppressRule in LocalSuppressRules)
+            {
+                <tr>
+                    <td>@suppressRule.Key</td>
+                    <td>@suppressRule.Value</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <MudTooltip Text="No local suppress rules">
+            <span style="color: @StateContainer.CurrentTheme.Palette.Success">
+                &nbsp;<i class="fa-solid fa-circle-check"></i>
+            </span>
+        </MudTooltip>
+    }
+}
+
+@code {
+
+    [Inject]
+    private StateContainer? StateContainer { get; set; }
+
+    [Parameter]
+    public List<KeyValueItem> LocalSuppressRules { get; set; } = new List<KeyValueItem>();
+
+}

@@ -6,30 +6,28 @@
 @if (StateContainer is not null &&
      PackageReferences is not null)
 {
-    <MudSimpleTable>
-        <tbody>
-            @foreach (var packageReference in PackageReferences)
-            {
-                <tr>
-                    <td>@packageReference.PackageId</td>
-                    <td width="80px">
-                        @if (packageReference.IsNewest)
-                        {
-                            <MudTooltip Text="@($"{packageReference.PackageId} has the latest version {packageReference.NewestVersion}")">
-                                <span style="color: @StateContainer.CurrentTheme.Palette.Success">@packageReference.Version</span>
-                            </MudTooltip>
-                        }
-                        else
-                        {
-                            <MudTooltip Text="@($"{packageReference.PackageId} has a newer version {packageReference.NewestVersion}")">
-                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@packageReference.Version</span>
-                            </MudTooltip>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </MudSimpleTable>
+    <table class="atc-simple-table-clean table-no-padding">
+        @foreach (var packageReference in PackageReferences)
+        {
+            <tr>
+                <td>@packageReference.PackageId</td>
+                <td width="80px">
+                    @if (packageReference.IsNewest)
+                    {
+                        <MudTooltip Text="@($"{packageReference.PackageId} has the latest version {packageReference.NewestVersion}")">
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">@packageReference.Version</span>
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="@($"{packageReference.PackageId} has a newer version {packageReference.NewestVersion}")">
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@packageReference.Version</span>
+                        </MudTooltip>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
 }
 
 @code {
