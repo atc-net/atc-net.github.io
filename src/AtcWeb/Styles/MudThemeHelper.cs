@@ -65,7 +65,6 @@ namespace AtcWeb.Styles
             TableHover = new MudColor(Colors.Shades.White).SetAlpha(0.04).ToString(MudColorOutputFormats.RGBA),
             Divider = Colors.Grey.Lighten2,
             DividerLight = new MudColor(Colors.Shades.White).SetAlpha(0.8).ToString(MudColorOutputFormats.RGBA),
-
         };
 
         public static readonly MudTheme LightTheme = new MudTheme
