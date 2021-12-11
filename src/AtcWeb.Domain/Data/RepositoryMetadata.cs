@@ -24,6 +24,8 @@ namespace AtcWeb.Domain.Data
             Tuple.Create("atc-docs", "davidkallesen"),
             Tuple.Create("atc-docs", "perkops"),
             Tuple.Create("atc-iot-digital-twin", "perkops"),
+            Tuple.Create("atc-net.github.io", "davidkallesen"),
+            Tuple.Create("atc-net.github.io", "perkops"),
             Tuple.Create("atc-rest-api-generator", "davidkallesen"),
             Tuple.Create("atc-rest-api-generator", "perkops"),
             Tuple.Create("atc-rest-client", "davidkallesen"),
