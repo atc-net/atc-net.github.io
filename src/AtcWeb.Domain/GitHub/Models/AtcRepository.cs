@@ -31,6 +31,8 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Name => BaseData.Name;
 
+        public string DotName => Name.Replace('-', '.');
+
         public string Description => BaseData.Description;
 
         public string Url => $"https://github.com/atc-net/{Name}";
@@ -125,32 +127,32 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Packages",
                     "NuGet Version",
-                    new Uri($"https://img.shields.io/nuget/v/{BaseData.Name}.svg?logo=nuget")));
+                    new Uri($"https://img.shields.io/nuget/v/{DotName}.svg?logo=nuget")));
 
                 Badges.Add((
                     "Code Quality",
                     "Maintainability Rating",
-                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=sqale_rating")));
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=sqale_rating")));
 
                 Badges.Add((
                     "Code Quality",
                     "Reliability Rating",
-                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=reliability_rating")));
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=reliability_rating")));
 
                 Badges.Add((
                     "Code Quality",
                     "Security Rating",
-                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=security_rating")));
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=security_rating")));
 
                 Badges.Add((
                     "Code Quality",
                     "Bugs",
-                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=bugs")));
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=bugs")));
 
                 Badges.Add((
                     "Code Quality",
                     "Vulnerabilities",
-                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=vulnerabilities")));
+                    new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=vulnerabilities")));
             }
         }
 
