@@ -108,7 +108,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 var sa = s.Split('#', StringSplitOptions.RemoveEmptyEntries);
                 if (sa.Length == 2)
                 {
-                    comment = sa[1];
+                    comment = sa[1].Trim();
                 }
 
                 list.Add(new KeyValueItem(ruleId, comment));

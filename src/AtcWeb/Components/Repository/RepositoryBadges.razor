@@ -2,49 +2,49 @@
 
 @if (Repository is not null)
 {
-    <MudSimpleTable Bordered="true"
+    <MudSimpleTable Bordered="false"
                     Elevation="0">
         <thead>
             <tr>
-                <th style="width: 25%">General Project Info</th>
-                <th style="width: 25%">Packages</th>
-                <th style="width: 25%">Build Status</th>
-                <th style="width: 25%">Code Quality</th>
+                <th class="px-0 py-0" style="width: 25%">General Project Info</th>
+                <th class="px-0 py-0" style="width: 25%">Packages</th>
+                <th class="px-0 py-0" style="width: 25%">Build Status</th>
+                <th class="px-0 py-0" style="width: 25%">Code Quality</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                    <ul>
+                <td class="px-0 py-2" style="vertical-align: top;">
+                    <ol style="list-style-type: none;">
                         @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "General Project Info"))
                         {
                             <li><img src="@url" alt="@key" /></li>
                         }
-                    </ul>
+                    </ol>
                 </td>
-                <td>
-                    <ul>
+                <td class="px-0 py-2" style="vertical-align: top;">
+                    <ol style="list-style-type: none;">
                         @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Packages"))
                         {
                             <li><img src="@url" alt="@key" /></li>
                         }
-                    </ul>
+                    </ol>
                 </td>
-                <td>
-                    <ul>
+                <td class="px-0 py-2" style="vertical-align: top;">
+                    <ol style="list-style-type: none;">
                         @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Build Status"))
                         {
                             <li><img src="@url" alt="@key" /></li>
                         }
-                    </ul>
+                    </ol>
                 </td>
-                <td>
-                    <ul>
+                <td class="px-0 py-2" style="vertical-align: top;">
+                    <ol style="list-style-type: none;">
                         @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Code Quality"))
                         {
                             <li><img src="@url" alt="@key" /></li>
                         }
-                    </ul>
+                    </ol>
                 </td>
             </tr>
         </tbody>

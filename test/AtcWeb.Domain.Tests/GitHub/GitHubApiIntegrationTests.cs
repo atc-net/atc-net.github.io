@@ -33,6 +33,25 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
+        public async Task GetAtcRepositoryByName(
+            [Frozen] IMemoryCache memoryCache)
+        {
+            // Arrange
+            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
+            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubRepository) = await gitHubApiClient.GetAtcRepositoryByName("atc");
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubRepository
+                .Should()
+                .NotBeNull();
+        }
+
+        [Theory, AutoNSubstituteData]
         public async Task GetAtcContributors(
             [Frozen] IMemoryCache memoryCache)
         {
@@ -112,6 +131,69 @@ namespace AtcWeb.Domain.Tests.GitHub
             gitHubRaw
                 .Should()
                 .NotBeEmpty();
+        }
+
+        [Theory, AutoNSubstituteData]
+        public async Task GetIssuesAllByRepositoryByName(
+            [Frozen] IMemoryCache memoryCache)
+        {
+            // Arrange
+            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
+            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesAllByRepositoryByName("atc");
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubIssues
+                .Should()
+                .NotBeEmpty()
+                .And
+                .HaveCountGreaterThan(1);
+        }
+
+        [Theory, AutoNSubstituteData]
+        public async Task GetIssuesOpenByRepositoryByName(
+            [Frozen] IMemoryCache memoryCache)
+        {
+            // Arrange
+            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
+            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName("atc");
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubIssues
+                .Should()
+                .NotBeEmpty()
+                .And
+                .HaveCountGreaterThan(1);
+        }
+
+        [Theory, AutoNSubstituteData]
+        public async Task GetIssuesClosedByRepositoryByName(
+            [Frozen] IMemoryCache memoryCache)
+        {
+            // Arrange
+            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
+            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+
+            // Act
+            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesClosedByRepositoryByName("atc");
+
+            // Assert
+            Assert.True(isSuccessful);
+
+            gitHubIssues
+                .Should()
+                .NotBeEmpty()
+                .And
+                .HaveCountGreaterThan(1);
         }
     }
 }

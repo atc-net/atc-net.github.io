@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Atc;
 using Octokit;
 
 // ReSharper disable InvertIf
@@ -17,15 +19,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 this.DefaultBranchName = "master";
             }
 
-            this.Badges = new List<(string Group, string Key, Uri Url)>
-            {
-                ("General Project Info", "Github top language", new Uri($"https://img.shields.io/github/languages/top/atc-net/{repository.Name}")),
-                ("General Project Info", "Github stars", new Uri($"https://img.shields.io/github/stars/atc-net/{repository.Name}")),
-                ("General Project Info", "Github forks", new Uri($"https://img.shields.io/github/forks/atc-net/{repository.Name}")),
-                ("General Project Info", "Github size", new Uri($"https://img.shields.io/github/repo-size/atc-net/{repository.Name}")),
-                ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{repository.Name}.svg?logo=github")),
-            };
-
+            Badges = new List<(string Group, string Key, Uri Url)>();
             FolderAndFilePaths = new List<GitHubPath>();
             Root = new RootMetadata();
             Workflow = new WorkflowMetadata();
@@ -43,7 +37,7 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string DefaultBranchName { get; }
 
-        public List<(string Group, string Key, Uri Url)> Badges { get; }
+        public List<(string Group, string Key, Uri Url)> Badges { get; private set; }
 
         public List<RepositoryContributor> ResponsibleMembers { get; set; }
 
@@ -56,6 +50,8 @@ namespace AtcWeb.Domain.GitHub.Models
         public CodingRulesMetadata CodingRules { get; set; }
 
         public DotnetMetadata Dotnet { get; set; }
+
+        public List<Issue> OpenIssues { get; set; }
 
         public bool HasRootReadme => Root?.HasReadme ?? false;
 
@@ -82,6 +78,16 @@ namespace AtcWeb.Domain.GitHub.Models
         [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         public void SetBadges()
         {
+            Badges = new List<(string Group, string Key, Uri Url)>
+            {
+                ("General Project Info", "Github top language", new Uri($"https://img.shields.io/github/languages/top/atc-net/{Name}?logo=github")),
+                ("General Project Info", "Github stars", new Uri($"https://img.shields.io/github/stars/atc-net/{Name}?logo=github&label=Stars")),
+                ("General Project Info", "Github watchers", new Uri($"https://img.shields.io/github/watchers/atc-net/{Name}?logo=github&label=Watch")),
+                ("General Project Info", "Github forks", new Uri($"https://img.shields.io/github/forks/atc-net/{Name}?logo=github&label=Forks")),
+                ("General Project Info", "Github size", new Uri($"https://img.shields.io/github/repo-size/atc-net/{Name}?logo=github&label=Repo-size")),
+                ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{Name}.svg?logo=github&label=Issues")),
+            };
+
             if (HasWorkflowPreIntegration)
             {
                 Badges.Add((
@@ -146,6 +152,49 @@ namespace AtcWeb.Domain.GitHub.Models
                     "Vulnerabilities",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={BaseData.Name}&metric=vulnerabilities")));
             }
+        }
+
+        public DateTimeOffset? GetOpenIssuesNewest()
+        {
+            if (OpenIssues.Count == 0)
+            {
+                return null;
+            }
+
+            return OpenIssues.Max(x => x.CreatedAt);
+        }
+
+        public DateTimeOffset? GetOpenIssuesOldest()
+        {
+            if (OpenIssues.Count == 0)
+            {
+                return null;
+            }
+
+            return OpenIssues.Min(x => x.CreatedAt);
+        }
+
+        public LogCategoryType GetOpenIssuesNewestState(int monthWarning, int monthError) => GetOpenIssuesState(GetOpenIssuesNewest(), monthWarning, monthError);
+
+        public LogCategoryType GetOpenIssuesOldestState(int monthWarning, int monthError) => GetOpenIssuesState(GetOpenIssuesOldest(), monthWarning, monthError);
+
+        private static LogCategoryType GetOpenIssuesState(DateTimeOffset? date, int monthWarning, int monthError)
+        {
+            var logCategoryType = LogCategoryType.Information;
+            if (date is not null)
+            {
+                if (date.Value <= DateTimeOffset.Now.AddMonths(monthWarning * -1))
+                {
+                    logCategoryType = LogCategoryType.Warning;
+                }
+
+                if (date.Value <= DateTimeOffset.Now.AddMonths(monthError * -1))
+                {
+                    logCategoryType = LogCategoryType.Error;
+                }
+            }
+
+            return logCategoryType;
         }
     }
 }

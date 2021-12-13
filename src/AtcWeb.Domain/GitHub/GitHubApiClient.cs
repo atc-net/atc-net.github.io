@@ -16,6 +16,7 @@ namespace AtcWeb.Domain.GitHub
 {
     public class GitHubApiClient
     {
+        private const int MaxPerPage = 100;
         private readonly IGitHubClient gitHubClient;
         private readonly IMemoryCache memoryCache;
 
@@ -133,7 +134,7 @@ namespace AtcWeb.Domain.GitHub
         {
             try
             {
-                var url = $"/repos/atc-net/{repositoryName}/contributors";
+                var url = $"/repos/atc-net/{repositoryName}/contributors?per_page={MaxPerPage}";
                 var cacheKey = $"{CacheConstants.CacheKeyContributors}_{url}";
                 if (memoryCache.TryGetValue(cacheKey, out List<RepositoryContributor> data))
                 {
@@ -214,6 +215,41 @@ namespace AtcWeb.Domain.GitHub
             catch (Exception ex)
             {
                 return (isSuccessful: false, ex.Message);
+            }
+        }
+
+        public Task<(bool isSuccessful, List<Issue>)> GetIssuesAllByRepositoryByName(string repositoryName)
+            => GetIssuesByRepositoryByName(repositoryName, "all");
+
+        public Task<(bool isSuccessful, List<Issue>)> GetIssuesOpenByRepositoryByName(string repositoryName)
+            => GetIssuesByRepositoryByName(repositoryName, "open");
+
+        public Task<(bool isSuccessful, List<Issue>)> GetIssuesClosedByRepositoryByName(string repositoryName)
+            => GetIssuesByRepositoryByName(repositoryName, "closed");
+
+        private async Task<(bool isSuccessful, List<Issue>)> GetIssuesByRepositoryByName(string repositoryName, string state)
+        {
+            try
+            {
+                var url = $"/repos/atc-net/{repositoryName}/issues?state={state}&per_page={MaxPerPage}";
+                var cacheKey = $"{CacheConstants.CacheKeyContributors}_{url}";
+                if (memoryCache.TryGetValue(cacheKey, out List<Issue> data))
+                {
+                    return (isSuccessful: true, data);
+                }
+
+                var issues = await gitHubClient.Issue.GetAllForRepository(HttpClientConstants.AtcOrganizationName, repositoryName);
+                if (issues is null)
+                {
+                    return (isSuccessful: false, new List<Issue>());
+                }
+
+                memoryCache.Set(cacheKey, issues, CacheConstants.AbsoluteExpirationRelativeToNow);
+                return (isSuccessful: true, issues.ToList());
+            }
+            catch
+            {
+                return (isSuccessful: false, new List<Issue>());
             }
         }
     }

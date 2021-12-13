@@ -2,17 +2,24 @@
 <div @ref="@SectionReference" id="@GetSectionId()" class="@Classname">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
-        <MudText Typo="Typo.h4">@Title</MudText>
+        <MudText Typo="Typo.h4"
+                 Color="@TitleColor">
+            @Title
+        </MudText>
     }
 
     @if (SubTitle is not null)
     {
-        <MudText Typo="Typo.h6">@SubTitle</MudText>
+        <MudText Typo="Typo.h6">
+            @SubTitle
+        </MudText>
     }
 
     @if (Description is not null)
     {
-        <MudText>@Description</MudText>
+        <MudText>
+            @Description
+        </MudText>
     }
 </div>
 
@@ -28,6 +35,8 @@
     [Parameter] public string? Class { get; set; }
 
     [Parameter] public string? Title { get; set; }
+
+    [Parameter] public Color TitleColor { get; set; } = Color.Default;
 
     [Parameter] public RenderFragment? SubTitle { get; set; }
 

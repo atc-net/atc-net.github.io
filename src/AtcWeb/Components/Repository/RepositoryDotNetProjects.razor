@@ -16,7 +16,7 @@
             @foreach (var project in Repository.Dotnet.Projects)
             {
                 <tr>
-                    <td style="vertical-align:top">
+                    <td style="vertical-align: top;">
                         @project.Name
                     </td>
                     <td>
@@ -73,7 +73,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top">Package reference:</td>
+                                <td style="vertical-align: top;">Package reference:</td>
                                 <td><RepositoryDotNetProjectPackageReferences PackageReferences="@project.PackageReferences" /></td>
                             </tr>
                         </table>

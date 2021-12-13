@@ -19,10 +19,9 @@
         {
             foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
-                var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
-
                 <DocsPageSection>
-                    <SectionHeader Title="@repository.Name">
+                    <SectionHeader TitleColor="Color.Info"
+                                   Title="@repository.Name">
                         <SubTitle>
                             <RepositoryDescription Repository="@repository" />
                         </SubTitle>
@@ -31,10 +30,12 @@
                                     FullWidth="true">
 
                         <RepositoryBadges Repository="@repository" />
+                        <RepositorySummery Repository="@repository"/>
 
                         @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
                         {
                             <div class="py-4">
+                                <h2>.NET projects</h2>
                                 <RepositoryDotNetProjects Repository="@repository" />
                             </div>
                         }
@@ -43,6 +44,7 @@
                              !repository.Name.Equals("atc-snippets"))
                         {
                             <div class="py-4">
+                                <h2>Atc Coding Rules</h2>
                                 <RepositoryCodingRules Repository="@repository" />
                             </div>
                         }

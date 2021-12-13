@@ -10,14 +10,17 @@
         @if (RateLimits is null)
         {
             <MudGrid Justify="Justify.Center">
-                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                <MudProgressCircular Color="Color.Primary"
+                                     Size="Size.Medium"
+                                     Indeterminate="true" />
             </MudGrid>
         }
         else
         {
             <DocsPageSection>
                 <SectionHeader Title="Rate limits" />
-                <SectionContent AutoMarginContent="true" FullWidth="false">
+                <SectionContent AutoMarginContent="true"
+                                FullWidth="false">
                     <MudSimpleTable Bordered="true"
                                     Elevation="0">
                         <thead>

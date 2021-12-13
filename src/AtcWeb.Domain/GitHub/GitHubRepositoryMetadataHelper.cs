@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
 using AtcWeb.Domain.Nuget;
+using Octokit;
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -172,6 +173,21 @@ namespace AtcWeb.Domain.GitHub
                 data.RawDirectoryBuildPropsTest);
 
             return data;
+        }
+
+        public static async Task<List<Issue>> LoadOpenIssues(
+            GitHubApiClient gitHubApiClient,
+            string repositoryName)
+        {
+            if (gitHubApiClient is null)
+            {
+                throw new ArgumentNullException(nameof(gitHubApiClient));
+            }
+
+            var (isSuccessful, issues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName(repositoryName);
+            return isSuccessful
+                ? issues
+                : new List<Issue>();
         }
     }
 }

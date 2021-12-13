@@ -1,7 +1,5 @@
 @page "/introduction/repository-overview"
 
-@using AtcWeb.Styles
-
 @inherits RepositoryOverviewBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
@@ -19,10 +17,9 @@
         {
             foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
-                var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
-
                 <DocsPageSection>
-                    <SectionHeader Title="@repository.Name">
+                    <SectionHeader TitleColor="Color.Info"
+                                   Title="@repository.Name">
                         <SubTitle>
                             <RepositoryDescription Repository="@repository" />
                         </SubTitle>

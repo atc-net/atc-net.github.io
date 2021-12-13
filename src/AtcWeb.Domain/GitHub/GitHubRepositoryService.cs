@@ -171,9 +171,13 @@ namespace AtcWeb.Domain.GitHub
                 repository.FolderAndFilePaths,
                 repository.Name);
 
+            var taskOpenIssues = GitHubRepositoryMetadataHelper.LoadOpenIssues(
+                gitHubApiClient,
+                repository.Name);
+
             var tasks = new List<Task>
             {
-                taskCodingRules, taskDotnet,
+                taskCodingRules, taskDotnet, taskOpenIssues,
             };
 
             // TODO: ATC-WhenAll
@@ -181,6 +185,7 @@ namespace AtcWeb.Domain.GitHub
 
             repository.CodingRules = await taskCodingRules;
             repository.Dotnet = await taskDotnet;
+            repository.OpenIssues = await taskOpenIssues;
 
             foreach (var dotnetProject in repository.Dotnet.Projects)
             {
@@ -196,6 +201,8 @@ namespace AtcWeb.Domain.GitHub
                     }
                 }
             }
+
+            repository.SetBadges();
         }
     }
 }
