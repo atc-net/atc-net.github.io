@@ -22,12 +22,20 @@
                     {
                         if (Repository.CodingRules.IsLatestVersionRoot)
                         {
-                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Success">
+                                .editorconfig is up to date
+                            </MudText>
                         }
                         else
                         {
                             <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionRoot()}' and latest version is '{CodingRulesMetadata.LatestVersionRoot}'")">
-                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                                <MudText Typo="Typo.body2"
+                                         Class="my-0"
+                                         Color="Color.Warning">
+                                    .editorconfig is not up to date
+                                </MudText>
                             </MudTooltip>
                         }
 
@@ -35,7 +43,11 @@
                     }
                     else
                     {
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                        <MudText Typo="Typo.body2"
+                                 Class="my-0"
+                                 Color="Color.Warning">
+                            .editorconfig is missing
+                        </MudText>
                     }
                 </td>
             </tr>
@@ -49,12 +61,20 @@
                     {
                         if (Repository.CodingRules.IsLatestVersionSrc)
                         {
-                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Success">
+                                .editorconfig is up to date
+                            </MudText>
                         }
                         else
                         {
                             <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionSrc()}' and latest version is '{CodingRulesMetadata.LatestVersionSrc}'")">
-                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                                <MudText Typo="Typo.body2"
+                                         Class="my-0"
+                                         Color="Color.Warning">
+                                    .editorconfig is not up to date
+                                </MudText>
                             </MudTooltip>
                         }
 
@@ -62,7 +82,11 @@
                     }
                     else
                     {
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                        <MudText Typo="Typo.body2"
+                                 Class="my-0"
+                                 Color="Color.Warning">
+                            .editorconfig is missing
+                        </MudText>
                     }
                 </td>
             </tr>
@@ -76,12 +100,20 @@
                     {
                         if (Repository.CodingRules.IsLatestVersionTest)
                         {
-                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">.editorconfig is up to date</span>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Success">
+                                .editorconfig is up to date
+                            </MudText>
                         }
                         else
                         {
                             <MudTooltip Text="@($"Current version is '{Repository.CodingRules.GetCurrentVersionTest()}' and latest version is '{CodingRulesMetadata.LatestVersionTest}'")">
-                                <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is not up to date</span>
+                                <MudText Typo="Typo.body2"
+                                         Class="my-0"
+                                         Color="Color.Warning">
+                                    .editorconfig is not up to date
+                                </MudText>
                             </MudTooltip>
                         }
 
@@ -89,7 +121,11 @@
                     }
                     else
                     {
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">.editorconfig is missing</span>
+                        <MudText Typo="Typo.body2"
+                                 Class="my-0"
+                                 Color="Color.Warning">
+                            .editorconfig is missing
+                        </MudText>
                     }
                 </td>
             </tr>

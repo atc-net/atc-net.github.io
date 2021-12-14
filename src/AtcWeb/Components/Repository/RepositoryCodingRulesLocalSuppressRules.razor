@@ -5,29 +5,51 @@
 {
     @if (LocalSuppressRules.Count > 0)
     {
-        <MudTooltip Text="@($"{LocalSuppressRules.Count} Local suppress rules")">
-            <span style="color: @StateContainer.CurrentTheme.Palette.Success">
-                &nbsp;<i class="fa-regular fa-circle-check"></i>
-            </span>
-        </MudTooltip>
+        if (LocalSuppressRules.Count > 5)
+        {
+            <MudText Typo="Typo.body2"
+                     Class="my-0"
+                     Color="Color.Inherit">
+                <i>@LocalSuppressRules.Count local suppress rules.</i>
+            </MudText>
+        }
 
         <table class="atc-simple-table-clean table-no-padding">
             @foreach (var suppressRule in LocalSuppressRules)
             {
                 <tr>
                     <td style="vertical-align: top; padding-right: 12px !important;">@suppressRule.Key</td>
-                    <td>@suppressRule.Value</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(suppressRule.Value) ||
+                             suppressRule.Value.Length < 5 ||
+                             suppressRule.Value.StartsWith(suppressRule.Key, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Warning">
+                                @suppressRule.Value
+                            </MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Inherit">
+                                @suppressRule.Value
+                            </MudText>
+                        }
+                    </td>
                 </tr>
             }
         </table>
     }
     else
     {
-        <MudTooltip Text="No local suppress rules">
-            <span style="color: @StateContainer.CurrentTheme.Palette.Success">
-                &nbsp;<i class="fa-solid fa-circle-check"></i>
-            </span>
-        </MudTooltip>
+        <MudText Typo="Typo.body2"
+                 Class="my-0"
+                 Color="Color.Inherit">
+            <i>No local suppress rules.</i>
+        </MudText>
     }
 }
 
