@@ -1,11 +1,26 @@
 <div class="docs-page-header mb-12">
-    <MudText Typo="@Typo.h3">@Title</MudText>
+    @if (string.IsNullOrEmpty(TitleLink))
+    {
+        <MudText Typo="@Typo.h3">
+            @Title
+        </MudText>
+    }
+    else
+    {
+        <MudLink Href="@TitleLink"
+                 Target="_blank"
+                 Typo="Typo.h3">
+            @Title
+        </MudLink>
+    }
     <MudText>@GetSubTitle() @Description</MudText>
 </div>
 
 @code
 {
     [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? TitleLink { get; set; }
 
     [Parameter] public string? SubTitle { get; set; }
 
@@ -15,9 +30,9 @@
 
     string GetSubTitle()
     {
-        if (string.IsNullOrEmpty(SubTitle))
-            return "";
-        return SubTitle.TrimEnd('.') + ".";
+        return string.IsNullOrEmpty(SubTitle)
+            ? string.Empty
+            : SubTitle.TrimEnd('.') + ".";
     }
 
 }

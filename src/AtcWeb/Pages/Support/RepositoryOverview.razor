@@ -6,7 +6,7 @@
 
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="Repository overview"
-                    SubTitle="This is the overview of all atc repositories.">
+                    SubTitle="This is the technical overview of all atc repositories.">
     </DocsPageHeader>
     <DocsPageContent>
         @if (Repositories is null)
@@ -20,8 +20,9 @@
             foreach (var repository in Repositories.OrderBy(x => x.Name))
             {
                 <DocsPageSection>
-                    <SectionHeader TitleColor="Color.Info"
-                                   Title="@repository.Name">
+                    <SectionHeader Title="@repository.Name"
+                                   TitleColor="Color.Primary"
+                                   TitleLink="@($"https://atc-net.github.io/repository/{repository.Name}")">
                         <SubTitle>
                             <RepositoryDescription Repository="@repository" />
                         </SubTitle>

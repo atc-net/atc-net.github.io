@@ -2,10 +2,22 @@
 <div @ref="@SectionReference" id="@GetSectionId()" class="@Classname">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
-        <MudText Typo="Typo.h4"
-                 Color="@TitleColor">
-            @Title
-        </MudText>
+        if (string.IsNullOrEmpty(TitleLink))
+        {
+            <MudText Typo="@Typo.h3"
+                     Color="@TitleColor">
+                @Title
+            </MudText>
+        }
+        else
+        {
+            <MudLink Href="@TitleLink"
+                     Target="_blank"
+                     Typo="Typo.h3"
+                     Color="@TitleColor">
+                @Title
+            </MudLink>
+        }
     }
 
     @if (SubTitle is not null)
@@ -35,6 +47,8 @@
     [Parameter] public string? Class { get; set; }
 
     [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? TitleLink { get; set; }
 
     [Parameter] public Color TitleColor { get; set; } = Color.Default;
 

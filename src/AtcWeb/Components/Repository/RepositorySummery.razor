@@ -21,68 +21,100 @@
                 <td>Pushed:</td>
                 <td>@Repository.BaseData.PushedAt?.ToString("g")</td>
             </tr>
-            <tr>
-                <td style="vertical-align: top;">Open issues:</td>
-                <td>
-                    @if (Repository.OpenIssues.Count > 0)
-                    {
-                        <ol style="list-style-type: none;">
-                            <li>
-                                @if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Warning)
-                                {
-                                    <MudTooltip Text="Older than 3 month">
-                                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
-                                            Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                        </span>
-                                    </MudTooltip>
-                                }
-                                else if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Error)
-                                {
-                                    <MudTooltip Text="Older than 6 month">
-                                        <span style="color: @StateContainer.CurrentTheme.Palette.Error">
-                                            Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                        </span>
-                                    </MudTooltip>
-                                }
-                                else
-                                {
-                                    <span>
+        <tr>
+            <td style="vertical-align: top;">Open issues:</td>
+            <td>
+                @if (Repository.OpenIssues.Count > 0)
+                {
+                    <ol style="list-style-type: none;">
+                        <li>
+                            @if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Warning)
+                            {
+                                <MudTooltip Text="Older than 3 month">
+                                    <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
                                         Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
                                     </span>
-                                }
-                            </li>
-                            <li>
-                                @if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Warning)
-                                {
-                                    <MudTooltip Text="Older than 3 month">
-                                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
-                                            Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                        </span>
-                                    </MudTooltip>
-                                }
-                                else if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Error)
-                                {
-                                    <MudTooltip Text="Older than 6 month">
-                                        <span style="color: @StateContainer.CurrentTheme.Palette.Error">
-                                            Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                        </span>
-                                    </MudTooltip>
-                                }
-                                else
-                                {
-                                    <span>
+                                </MudTooltip>
+                            }
+                            else if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Error)
+                            {
+                                <MudTooltip Text="Older than 6 month">
+                                    <span style="color: @StateContainer.CurrentTheme.Palette.Error">
+                                        Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                    </span>
+                                </MudTooltip>
+                            }
+                            else
+                            {
+                                <span>
+                                    Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                </span>
+                            }
+                        </li>
+                        <li>
+                            @if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Warning)
+                            {
+                                <MudTooltip Text="Older than 3 month">
+                                    <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
                                         Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
                                     </span>
-                                }
-                            </li>
-                        </ol>
-                    }
-                    else
-                    {
-                        <span>None</span>
-                    }
-                </td>
-            </tr>
+                                </MudTooltip>
+                            }
+                            else if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Error)
+                            {
+                                <MudTooltip Text="Older than 6 month">
+                                    <span style="color: @StateContainer.CurrentTheme.Palette.Error">
+                                        Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                    </span>
+                                </MudTooltip>
+                            }
+                            else
+                            {
+                                <span>
+                                    Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                </span>
+                            }
+                        </li>
+                    </ol>
+                }
+                else
+                {
+                    <span>None</span>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Homepage:</td>
+            <td>
+                @if (string.IsNullOrEmpty(Repository.BaseData.Homepage))
+                {
+                    <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
+                            The homepage is missing!
+                        </span>
+                    </MudTooltip>
+                }
+                else if (!Repository.BaseData.Homepage.Equals($"https://atc-net.github.io/repository/{Repository.Name}", StringComparison.Ordinal))
+                {
+                    <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Error">
+                            The homepage is wrong url!
+                        </span>
+                    </MudTooltip>
+                }
+                else
+                {
+                    <MudTooltip Text=@($"https://atc-net.github.io/repository/{Repository.Name}")>
+                        <MudLink Href="@($"https://atc-net.github.io/repository/{Repository.Name}")"
+                                 Target="_blank"
+                                 Typo="Typo.body2"
+                                 Color="Color.Success">
+                            Link
+                        </MudLink>
+                    </MudTooltip>
+                }
+            </td>
+        </tr>
         </tbody>
     </MudSimpleTable>
 }

@@ -15,7 +15,8 @@
     }
     else
     {
-        <DocsPageHeader Title="@Repository.Name">
+        <DocsPageHeader Title="@Repository.Name"
+                        TitleLink="@($"https://atc-net.github.io/repository/{Repository.Name}")">
             <Description>
                 <RepositoryDescription Repository="@Repository" />
             </Description>

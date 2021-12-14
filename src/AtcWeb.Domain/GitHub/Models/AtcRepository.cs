@@ -31,7 +31,10 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Name => BaseData.Name;
 
-        public string DotName => Name.Replace('-', '.');
+        public string DotName => Name
+            .Replace('-', '.')
+            .Replace("atc.rest.api.generator", "atc-api-gen", StringComparison.Ordinal)
+            .Replace("atc.coding.rules.updater", "atc-coding-rules-updater", StringComparison.Ordinal);
 
         public string Description => BaseData.Description;
 
