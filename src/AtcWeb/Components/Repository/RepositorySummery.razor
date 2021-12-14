@@ -3,7 +3,7 @@
 @using AtcWeb.State
 
 @if (StateContainer is not null &&
-  Repository is not null)
+     Repository is not null)
 {
     <MudSimpleTable Bordered="false"
                     Elevation="0"
@@ -21,100 +21,154 @@
                 <td>Pushed:</td>
                 <td>@Repository.BaseData.PushedAt?.ToString("g")</td>
             </tr>
-        <tr>
-            <td style="vertical-align: top;">Open issues:</td>
-            <td>
-                @if (Repository.OpenIssues.Count > 0)
-                {
-                    <ol style="list-style-type: none;">
-                        <li>
-                            @if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Warning)
-                            {
-                                <MudTooltip Text="Older than 3 month">
-                                    <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
+            <tr>
+                <td style="vertical-align: top;">Open issues:</td>
+                <td>
+                    @if (Repository.OpenIssues.Count > 0)
+                    {
+                        <ol style="list-style-type: none;">
+                            <li>
+                                @if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Warning)
+                                {
+                                    <MudTooltip Text="Older than 3 month">
+                                        <MudText Typo="Typo.body2"
+                                                 Class="my-0"
+                                                 Color="Color.Warning">
+                                            Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                        </MudText>
+                                    </MudTooltip>
+                                }
+                                else if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Error)
+                                {
+                                    <MudTooltip Text="Older than 6 month">
+                                        <MudText Typo="Typo.body2"
+                                                 Class="my-0"
+                                                 Color="Color.Error">
+                                            Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                        </MudText>
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.body2"
+                                             Class="my-0"
+                                             Color="Color.Inherit">
                                         Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                    </span>
-                                </MudTooltip>
-                            }
-                            else if (Repository.GetOpenIssuesOldestState(1, 3) == LogCategoryType.Error)
-                            {
-                                <MudTooltip Text="Older than 6 month">
-                                    <span style="color: @StateContainer.CurrentTheme.Palette.Error">
-                                        Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                    </span>
-                                </MudTooltip>
-                            }
-                            else
-                            {
-                                <span>
-                                    Newest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                </span>
-                            }
-                        </li>
-                        <li>
-                            @if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Warning)
-                            {
-                                <MudTooltip Text="Older than 3 month">
-                                    <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
+                                    </MudText>
+                                }
+                            </li>
+                            <li>
+                                @if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Warning)
+                                {
+                                    <MudTooltip Text="Older than 3 month">
+                                        <MudText Typo="Typo.body2"
+                                                 Class="my-0"
+                                                 Color="Color.Warning">
+                                            Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                        </MudText>
+                                    </MudTooltip>
+                                }
+                                else if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Error)
+                                {
+                                    <MudTooltip Text="Older than 6 month">
+                                        <MudText Typo="Typo.body2"
+                                                 Class="my-0"
+                                                 Color="Color.Error">
+                                            Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
+                                        </MudText>
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.body2"
+                                             Class="my-0"
+                                             Color="Color.Inherit">
                                         Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                    </span>
-                                </MudTooltip>
-                            }
-                            else if (Repository.GetOpenIssuesOldestState(3, 6) == LogCategoryType.Error)
-                            {
-                                <MudTooltip Text="Older than 6 month">
-                                    <span style="color: @StateContainer.CurrentTheme.Palette.Error">
-                                        Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                    </span>
-                                </MudTooltip>
-                            }
-                            else
-                            {
-                                <span>
-                                    Oldest created: @Repository.GetOpenIssuesNewest()?.ToString("g") &nbsp;
-                                </span>
-                            }
-                        </li>
-                    </ol>
-                }
-                else
-                {
-                    <span>None</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <td>Homepage:</td>
-            <td>
-                @if (string.IsNullOrEmpty(Repository.BaseData.Homepage))
-                {
-                    <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">
-                            The homepage is missing!
-                        </span>
-                    </MudTooltip>
-                }
-                else if (!Repository.BaseData.Homepage.Equals($"https://atc-net.github.io/repository/{Repository.Name}", StringComparison.Ordinal))
-                {
-                    <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Error">
-                            The homepage is wrong url!
-                        </span>
-                    </MudTooltip>
-                }
-                else
-                {
-                    <MudTooltip Text=@($"https://atc-net.github.io/repository/{Repository.Name}")>
-                        <MudLink Href="@($"https://atc-net.github.io/repository/{Repository.Name}")"
-                                 Target="_blank"
-                                 Typo="Typo.body2"
-                                 Color="Color.Success">
-                            Link
-                        </MudLink>
-                    </MudTooltip>
-                }
-            </td>
-        </tr>
+                                    </MudText>
+                                }
+                            </li>
+                        </ol>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2"
+                                 Class="my-0"
+                                 Color="Color.Inherit">
+                            None
+                        </MudText>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Homepage:</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Repository.BaseData.Homepage))
+                    {
+                        <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Warning">
+                                The homepage is missing!
+                            </MudText>
+                        </MudTooltip>
+                    }
+                    else if (!Repository.BaseData.Homepage.Equals($"https://atc-net.github.io/repository/{Repository.Name}", StringComparison.Ordinal))
+                    {
+                        <MudTooltip Text=@($"Go to repo, click on about-gear, update website-field with:\n https://atc-net.github.io/repository/{Repository.Name}")>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Error">
+                                The homepage is wrong url!
+                            </MudText>
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text=@($"https://atc-net.github.io/repository/{Repository.Name}")>
+                            <MudLink Href="@($"https://atc-net.github.io/repository/{Repository.Name}")"
+                             Target="_blank"
+                             Typo="Typo.body2"
+                             Class="my-0"
+                             Color="Color.Primary">
+                                Link
+                            </MudLink>
+                        </MudTooltip>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>License:</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Repository.BaseData.License?.Key))
+                    {
+                        <MudTooltip Text=@("Go to repo, and add a MIT-license")>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Warning">
+                                The MIT-license is missing!
+                            </MudText>
+                        </MudTooltip>
+                    }
+                    else if (!Repository.BaseData.License.Key.Equals("mit", StringComparison.Ordinal))
+                    {
+                        <MudTooltip Text=@("Go to repo, and change the license to a MIT-license")>
+                            <MudText Typo="Typo.body2"
+                                     Class="my-0"
+                                     Color="Color.Error">
+                                The license is wrong - should be set to MIT-license!
+                            </MudText>
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2"
+                                 Class="my-0"
+                                 Color="Color.Inherit">
+                            MIT
+                        </MudText>
+                    }
+                </td>
+            </tr>
         </tbody>
     </MudSimpleTable>
 }
