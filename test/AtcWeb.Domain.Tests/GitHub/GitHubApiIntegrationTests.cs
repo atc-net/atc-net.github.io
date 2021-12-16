@@ -102,7 +102,7 @@ namespace AtcWeb.Domain.Tests.GitHub
             var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
 
             // Act
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName("atc", "master");
+            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName("atc", "main");
 
             // Assert
             Assert.True(isSuccessful);
