@@ -7,15 +7,14 @@
     <DocsPageContent>
 
         <DocsPageSection>
-            <SectionHeader Title="What is ATC" />
+            <SectionHeader Title="What is ATC / ATC-NET" />
             <SectionContent AutoMarginContent="false" FullWidth="true">
                 <p>
-                    What are ATC and ATC-NET?
+                    Short answer; Just names.
                 </p>
                 <p>
-                    The short answer is just names.
-                    We had to find a name that was short and not a was company name,
-                    as we want to be open source and not financially organized.
+                    We had to come up with a name that was short and not a company name,
+                    as we wanted an organization which was fully open sourced and not backed financially by any company.
                 </p>
                 <p>
                     Since our first repository was a .NET project,
@@ -28,83 +27,84 @@
             <SectionHeader Title="How it started" />
             <SectionContent AutoMarginContent="false" FullWidth="true">
                 <p>
-                    It all started with two colleagues who have worked together for a long time, and where there has always been 'copy and pasted'
-                    code from a private code base for different customers and projects over and over again.
+                    It all started with two colleagues who worked together for a long time for different customers on different projects,
+                    where code was being copied around from private code bases to project code bases over and over again.
                 </p>
                 <p>
-                    And one day, then one guy said to the other guy, we should put this common code into open-source
-                    and make some Nuget packages that we can just download and use instead.
+                    One day, then one guy said to the other guy, we should put this common code into an open-source repository
+                    and make some Nuget packages, which we can then download and utilize instead.
+                    After this the process started, which involved tasks such as; Coming up with a name, selecting a platform for hosting the code, selecting licenses, defining workflows, rules etc.
                 </p>
                 <p>
-                    Good idea said the other guy let's start up, but then we must ensure that we make the right model and that is real open-source,
-                    where everyone can contribute and forks as they want. No profit and no specific ownership, but free for all.
+                    GitHub was selected as the code platform, MIT license for all repositories, and a simple setup with workflows for commits and package distribution was defined.
                 </p>
                 <p>
-                    So we selected GitHub as code platform, MIT license for all repositories, and a simple setup with workflows for commits and package distribution.
+                    After the first two colleagues started, many more good colleagues joined.
+                    Other developers and hopefully many new will follow.
+                </p>
+            </SectionContent>
+        </DocsPageSection>
+
+        <DocsPageSection>
+            <SectionHeader Title="What is the purpose with ATC-NET" />
+            <SectionContent AutoMarginContent="false" FullWidth="true">
+                <p>
+                    The main purpose is to make a good, solid and stable toolbox with code and snippets based on many years of developer experience,
+                    which can be used in many projects.
                 </p>
                 <p>
-                    When we work for customers - we say proudly:
+                    When we work on any projects, we can proudly say the following:
                     <ul>
-                        <li>We share code.</li>
+                        <li>We share common code.</li>
                         <li>We are not afraid of showing our code.</li>
-                        <li>When we leave, the code will stay and still be improved, documented etc. overtime.</li>
+                        <li>When we leave, the code will stay in github and continue to be improved and documented through other projects.</li>
+                        <li>Projects can adopt the code themselves and everybody is free to fork the code</li>
                     </ul>
                 </p>
                 <p>
-                    After the first two colleagues started, we are today many good colleagues and other developers and hopefully many new will follow.
-                </p>
-            </SectionContent>
-        </DocsPageSection>
-
-        <DocsPageSection>
-            <SectionHeader Title="What is the target" />
-            <SectionContent AutoMarginContent="false" FullWidth="true">
-                <p>
-                    The main purpose is to make a good, solid and stable toolbox with code, snippets and experience that can be used in many places.
+                    Today we use several programming languages as well as technologies.
+                    Therefore, we strive to be somewhat disciplined in the repository structure, naming and versioning scheme.
                 </p>
                 <p>
-                    Today we use several programming languages as well as technologies. Therefore, we strive to be somewhat disciplined in repository structure, naming and versioning.
-                </p>
-                <p>
-                    For the language C# and .NET target framework:
+                    Specifically around C# and .NET target framework:
                     <ul>
-                        <li>We will try to be on the latest new LTS version from Microsoft - (Today is C# 10 on .NET 6).</li>
+                        <li>We will try to be on the latest new LTS version from Microsoft - (Currently C# 10 / .NET 6).</li>
                         <li>We try as much as we can to be cross platform independent (support Linux, MacOS and Windows).</li>
-                    </ul>                    
+                    </ul>
                 </p>
             </SectionContent>
         </DocsPageSection>
 
         <DocsPageSection>
-            <SectionHeader Title="How to contributing" />
+            <SectionHeader Title="How to contribute" />
             <SectionContent AutoMarginContent="false" FullWidth="true">
                 <p>
                     To make a contribution to a repository, just follow the "fork-and-pull" Git workflow. <MudLink Href="https://gist.github.com/Chaser324/ce0505fbed06b947d962">Read more here.</MudLink>
                 </p>
                 <p>
-                    So the simple steps are:
+                    The simple steps are:
                     <ul>
                         <li>Fork the repo on GitHub</li>
                         <li>Clone the project to your own machine</li>
                         <li>Commit changes to your own branch</li>
                         <li>Push your work back up to your fork</li>
-                        <li>Submit a pull request (PR) so that we can review your changes</li>
+                        <li>Submit a pull request (PR) so atc members, can review your changes</li>
                     </ul>
                 </p>
                 <p>
-                    NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+                    NOTE: Be sure to merge with the latest code from "upstream" before making a pull request!
                 </p>
                 <p>
                     More information can be found under <MudLink Href="/introduction/general-rules-and-guidelines#introduction">General Rules and Guidelines</MudLink>
                 </p>
                 <p>
-                    In general we have a repository workflow:
+                    Currently we have the following repository workflow:
                     <ul>
-                        <li>You PR will trigger 'pre-integration', that build and test you code.</li>
-                        <li>On a 'green' PR, code can be approved.</li>
-                        <li>Now the PR, can be merge into the 'main' branch, and this will trigger 'post-integration', that build, test and publish artifacts/packages to 'GitHub Package Registry'.</li>
-                        <li>On a 'green' merge process, code can be released.</li>
-                        <li>Releasing, is a manual workflow trigger, and when it is used, build and publish artifacts/packages to 'Nuget Package Registry'.</li>
+                        <li>A PR will trigger 'pre-integration', that builds and tests the code.</li>
+                        <li>On a succesful PR, code can be approved.</li>
+                        <li>Once the PR is merged into the 'main' branch, this will trigger the 'post-integration' workflow, which; Builds, tests and publishes artifacts/packages to 'GitHub Package Registry' or PyPi test package index.</li>
+                        <li>On a successful merge process, code can now be released to Nuget/PyPi package indexes.</li>
+                        <li>Releasing, is a manual workflow trigger. Once used it will; Build and publish artifacts/packages to 'Nuget Package Registry'/PyPi package indexes.</li>
                     </ul>
                 </p>
                 <p>
@@ -117,23 +117,11 @@
             <SectionHeader Title="Coding Guidelines" />
             <SectionContent AutoMarginContent="false" FullWidth="true">
                 <p>
-                    We have some coding guidelines we follow defined in the repository named <MudLink Href="https://github.com/atc-net/atc-coding-rules">ATC-Coding-Rules</MudLink>.
+                    We follow the coding guidelines defined in the repository <MudLink Href="https://github.com/atc-net/atc-coding-rules">ATC-Coding-Rules</MudLink>.
                 </p>
                 <p>
-                    These ATC-Coding-Rules is defined, based on .editorconfig files. And for .NET projects/solutions we are using and a range of Roslyn Analyzers.
-                </p>
-                <p>
-                    So the simple steps are:
-                    <ul>
-                        <li>Fork the repo on GitHub</li>
-                        <li>Clone the project to your own machine</li>
-                        <li>Commit changes to your own branch</li>
-                        <li>Push your work back up to your fork</li>
-                        <li>Submit a pull request (PR) so that we can review your changes</li>
-                    </ul>
-                </p>
-                <p>
-                    NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+                    These ATC-Coding-Rules are  based on .editorconfig files.
+                    Furthermore for .NET projects/solutions we are using a range of Roslyn Analyzers.
                 </p>
             </SectionContent>
         </DocsPageSection>

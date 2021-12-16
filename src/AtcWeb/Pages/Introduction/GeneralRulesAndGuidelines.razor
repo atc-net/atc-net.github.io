@@ -12,19 +12,29 @@
             <SectionHeader Title="Introduction"/>
             <SectionContent>
                 <p>
-                    The ATC-Net organization has a list of repositories. All these repositories are split up and managed by people from the core team, referred to as ATC-team.
+                    The ATC-Net organization repositories are split up and managed by people from the core team, referred to as ATC-team.
                 </p>
 
                 <ul style="list-style-type: square">
-                    <li>All repositories are free for use and possible to contribute to - ATC-Net use <b>MIT license</b>.</li>
-                    <li>Each repository is managed by one or more people from the ATC-team, referred to as Repo-Responsible (GitHub Role is Admin).</li>
-                    <li>Everyone can contribute to a repository by making a pull-request, referred to as PR.</li>
+                    <li>All repositories are free to use and contribute to - ATC-Net uses the <b>MIT license</b>.</li>
+                    <li>Each repository is managed by one or more people from the ATC-team, referred to as Repo-Responsible.</li>
+                    <li>Everyone can contribute to a repository by making a pull-request (PR).</li>
                 </ul>
 
                 <p>
-                    The process for creating a new repository, must go through the ATC-team. In this process there are important steps that have to be defined, like repository naming,
-                    purpose and who should be Repo-Admins. The repository setup should follow a ATC repository template with some settings.
-                    This process and repository template is under 'construction', but for now som parts can be found under snippets for atc-github-setup.
+                    The process for creating a new repository, must go through the ATC-team.
+
+                    This process involves a few steps
+
+                    <ul style="list-style-type: square">
+                        <li>Giving the repository a meaningful name</li>
+                        <li>Defining the purpose of the repository through a good description</li>
+                        <li>Assign Repo-Responsible members</li>
+                        <li>Follow the general ATC repository template</li>
+                    </ul>
+                    <br />
+                    When creating a repository on the atc-net organization, the above mentioned rules must be followed.
+                    If in need to create a "startup" repository, the <MudLink Href="https://github.com/sandbox-atc-net">Sandbox ATC-NET Organization</MudLink> can be used.
                 </p>
             </SectionContent>
         </DocsPageSection>
@@ -33,20 +43,35 @@
             <SectionHeader Title="What does it mean to be a Repo-Responsible"/>
             <SectionContent>
                 <p>
-                    The meaning of a Repo-Responsible, is just that the person(s) takes responsibility for driving the repository and ensuring the common ATC-Rules,
-                    settings and git-workflows are in a acceptable form / in sync with the ATC-team knowledge and attitudes.
+                    A Repo-Responsible member, is taking responsibility for driving the repository and ensuring that the common ATC-Rules,
+                    settings and workflows are in a acceptable state.
                 </p>
+                <p>
+                    Some of these tasks are as follows.
+                </p>
+                <p>
+                    <h3>For C#/.NET projects</h3>
 
-                <ul style="list-style-type: square">
-                    <li>Ensure a process is enabled, like <b>PR</b>.</li>
-                    <li>Ensure <b>beta</b> Nuget-packages is stored in GitHub <MudLink Href="https://github.com/orgs/atc-net/packages">Packages-Repository</MudLink> for dotnet projects.</li>
-                    <li>Ensure <b>release</b> Nuget-packages is stored in Nuget.org <MudLink Href="https://www.nuget.org/packages?q=atc-net">Packages-Repository</MudLink> for dotnet projects.</li>
-                </ul>
+                    <ul style="list-style-type: square">
+                        <li>Ensure a process is enabled, like <b>PR</b>.</li>
+                        <li>Ensure <b>beta</b> Nuget-packages is stored in <MudLink Href="https://github.com/orgs/atc-net/packages">GitHub Package Repository</MudLink>.</li>
+                        <li>Ensure <b>release</b> Nuget-packages is stored in <MudLink Href="https://www.nuget.org/packages?q=atc-net">Nuget.org Package Repository</MudLink>.</li>
+                    </ul>
+                </p>
+                <p>
+                    <h3>For Python projects</h3>
+
+                    <ul style="list-style-type: square">
+                        <li>Ensure a process is enabled, like <b>PR</b>.</li>
+                        <li>Ensure <b>beta</b> Python-packages is stored in <MudLink Href="https://test.pypi.org/">Test PyPi Package Repository</MudLink>.</li>
+                        <li>Ensure <b>release</b> Python-packages is stored in <MudLink Href="https://pypi.org/">PyPi Package Repository</MudLink>.</li>
+                    </ul>
+                </p>
             </SectionContent>
         </DocsPageSection>
 
         <DocsPageSection>
-            <SectionHeader Title="Repo-Responsible"/>
+            <SectionHeader Title="Repo-Responsible(s)"/>
             <SectionContent>
                 @if (Repositories is null)
                 {
