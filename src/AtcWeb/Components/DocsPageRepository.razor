@@ -23,6 +23,13 @@
         </DocsPageHeader>
         <DocsPageContent>
             <DocsPageSection>
+                <SectionHeader Title="Status" />
+                <SectionContent AutoMarginContent="false"
+                                FullWidth="true">
+                    <RepositoryBadges Repository="@Repository" />
+                </SectionContent>
+            </DocsPageSection>
+            <DocsPageSection>
                 <SectionHeader Title="Readme" />
                 <SectionContent AutoMarginContent="false"
                                 FullWidth="true">
@@ -30,7 +37,7 @@
                         @if (Repository.Root.HasReadme)
                         {
                             <MudCardContent>
-                                <MarkdownContent Content="@Repository.Root.RawReadme" />
+                                <MarkdownContent Content="@Repository.Root.RawReadme"/>
                             </MudCardContent>
                         }
                         else
@@ -41,12 +48,12 @@
                 </SectionContent>
             </DocsPageSection>
             <DocsPageSection>
-                <SectionHeader Title="Responsible members" />
+                <SectionHeader Title="Responsible members"/>
                 <SectionContent FullWidth="true">
                     <GitHubContributorGrid Contributors="@Repository.ResponsibleMembers"
                                            RepositoryName="@Repository.Name"
                                            ItemTitle="Responsible member"
-                                           Justify="Justify.FlexStart" />
+                                           Justify="Justify.FlexStart"/>
                 </SectionContent>
             </DocsPageSection>
         </DocsPageContent>

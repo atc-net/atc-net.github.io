@@ -1,10 +1,11 @@
 @using MudBlazor.Utilities
+
 <div @ref="@SectionReference" id="@GetSectionId()" class="@Classname">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
         if (string.IsNullOrEmpty(TitleLink))
         {
-            <MudText Typo="@Typo.h3"
+            <MudText Typo="@Typo.h4"
                      Color="@TitleColor">
                 @Title
             </MudText>

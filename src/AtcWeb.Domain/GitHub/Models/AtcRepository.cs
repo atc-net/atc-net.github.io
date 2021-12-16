@@ -13,13 +13,13 @@ namespace AtcWeb.Domain.GitHub.Models
         public AtcRepository(Repository repository)
         {
             this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
-            this.DefaultBranchName = "main";
             Badges = new List<(string Group, string Key, Uri Url)>();
             FolderAndFilePaths = new List<GitHubPath>();
             Root = new RootMetadata();
             Workflow = new WorkflowMetadata();
             CodingRules = new CodingRulesMetadata();
             Dotnet = new DotnetMetadata();
+            Python = new PythonMetadata();
         }
 
         public Repository BaseData { get; }
@@ -35,8 +35,6 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Url => $"https://github.com/atc-net/{Name}";
 
-        public string DefaultBranchName { get; }
-
         public List<(string Group, string Key, Uri Url)> Badges { get; private set; }
 
         public List<RepositoryContributor> ResponsibleMembers { get; set; }
@@ -49,7 +47,9 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public CodingRulesMetadata CodingRules { get; set; }
 
-        public DotnetMetadata Dotnet { get; set; }
+        public DotnetMetadata? Dotnet { get; set; }
+
+        public PythonMetadata? Python { get; set; }
 
         public List<Issue> OpenIssues { get; set; }
 
@@ -74,6 +74,10 @@ namespace AtcWeb.Domain.GitHub.Models
         public bool HasDotnetDirectoryBuildPropsSrc => Dotnet?.HasDirectoryBuildPropsSrc ?? false;
 
         public bool HasDotnetDirectoryBuildPropsTest => Dotnet?.HasDirectoryBuildPropsTest ?? false;
+
+        public bool IsDotnetSolution => "C#".Equals(BaseData.Language, StringComparison.Ordinal);
+
+        public bool IsPythonSolution => "Python".Equals(BaseData.Language, StringComparison.Ordinal);
 
         [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         public void SetBadges()
@@ -112,7 +116,7 @@ namespace AtcWeb.Domain.GitHub.Models
                     new Uri($"{Url}/workflows/Release/badge.svg")));
             }
 
-            if (HasWorkflowPostIntegration && HasDotnetSolution)
+            if (HasWorkflowPostIntegration && IsDotnetSolution)
             {
                 Badges.Add((
                     "Packages",
@@ -120,7 +124,7 @@ namespace AtcWeb.Domain.GitHub.Models
                     new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=GitHub&message=latest")));
             }
 
-            if (HasWorkflowRelease && HasDotnetSolution)
+            if (HasWorkflowRelease && IsDotnetSolution)
             {
                 Badges.Add((
                     "Packages",
@@ -130,7 +134,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Packages",
                     "Downloads",
-                    new Uri($"https://img.shields.io/nuget/dt/{DotName}?logo=nuget&style=flat-square&label=Downloads")));
+                    new Uri($"https://img.shields.io/nuget/dt/{DotName}?logo=nuget&label=Downloads")));
 
                 Badges.Add((
                     "Code Quality",
@@ -156,6 +160,14 @@ namespace AtcWeb.Domain.GitHub.Models
                     "Code Quality",
                     "Vulnerabilities",
                     new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=vulnerabilities")));
+            }
+
+            if (HasWorkflowRelease && IsPythonSolution)
+            {
+                Badges.Add((
+                    "Packages",
+                    "PyPi Version",
+                    new Uri($"https://badge.fury.io/py/{Name}.svg")));
             }
         }
 

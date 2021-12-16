@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,8 +120,10 @@ namespace AtcWeb.Domain.GitHub
 
         private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName)
         {
-            var (isSuccessful, gitHubPath) =
-                await gitHubApiClient.GetAtcAllPathsByRepositoryByName(repositoryName, defaultBranchName);
+            var (isSuccessful, gitHubPath) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName(
+                repositoryName,
+                defaultBranchName);
+
             return isSuccessful
                 ? gitHubPath
                 : new List<GitHubPath>();
@@ -132,13 +135,13 @@ namespace AtcWeb.Domain.GitHub
 
             repository.FolderAndFilePaths = await GetDirectoryMetadata(
                 gitHubRepository.Name,
-                repository.DefaultBranchName);
+                repository.BaseData.DefaultBranch);
 
             var taskRoot = GitHubRepositoryMetadataHelper.LoadRoot(
                 gitHubApiClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
-                repository.DefaultBranchName);
+                repository.BaseData.DefaultBranch);
 
             var taskWorkflow = GitHubRepositoryMetadataHelper.LoadWorkflow(
                 gitHubApiClient,
@@ -159,14 +162,10 @@ namespace AtcWeb.Domain.GitHub
             repository.SetBadges();
         }
 
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         private async Task PopulateMetaDataAdvanced(AtcRepository repository)
         {
             var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
-                gitHubApiClient,
-                repository.FolderAndFilePaths,
-                repository.Name);
-
-            var taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
                 gitHubApiClient,
                 repository.FolderAndFilePaths,
                 repository.Name);
@@ -177,19 +176,41 @@ namespace AtcWeb.Domain.GitHub
 
             var tasks = new List<Task>
             {
-                taskCodingRules, taskDotnet, taskOpenIssues,
+                taskCodingRules, taskOpenIssues,
             };
+
+            Task<DotnetMetadata>? taskDotnet = null;
+            Task<PythonMetadata>? taskPython = null;
+
+            if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
+            {
+                taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
+                    gitHubApiClient,
+                    repository.FolderAndFilePaths,
+                    repository.Name);
+
+                tasks.Add(taskDotnet);
+            }
+            else if ("Python".Equals(repository.BaseData.Language, StringComparison.Ordinal))
+            {
+                taskPython = GitHubRepositoryMetadataHelper.LoadPython(
+                    gitHubApiClient,
+                    repository.FolderAndFilePaths,
+                    repository.Name);
+
+                tasks.Add(taskPython);
+            }
 
             // TODO: ATC-WhenAll
             await Task.WhenAll(tasks);
 
             repository.CodingRules = await taskCodingRules;
-            repository.Dotnet = await taskDotnet;
             repository.OpenIssues = await taskOpenIssues;
 
-            foreach (var dotnetProject in repository.Dotnet.Projects)
+            if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
             {
-                foreach (var nugetPackageVersion in dotnetProject.PackageReferences)
+                repository.Dotnet = await taskDotnet!;
+                foreach (var nugetPackageVersion in repository.Dotnet.Projects.SelectMany(x => x.PackageReferences))
                 {
                     var (isSuccessful, latestVersion) = await nugetApiClient.GetVersionForPackageId(
                         nugetPackageVersion.PackageId,
@@ -200,6 +221,10 @@ namespace AtcWeb.Domain.GitHub
                         nugetPackageVersion.NewestVersion = latestVersion;
                     }
                 }
+            }
+            else if ("Python".Equals(repository.BaseData.Language, StringComparison.Ordinal))
+            {
+                repository.Python = await taskPython!;
             }
 
             repository.SetBadges();

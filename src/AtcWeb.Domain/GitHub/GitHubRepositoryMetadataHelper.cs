@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtcWeb.Domain.GitHub.Models;
-using AtcWeb.Domain.Nuget;
 using Octokit;
 
 // ReSharper disable StringLiteralTypo
@@ -116,6 +115,21 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
+        public static async Task<List<Issue>> LoadOpenIssues(
+            GitHubApiClient gitHubApiClient,
+            string repositoryName)
+        {
+            if (gitHubApiClient is null)
+            {
+                throw new ArgumentNullException(nameof(gitHubApiClient));
+            }
+
+            var (isSuccessful, issues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName(repositoryName);
+            return isSuccessful
+                ? issues
+                : new List<Issue>();
+        }
+
         public static async Task<DotnetMetadata> LoadDotnet(
             GitHubApiClient gitHubApiClient,
             List<GitHubPath> foldersAndFiles,
@@ -133,7 +147,8 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new DotnetMetadata();
 
-            var fileSolutionFile = foldersAndFiles.Find(x => x.IsFile && "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
+            var fileSolutionFile = foldersAndFiles.Find(x =>
+                x.IsFile && "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
             if (fileSolutionFile is not null)
             {
                 var (isSuccessfulSolution, rawSolution) = await gitHubApiClient.GetRawAtcCodeFile(
@@ -175,8 +190,9 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
-        public static async Task<List<Issue>> LoadOpenIssues(
+        public static async Task<PythonMetadata> LoadPython(
             GitHubApiClient gitHubApiClient,
+            List<GitHubPath> foldersAndFiles,
             string repositoryName)
         {
             if (gitHubApiClient is null)
@@ -184,10 +200,17 @@ namespace AtcWeb.Domain.GitHub
                 throw new ArgumentNullException(nameof(gitHubApiClient));
             }
 
-            var (isSuccessful, issues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName(repositoryName);
-            return isSuccessful
-                ? issues
-                : new List<Issue>();
+            if (foldersAndFiles is null)
+            {
+                throw new ArgumentNullException(nameof(foldersAndFiles));
+            }
+
+            var data = new PythonMetadata();
+
+            // TODO:
+            await Task.Delay(1);
+
+            return data;
         }
     }
 }

@@ -40,6 +40,13 @@
                                 <RepositoryDotNetProjects Repository="@repository" />
                             </div>
                         }
+                        else if ("Python".Equals(repository.BaseData.Language, StringComparison.Ordinal))
+                        {
+                            <div class="py-4">
+                                <h2>Python projects</h2>
+                                <i>TODO: Data rendering is not implemented yet.</i>
+                            </div>
+                        }
 
                         @if (!repository.Name.Equals("atc-docs") ||
                              !repository.Name.Equals("atc-snippets"))
