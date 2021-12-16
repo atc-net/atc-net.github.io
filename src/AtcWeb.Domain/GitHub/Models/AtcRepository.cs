@@ -14,11 +14,6 @@ namespace AtcWeb.Domain.GitHub.Models
         {
             this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
             this.DefaultBranchName = "main";
-            if (repository.Name.Equals("atc", StringComparison.Ordinal))
-            {
-                this.DefaultBranchName = "master";
-            }
-
             Badges = new List<(string Group, string Key, Uri Url)>();
             FolderAndFilePaths = new List<GitHubPath>();
             Root = new RootMetadata();
