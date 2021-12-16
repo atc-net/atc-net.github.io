@@ -122,7 +122,7 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Packages",
                     "Github Version",
-                    new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=github&message=latest")));
+                    new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=GitHub&message=latest")));
             }
 
             if (HasWorkflowRelease && HasDotnetSolution)
@@ -130,7 +130,12 @@ namespace AtcWeb.Domain.GitHub.Models
                 Badges.Add((
                     "Packages",
                     "NuGet Version",
-                    new Uri($"https://img.shields.io/nuget/v/{DotName}.svg?logo=nuget")));
+                    new Uri($"https://img.shields.io/nuget/v/{DotName}.svg?logo=nuget&label=Nuget")));
+
+                Badges.Add((
+                    "Packages",
+                    "Downloads",
+                    new Uri($"https://img.shields.io/nuget/dt/{DotName}?logo=nuget&style=flat-square&label=Downloads")));
 
                 Badges.Add((
                     "Code Quality",
