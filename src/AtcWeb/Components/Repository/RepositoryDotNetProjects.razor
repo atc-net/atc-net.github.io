@@ -2,7 +2,7 @@
 @using AtcWeb.State
 
 @if (StateContainer is not null &&
-     Repository is not null)
+     Repository?.Dotnet != null)
 {
     <MudSimpleTable Bordered="true"
                     Elevation="0">
