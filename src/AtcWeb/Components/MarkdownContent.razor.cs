@@ -43,6 +43,10 @@ namespace AtcWeb.Components
                     .Replace(
                         "<img src=\"https://raw.githubusercontent.com/",
                         "<img style='height: 100%; width: 100%; object-fit: contain' src=\"https://raw.githubusercontent.com/",
+                        StringComparison.Ordinal)
+                    .Replace(
+                        "<a href=\"https://github.com/atc-net/",
+                        "<a target=\"_blank\" href=\"https://github.com/atc-net/",
                         StringComparison.Ordinal);
 
             return new MarkupString(sanitizedHtml);
