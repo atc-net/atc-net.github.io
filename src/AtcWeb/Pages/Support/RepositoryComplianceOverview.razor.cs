@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AtcWeb.Pages.Support
 {
-    public class RepositoryOverviewBase : ComponentBase
+    public class RepositoryComplianceOverviewBase : ComponentBase
     {
         protected List<Domain.GitHub.Models.AtcRepository>? Repositories;
 
