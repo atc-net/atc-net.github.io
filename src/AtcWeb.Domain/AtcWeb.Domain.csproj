@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.358" />
     <PackageReference Include="Atc" Version="1.1.360" />
     <PackageReference Include="GitHubApiStatus.Extensions" Version="2.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
     <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
