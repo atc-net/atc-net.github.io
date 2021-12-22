@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.358" />
+    <PackageReference Include="Atc" Version="1.1.360" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
     <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
     <PackageReference Include="Markdig" Version="0.26.0" />

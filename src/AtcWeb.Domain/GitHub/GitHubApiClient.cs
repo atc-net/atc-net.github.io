@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Atc.Helpers;
 using AtcWeb.Domain.GitHub.Models;
 using GitHubApiStatus;
 using Microsoft.Extensions.Caching.Memory;
@@ -117,8 +118,7 @@ namespace AtcWeb.Domain.GitHub
                             }
                         });
 
-                    // TODO: ATC-WhenAll
-                    await Task.WhenAll(tasks);
+                    await TaskHelper.WhenAll(tasks);
                 }
 
                 memoryCache.Set(cacheKey, bag.ToList(), CacheConstants.AbsoluteExpirationRelativeToNow);
