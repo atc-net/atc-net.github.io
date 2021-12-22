@@ -23,28 +23,39 @@
                     </ol>
                 </td>
                 <td class="px-0 py-2" style="vertical-align: top;">
-                    <ol style="list-style-type: none;">
-                        @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Build Status"))
-                        {
-                            <li><img src="@url" alt="@key" /></li>
-                        }
-                    </ol>
+                    @if (Repository.Badges.Any(x => x.Group == "Build Status"))
+                    {
+                        <ol style="list-style-type: none;">
+                            @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Build Status"))
+                            {
+                                <li><img src="@url" alt="@key" /></li>
+                            }
+                        </ol>
+                        <br />
+                        <img src="@($"https://buildstats.info/github/chart/atc-net/{Repository.Name}")" alt="Build history" />
+                    }
                 </td>
                 <td class="px-0 py-2" style="vertical-align: top;">
-                    <ol style="list-style-type: none;">
-                        @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Packages"))
-                        {
-                            <li><img src="@url" alt="@key" /></li>
-                        }
-                    </ol>
+                    @if (Repository.Badges.Any(x => x.Group == "Packages"))
+                    {
+                        <ol style="list-style-type: none;">
+                            @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Packages"))
+                            {
+                                <li><img src="@url" alt="@key" /></li>
+                            }
+                        </ol>
+                    }
                 </td>
                 <td class="px-0 py-2" style="vertical-align: top;">
-                    <ol style="list-style-type: none;">
-                        @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Code Quality"))
-                        {
-                            <li><img src="@url" alt="@key" /></li>
-                        }
-                    </ol>
+                    @if (Repository.Badges.Any(x => x.Group == "Code Quality"))
+                    {
+                        <ol style="list-style-type: none;">
+                            @foreach (var (_, key, url) in Repository.Badges.Where(x => x.Group == "Code Quality"))
+                            {
+                                <li><img src="@url" alt="@key" /></li>
+                            }
+                        </ol>
+                    }
                 </td>
             </tr>
         </tbody>
