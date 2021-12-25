@@ -89,8 +89,7 @@ namespace AtcWeb.Domain.GitHub
                     bag.Add(atcRepository);
                 });
 
-            // TODO: ATC-WhenAll
-            await Task.WhenAll(tasks);
+            await TaskHelper.WhenAll(tasks);
 
             return bag.ToList();
         }
@@ -153,8 +152,7 @@ namespace AtcWeb.Domain.GitHub
                 taskRoot, taskWorkflow,
             };
 
-            // TODO: ATC-WhenAll
-            await Task.WhenAll(tasks);
+            await TaskHelper.WhenAll(tasks);
 
             repository.Root = await taskRoot;
             repository.Workflow = await taskWorkflow;
@@ -201,8 +199,7 @@ namespace AtcWeb.Domain.GitHub
                 tasks.Add(taskPython);
             }
 
-            // TODO: ATC-WhenAll
-            await Task.WhenAll(tasks);
+            await TaskHelper.WhenAll(tasks);
 
             repository.CodingRules = await taskCodingRules;
             repository.OpenIssues = await taskOpenIssues;
