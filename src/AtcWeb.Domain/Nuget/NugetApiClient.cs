@@ -74,7 +74,7 @@ namespace AtcWeb.Domain.Nuget
                 return (isSuccessful: false, new Version());
             }
 
-            memoryCache.Set(cacheKey, nugetSearchResult, CacheConstants.AbsoluteExpirationRelativeToNow);
+            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
             return (isSuccessful: true, result);
         }
 
