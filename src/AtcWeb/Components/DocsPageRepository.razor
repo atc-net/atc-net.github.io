@@ -37,7 +37,9 @@
                         @if (Repository.Root.HasReadme)
                         {
                             <MudCardContent>
-                                <MarkdownContent Content="@Repository.Root.RawReadme"/>
+                                <MarkdownRepositoryContent RepositoryName="@Repository.Name"
+                                                           RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                           Content="@Repository.Root.RawReadme"/>
                             </MudCardContent>
                         }
                         else

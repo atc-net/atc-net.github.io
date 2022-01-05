@@ -28,9 +28,9 @@ namespace AtcWeb.Domain.GitHub
 
         public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()
         {
-            var (isSuccessful, gitHubContributors) = await atcApiGitHubApiInformationClient.GetApiRateLimits();
+            var (isSuccessful, gitHubApiRateLimits) = await atcApiGitHubApiInformationClient.GetApiRateLimits();
             return isSuccessful
-                ? gitHubContributors
+                ? gitHubApiRateLimits
                 : null;
         }
 

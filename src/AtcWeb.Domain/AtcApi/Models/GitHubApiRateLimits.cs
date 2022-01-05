@@ -2,6 +2,8 @@ namespace AtcWeb.Domain.AtcApi.Models
 {
     public class GitHubApiRateLimits
     {
-        public GitHubApiRateLimit RestApi { get; set; }
+        public GitHubApiRateLimitStatus RestApi { get; set; }
+
+        public override string ToString() => $"{nameof(RestApi)}: ({RestApi})";
     }
 }

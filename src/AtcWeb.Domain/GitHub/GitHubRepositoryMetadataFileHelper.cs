@@ -71,7 +71,7 @@ namespace AtcWeb.Domain.GitHub
                             StringComparison.Ordinal)
                         .Replace(
                             "](docs/",
-                            $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/docs/",
+                            $"](https://github.com/atc-net/{repositoryName}/blob/{defaultBranchName}/docs/",
                             StringComparison.Ordinal);
 
                     return rawFileContent;

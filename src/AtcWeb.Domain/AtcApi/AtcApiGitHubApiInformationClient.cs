@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json;
@@ -27,7 +28,9 @@ namespace AtcWeb.Domain.AtcApi
                 }
 
                 var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
+                Console.WriteLine("# " + content);
                 var result = JsonSerializer.Deserialize<GitHubApiRateLimits>(content, JsonSerializerOptionsFactory.Create());
+                Console.WriteLine("## " + result);
                 return result is null
                     ? (isSuccessful: false, new GitHubApiRateLimits())
                     : (isSuccessful: true, result);
