@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -11,6 +12,7 @@ namespace AtcWeb.Domain.AtcApi
     {
         private const string BaseAddress = "https://atc-api.azurewebsites.net/github/api-information";
 
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OK.")]
         public async Task<(bool isSuccessful, GitHubApiRateLimits)> GetApiRateLimits(CancellationToken cancellationToken = default)
         {
             try
