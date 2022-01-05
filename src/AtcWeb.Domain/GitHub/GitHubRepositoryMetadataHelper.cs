@@ -148,8 +148,8 @@ namespace AtcWeb.Domain.GitHub
 
             var data = new DotnetMetadata();
 
-            var fileSolutionFile = foldersAndFiles.Find(x =>
-                x.IsFile && "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
+            var fileSolutionFile = foldersAndFiles.Find(x => x.IsFile &&
+                                                             "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
             if (fileSolutionFile is not null)
             {
                 var (isSuccessfulSolution, rawSolution) = await gitHubRepositoryClient.GetFileByRepositoryNameAndFilePath(
