@@ -203,35 +203,11 @@ namespace AtcWeb.Domain.GitHub
                 }
 
                 if (!string.IsNullOrEmpty(packageId) &&
-                    !string.IsNullOrEmpty(version))
+                    !string.IsNullOrEmpty(version) &&
+                    Version.TryParse(version, out var dotnetVersion))
                 {
-                    if (Version.TryParse(version, out var dotnetVersion))
-                    {
-                        data.Add(new DotnetNugetPackageVersionExtended(packageId, dotnetVersion, dotnetVersion));
-                    }
+                    data.Add(new DotnetNugetPackageVersionExtended(packageId, dotnetVersion, dotnetVersion));
                 }
-
-                //var trimLine = line
-                //    .Replace("<PackageReference ", string.Empty, StringComparison.Ordinal)
-                //    .Replace("/>", string.Empty, StringComparison.Ordinal)
-                //    .Replace(">", string.Empty, StringComparison.Ordinal)
-                //    .Trim();
-                //var attributes = trimLine.Split(' ');
-                //if (attributes.Length != 2)
-                //{
-                //    continue;
-                //}
-
-                //var key = attributes[0]
-                //    .Replace("Include=", string.Empty, StringComparison.Ordinal)
-                //    .Replace("\"", string.Empty, StringComparison.Ordinal);
-                //var value = attributes[1]
-                //    .Replace("Version=", string.Empty, StringComparison.Ordinal)
-                //    .Replace("\"", string.Empty, StringComparison.Ordinal);
-                //if (Version.TryParse(value, out var version))
-                //{
-                //    data.Add(new DotnetNugetPackageVersionExtended(key, version, version));
-                //}
             }
 
             return data.OrderBy(x => x.PackageId);
