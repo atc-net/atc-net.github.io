@@ -167,7 +167,7 @@ namespace AtcWeb.Domain.GitHub
         private static IEnumerable<DotnetNugetPackageVersionExtended> GetPackageReferencesForCsproj(string rawCsproj)
         {
             var data = new List<DotnetNugetPackageVersionExtended>();
-            foreach (var line in rawCsproj.Split(Environment.NewLine))
+            foreach (var line in rawCsproj.EnsureEnvironmentNewLines().Split(Environment.NewLine))
             {
                 if (!line.Contains("<PackageReference ", StringComparison.Ordinal) ||
                     !line.Contains("Include=", StringComparison.Ordinal) ||
@@ -176,27 +176,62 @@ namespace AtcWeb.Domain.GitHub
                     continue;
                 }
 
-                var trimLine = line
+                var attributes = line
                     .Replace("<PackageReference ", string.Empty, StringComparison.Ordinal)
                     .Replace("/>", string.Empty, StringComparison.Ordinal)
                     .Replace(">", string.Empty, StringComparison.Ordinal)
-                    .Trim();
-                var attributes = trimLine.Split(' ');
-                if (attributes.Length != 2)
+                    .Trim()
+                    .Split(' ');
+
+                var packageId = string.Empty;
+                var version = string.Empty;
+
+                foreach (var attribute in attributes)
                 {
-                    continue;
+                    if (attribute.StartsWith("Include=", StringComparison.Ordinal))
+                    {
+                        packageId = attribute
+                            .Replace("Include=", string.Empty, StringComparison.Ordinal)
+                            .Replace("\"", string.Empty, StringComparison.Ordinal);
+                    }
+                    else if (attribute.StartsWith("Version=", StringComparison.Ordinal))
+                    {
+                        version = attribute
+                            .Replace("Version=", string.Empty, StringComparison.Ordinal)
+                            .Replace("\"", string.Empty, StringComparison.Ordinal);
+                    }
                 }
 
-                var key = attributes[0]
-                    .Replace("Include=", string.Empty, StringComparison.Ordinal)
-                    .Replace("\"", string.Empty, StringComparison.Ordinal);
-                var value = attributes[1]
-                    .Replace("Version=", string.Empty, StringComparison.Ordinal)
-                    .Replace("\"", string.Empty, StringComparison.Ordinal);
-                if (Version.TryParse(value, out var version))
+                if (!string.IsNullOrEmpty(packageId) &&
+                    !string.IsNullOrEmpty(version))
                 {
-                    data.Add(new DotnetNugetPackageVersionExtended(key, version, version));
+                    if (Version.TryParse(version, out var dotnetVersion))
+                    {
+                        data.Add(new DotnetNugetPackageVersionExtended(packageId, dotnetVersion, dotnetVersion));
+                    }
                 }
+
+                //var trimLine = line
+                //    .Replace("<PackageReference ", string.Empty, StringComparison.Ordinal)
+                //    .Replace("/>", string.Empty, StringComparison.Ordinal)
+                //    .Replace(">", string.Empty, StringComparison.Ordinal)
+                //    .Trim();
+                //var attributes = trimLine.Split(' ');
+                //if (attributes.Length != 2)
+                //{
+                //    continue;
+                //}
+
+                //var key = attributes[0]
+                //    .Replace("Include=", string.Empty, StringComparison.Ordinal)
+                //    .Replace("\"", string.Empty, StringComparison.Ordinal);
+                //var value = attributes[1]
+                //    .Replace("Version=", string.Empty, StringComparison.Ordinal)
+                //    .Replace("\"", string.Empty, StringComparison.Ordinal);
+                //if (Version.TryParse(value, out var version))
+                //{
+                //    data.Add(new DotnetNugetPackageVersionExtended(key, version, version));
+                //}
             }
 
             return data.OrderBy(x => x.PackageId);
