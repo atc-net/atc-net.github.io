@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using AtcWeb.Domain.AtcApi;
+using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.GitHub.Models;
-using Octokit;
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -13,14 +14,14 @@ namespace AtcWeb.Domain.GitHub
     public static class GitHubRepositoryMetadataHelper
     {
         public static async Task<RootMetadata> LoadRoot(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string defaultBranchName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -31,7 +32,7 @@ namespace AtcWeb.Domain.GitHub
             var data = new RootMetadata();
 
             data.RawReadme = await GitHubRepositoryMetadataFileHelper.GetReadMeFile(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 defaultBranchName);
@@ -40,13 +41,13 @@ namespace AtcWeb.Domain.GitHub
         }
 
         public static async Task<WorkflowMetadata> LoadWorkflow(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -57,19 +58,19 @@ namespace AtcWeb.Domain.GitHub
             var data = new WorkflowMetadata();
 
             data.RawPreIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 ".github/workflows/pre-integration.yml");
 
             data.RawPostIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 ".github/workflows/post-integration.yml");
 
             data.RawRelease = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 ".github/workflows/release.yml");
@@ -78,13 +79,13 @@ namespace AtcWeb.Domain.GitHub
         }
 
         public static async Task<CodingRulesMetadata> LoadCodingRules(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -95,19 +96,19 @@ namespace AtcWeb.Domain.GitHub
             var data = new CodingRulesMetadata();
 
             data.RawEditorConfigRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 ".editorconfig");
 
             data.RawEditorConfigSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 "src/.editorconfig");
 
             data.RawEditorConfigTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 "test/.editorconfig");
@@ -115,29 +116,29 @@ namespace AtcWeb.Domain.GitHub
             return data;
         }
 
-        public static async Task<List<Issue>> LoadOpenIssues(
-            GitHubApiClient gitHubApiClient,
+        public static async Task<List<GitHubIssue>> LoadOpenIssues(
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             string repositoryName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
-            var (isSuccessful, issues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName(repositoryName);
+            var (isSuccessful, issues) = await gitHubRepositoryClient.GetIssuesOpenByRepositoryByName(repositoryName);
             return isSuccessful
                 ? issues
-                : new List<Issue>();
+                : new List<GitHubIssue>();
         }
 
         public static async Task<DotnetMetadata> LoadDotnet(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -151,7 +152,7 @@ namespace AtcWeb.Domain.GitHub
                 x.IsFile && "sln".Equals(x.GetFileExtension(), StringComparison.OrdinalIgnoreCase));
             if (fileSolutionFile is not null)
             {
-                var (isSuccessfulSolution, rawSolution) = await gitHubApiClient.GetRawAtcCodeFile(
+                var (isSuccessfulSolution, rawSolution) = await gitHubRepositoryClient.GetFileByRepositoryNameAndFilePath(
                     repositoryName,
                     fileSolutionFile.Path);
 
@@ -162,25 +163,25 @@ namespace AtcWeb.Domain.GitHub
             }
 
             data.RawDirectoryBuildPropsRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 "Directory.Build.props");
 
             data.RawDirectoryBuildPropsSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 "src/Directory.Build.props");
 
             data.RawDirectoryBuildPropsTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 "test/Directory.Build.props");
 
             data.Projects = await GitHubRepositoryMetadataDotnetHelper.GetProjects(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 data.RawDirectoryBuildPropsRoot,
@@ -191,13 +192,13 @@ namespace AtcWeb.Domain.GitHub
         }
 
         public static async Task<PythonMetadata> LoadPython(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)

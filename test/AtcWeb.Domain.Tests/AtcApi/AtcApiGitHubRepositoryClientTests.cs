@@ -1,26 +1,24 @@
 using System.Threading.Tasks;
 using Atc.Test;
-using AtcWeb.Domain.GitHub;
+using AtcWeb.Domain.AtcApi;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
-// ReSharper disable RedundantNullableFlowAttribute
-namespace AtcWeb.Domain.Tests.GitHub
+namespace AtcWeb.Domain.Tests.AtcApi
 {
-    public class GitHubApiIntegrationTests
+    public class AtcApiGitHubRepositoryClientTests
     {
         [Theory, AutoNSubstituteData]
-        public async Task GetAtcRepositories(
+        public async Task GetRepositories(
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubRepositories) = await gitHubApiClient.GetAtcRepositories();
+            var (isSuccessful, gitHubRepositories) = await client.GetRepositories();
 
             // Assert
             Assert.True(isSuccessful);
@@ -33,15 +31,13 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetAtcRepositoryByName(
+        public async Task GetRepositoryByName(
             [Frozen] IMemoryCache memoryCache)
         {
-            // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubRepository) = await gitHubApiClient.GetAtcRepositoryByName("atc");
+            var (isSuccessful, gitHubRepository) = await client.GetRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);
@@ -52,15 +48,14 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetAtcContributors(
+        public async Task GetContributors(
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors();
+            var (isSuccessful, gitHubContributors) = await client.GetContributors();
 
             // Assert
             Assert.True(isSuccessful);
@@ -73,15 +68,14 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetAtcContributorsByRepository(
+        public async Task GetContributorsByRepository(
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributorsByRepositoryByName("atc");
+            var (isSuccessful, gitHubContributors) = await client.GetContributorsByRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);
@@ -94,15 +88,14 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetAtcAllPathsByRepository(
+        public async Task GetAllPathsByRepository(
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubPaths) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName("atc", "main");
+            var (isSuccessful, gitHubPaths) = await client.GetAllPathsByRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);
@@ -115,15 +108,14 @@ namespace AtcWeb.Domain.Tests.GitHub
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task GetRawAtcCodeFile(
+        public async Task GetFileByRepositoryNameAndFilePath(
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubRaw) = await gitHubApiClient.GetRawAtcCodeFile("atc", "README.md");
+            var (isSuccessful, gitHubRaw) = await client.GetFileByRepositoryNameAndFilePath("atc", "README.md");
 
             // Assert
             Assert.True(isSuccessful);
@@ -138,11 +130,10 @@ namespace AtcWeb.Domain.Tests.GitHub
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesAllByRepositoryByName("atc");
+            var (isSuccessful, gitHubIssues) = await client.GetIssuesAllByRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);
@@ -159,11 +150,10 @@ namespace AtcWeb.Domain.Tests.GitHub
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesOpenByRepositoryByName("atc");
+            var (isSuccessful, gitHubIssues) = await client.GetIssuesOpenByRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);
@@ -180,11 +170,10 @@ namespace AtcWeb.Domain.Tests.GitHub
             [Frozen] IMemoryCache memoryCache)
         {
             // Arrange
-            var gitHubClient = GitHubTestHttpClients.CreateGitHubClient();
-            var gitHubApiClient = new GitHubApiClient(gitHubClient, memoryCache);
+            var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
             // Act
-            var (isSuccessful, gitHubIssues) = await gitHubApiClient.GetIssuesClosedByRepositoryByName("atc");
+            var (isSuccessful, gitHubIssues) = await client.GetIssuesClosedByRepositoryByName("atc");
 
             // Assert
             Assert.True(isSuccessful);

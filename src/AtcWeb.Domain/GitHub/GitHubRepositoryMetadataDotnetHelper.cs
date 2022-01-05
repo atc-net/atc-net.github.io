@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AtcWeb.Domain.AtcApi;
+using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.GitHub.Models;
 
 // ReSharper disable LoopCanBeConvertedToQuery
@@ -14,7 +16,7 @@ namespace AtcWeb.Domain.GitHub
     {
         [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
         public static async Task<List<DotnetProject>> GetProjects(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string rawDirectoryBuildPropsRoot,
@@ -32,7 +34,7 @@ namespace AtcWeb.Domain.GitHub
                 var project = new DotnetProject();
 
                 project.RawCsproj = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                    gitHubApiClient,
+                    gitHubRepositoryClient,
                     foldersAndFiles,
                     repositoryName,
                     gitHubCsprojPath.Path);

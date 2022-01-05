@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
-using AtcWeb.Domain.GitHub.Models;
+using AtcWeb.Domain.AtcApi;
+using AtcWeb.Domain.AtcApi.Models;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub
@@ -12,14 +13,14 @@ namespace AtcWeb.Domain.GitHub
     public static class GitHubRepositoryMetadataFileHelper
     {
         public static async Task<string> GetFileByPath(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string path)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -30,7 +31,7 @@ namespace AtcWeb.Domain.GitHub
             var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
             if (gitHubFile is not null)
             {
-                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
+                var (isSuccessful, rawFileContent) = await gitHubRepositoryClient.GetFileByRepositoryNameAndFilePath(repositoryName, gitHubFile.Path);
                 if (isSuccessful)
                 {
                     return rawFileContent;
@@ -41,15 +42,15 @@ namespace AtcWeb.Domain.GitHub
         }
 
         public static async Task<string> GetFileByPathAndEnsureFullLinks(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string defaultBranchName,
             string path)
         {
-            if (gitHubApiClient is null)
+            if (gitHubRepositoryClient is null)
             {
-                throw new ArgumentNullException(nameof(gitHubApiClient));
+                throw new ArgumentNullException(nameof(gitHubRepositoryClient));
             }
 
             if (foldersAndFiles is null)
@@ -60,7 +61,7 @@ namespace AtcWeb.Domain.GitHub
             var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
             if (gitHubFile is not null)
             {
-                var (isSuccessful, rawFileContent) = await gitHubApiClient.GetRawAtcCodeFile(repositoryName, gitHubFile.Path);
+                var (isSuccessful, rawFileContent) = await gitHubRepositoryClient.GetFileByRepositoryNameAndFilePath(repositoryName, gitHubFile.Path);
                 if (isSuccessful)
                 {
                     rawFileContent = rawFileContent
@@ -81,13 +82,13 @@ namespace AtcWeb.Domain.GitHub
         }
 
         public static async Task<string> GetReadMeFile(
-            GitHubApiClient gitHubApiClient,
+            AtcApiGitHubRepositoryClient gitHubRepositoryClient,
             List<GitHubPath> foldersAndFiles,
             string repositoryName,
             string defaultBranchName)
         {
             var rawText = await GetFileByPathAndEnsureFullLinks(
-                gitHubApiClient,
+                gitHubRepositoryClient,
                 foldersAndFiles,
                 repositoryName,
                 defaultBranchName,

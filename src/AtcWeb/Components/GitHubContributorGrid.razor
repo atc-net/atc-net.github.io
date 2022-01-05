@@ -1,5 +1,5 @@
-@using Octokit
 @using AtcWeb.Domain.Data
+@using AtcWeb.Domain.AtcApi.Models
 
 <MudGrid Justify="@Justify">
     @if (Contributors is null)
@@ -39,7 +39,7 @@
     public string? RepositoryName { get; set; }
 
     [Parameter]
-    public List<RepositoryContributor>? Contributors { get; set; }
+    public List<GitHubRepositoryContributor>? Contributors { get; set; }
 
     [Parameter]
     public string ItemTitle { get; set; } = "Contributor";

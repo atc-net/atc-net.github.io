@@ -1,15 +1,12 @@
-using System;
 using System.Threading.Tasks;
-using AtcWeb.Domain;
+using AtcWeb.Domain.AtcApi;
 using AtcWeb.Domain.GitHub;
-using AtcWeb.Domain.Nuget;
 using AtcWeb.State;
 using Ganss.XSS;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
-using Octokit;
 
 namespace AtcWeb
 {
@@ -26,19 +23,8 @@ namespace AtcWeb
                 DefaultBrowserRequestMode = BrowserRequestMode.NoCors,
             });
 
-            builder.Services.AddScoped<IGitHubClient>(_ =>
-            {
-                var tokenAuth = new Credentials(HttpClientConstants.AtcAccessToken.Base64Decode());
-                var gitHubClient = new GitHubClient(new ProductHeaderValue(HttpClientConstants.AtcOrganizationName))
-                {
-                    Credentials = tokenAuth,
-                };
-
-                return gitHubClient;
-            });
-
-            builder.Services.AddScoped<GitHubApiClient>();
-            builder.Services.AddScoped<NugetApiClient>();
+            builder.Services.AddScoped<AtcApiGitHubApiInformationClient>();
+            builder.Services.AddScoped<AtcApiGitHubRepositoryClient>();
             builder.Services.AddScoped<GitHubRepositoryService>();
             builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(_ =>
             {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.GitHub;
-using GitHubApiStatus;
 using Microsoft.AspNetCore.Components;
 
 namespace AtcWeb.Pages.Support
@@ -14,7 +14,7 @@ namespace AtcWeb.Pages.Support
 
         protected override async Task OnInitializedAsync()
         {
-            RateLimits = await RepositoryService.GetApiRateLimitsAsync();
+            RateLimits = await RepositoryService.GetRestApiRateLimitsAsync();
 
             await base.OnInitializedAsync();
         }

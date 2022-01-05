@@ -3,52 +3,50 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Atc.Helpers;
+using AtcWeb.Domain.AtcApi;
+using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.Data;
 using AtcWeb.Domain.GitHub.Models;
-using AtcWeb.Domain.Nuget;
-using GitHubApiStatus;
-using Octokit;
 
 // ReSharper disable LoopCanBeConvertedToQuery
 namespace AtcWeb.Domain.GitHub
 {
     public class GitHubRepositoryService
     {
-        private readonly GitHubApiClient gitHubApiClient;
-        private readonly NugetApiClient nugetApiClient;
+        private readonly AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient;
+        private readonly AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient;
 
         public GitHubRepositoryService(
-            GitHubApiClient gitHubApiClient,
-            NugetApiClient nugetApiClient)
+            AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient,
+            AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient)
         {
-            this.gitHubApiClient = gitHubApiClient ?? throw new ArgumentNullException(nameof(gitHubApiClient));
-            this.nugetApiClient = nugetApiClient ?? throw new ArgumentNullException(nameof(nugetApiClient));
+            this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient ?? throw new ArgumentNullException(nameof(atcApiGitHubApiInformationClient));
+            this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient ?? throw new ArgumentNullException(nameof(atcApiGitHubRepositoryClient));
         }
 
-        public async Task<GitHubApiRateLimits?> GetApiRateLimitsAsync()
+        public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()
         {
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcApiRateLimits();
+            var (isSuccessful, gitHubContributors) = await atcApiGitHubApiInformationClient.GetApiRateLimits();
             return isSuccessful
                 ? gitHubContributors
                 : null;
         }
 
-        public async Task<List<RepositoryContributor>> GetContributorsAsync()
+        public async Task<List<GitHubRepositoryContributor>> GetContributorsAsync()
         {
-            var (isSuccessful, gitHubContributors) = await gitHubApiClient.GetAtcContributors();
+            var (isSuccessful, gitHubContributors) = await atcApiGitHubRepositoryClient.GetContributors();
             return isSuccessful
                 ? gitHubContributors
-                : new List<RepositoryContributor>();
+                : new List<GitHubRepositoryContributor>();
         }
 
-        public async Task<List<RepositoryContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName)
+        public async Task<List<GitHubRepositoryContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName)
         {
             var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
             var gitHubContributors = await GetContributorsAsync();
-            var data = new List<RepositoryContributor>();
+            var data = new List<GitHubRepositoryContributor>();
             foreach (var memberName in memberNames.OrderBy(x => x))
             {
                 var gitHubContributor =
@@ -65,7 +63,7 @@ namespace AtcWeb.Domain.GitHub
         public async Task<List<AtcRepository>> GetRepositoriesAsync(bool populateMetaDataBase = false, bool populateMetaDataAdvanced = false)
         {
             var bag = new ConcurrentBag<AtcRepository>();
-            var (isSuccessfulRepositories, repositories) = await gitHubApiClient.GetAtcRepositories();
+            var (isSuccessfulRepositories, repositories) = await atcApiGitHubRepositoryClient.GetRepositories();
             if (!isSuccessfulRepositories)
             {
                 return bag.ToList();
@@ -92,12 +90,13 @@ namespace AtcWeb.Domain.GitHub
 
             await TaskHelper.WhenAll(tasks);
 
-            return bag.ToList();
+            var atcRepositories = bag.ToList();
+            return atcRepositories;
         }
 
         public async Task<AtcRepository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaDataBase = false, bool populateMetaDataAdvanced = false)
         {
-            var (isSuccessful, repository) = await gitHubApiClient.GetAtcRepositoryByName(repositoryName);
+            var (isSuccessful, repository) = await atcApiGitHubRepositoryClient.GetRepositoryByName(repositoryName);
             if (!isSuccessful || repository is null)
             {
                 return null;
@@ -118,33 +117,29 @@ namespace AtcWeb.Domain.GitHub
             return atcRepository;
         }
 
-        private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName, string defaultBranchName)
+        private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName)
         {
-            var (isSuccessful, gitHubPath) = await gitHubApiClient.GetAtcAllPathsByRepositoryByName(
-                repositoryName,
-                defaultBranchName);
+            var (isSuccessful, gitHubPath) = await atcApiGitHubRepositoryClient.GetAllPathsByRepositoryByName(repositoryName);
 
             return isSuccessful
                 ? gitHubPath
                 : new List<GitHubPath>();
         }
 
-        private async Task PopulateMetaDataBase(AtcRepository repository, Repository gitHubRepository)
+        private async Task PopulateMetaDataBase(AtcRepository repository, GitHubRepository gitHubRepository)
         {
             repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
 
-            repository.FolderAndFilePaths = await GetDirectoryMetadata(
-                gitHubRepository.Name,
-                repository.BaseData.DefaultBranch);
+            repository.FolderAndFilePaths = await GetDirectoryMetadata(gitHubRepository.Name);
 
             var taskRoot = GitHubRepositoryMetadataHelper.LoadRoot(
-                gitHubApiClient,
+                atcApiGitHubRepositoryClient,
                 repository.FolderAndFilePaths,
                 repository.Name,
                 repository.BaseData.DefaultBranch);
 
             var taskWorkflow = GitHubRepositoryMetadataHelper.LoadWorkflow(
-                gitHubApiClient,
+                atcApiGitHubRepositoryClient,
                 repository.FolderAndFilePaths,
                 repository.Name);
 
@@ -165,12 +160,12 @@ namespace AtcWeb.Domain.GitHub
         private async Task PopulateMetaDataAdvanced(AtcRepository repository)
         {
             var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
-                gitHubApiClient,
+                atcApiGitHubRepositoryClient,
                 repository.FolderAndFilePaths,
                 repository.Name);
 
             var taskOpenIssues = GitHubRepositoryMetadataHelper.LoadOpenIssues(
-                gitHubApiClient,
+                atcApiGitHubRepositoryClient,
                 repository.Name);
 
             var tasks = new List<Task>
@@ -184,7 +179,7 @@ namespace AtcWeb.Domain.GitHub
             if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
             {
                 taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
-                    gitHubApiClient,
+                    atcApiGitHubRepositoryClient,
                     repository.FolderAndFilePaths,
                     repository.Name);
 
@@ -193,7 +188,7 @@ namespace AtcWeb.Domain.GitHub
             else if ("Python".Equals(repository.BaseData.Language, StringComparison.Ordinal))
             {
                 taskPython = GitHubRepositoryMetadataHelper.LoadPython(
-                    gitHubApiClient,
+                    atcApiGitHubRepositoryClient,
                     repository.FolderAndFilePaths,
                     repository.Name);
 
@@ -208,15 +203,17 @@ namespace AtcWeb.Domain.GitHub
             if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
             {
                 repository.Dotnet = await taskDotnet!;
-                foreach (var nugetPackageVersion in repository.Dotnet.Projects.SelectMany(x => x.PackageReferences))
+                var (isSuccessful, latestNugetPackageVersionsUsed) = await atcApiGitHubRepositoryClient.GetLatestNugetPackageVersionsUsed();
+                if (isSuccessful)
                 {
-                    var (isSuccessful, latestVersion) = await nugetApiClient.GetVersionForPackageId(
-                        nugetPackageVersion.PackageId,
-                        CancellationToken.None);
-
-                    if (isSuccessful)
+                    foreach (var nugetPackageVersion in repository.Dotnet.Projects.SelectMany(x => x.PackageReferences))
                     {
-                        nugetPackageVersion.NewestVersion = latestVersion;
+                        var latestNugetPackage = latestNugetPackageVersionsUsed.Find(x => x.PackageId == nugetPackageVersion.PackageId);
+                        if (latestNugetPackage is not null &&
+                            Version.TryParse(latestNugetPackage.Version, out var latestVersion))
+                        {
+                            nugetPackageVersion.NewestVersion = latestVersion;
+                        }
                     }
                 }
             }

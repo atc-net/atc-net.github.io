@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace AtcWeb.Domain.GitHub.Models
+namespace AtcWeb.Domain.AtcApi.Models
 {
     public class GitHubPath
     {

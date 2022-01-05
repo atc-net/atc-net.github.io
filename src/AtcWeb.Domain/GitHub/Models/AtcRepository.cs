@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Atc;
-using Octokit;
+using AtcWeb.Domain.AtcApi.Models;
 
 // ReSharper disable InvertIf
 namespace AtcWeb.Domain.GitHub.Models
 {
     public class AtcRepository
     {
-        public AtcRepository(Repository repository)
+        public AtcRepository(GitHubRepository repository)
         {
             this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
             Badges = new List<(string Group, string Key, Uri Url)>();
@@ -22,7 +22,7 @@ namespace AtcWeb.Domain.GitHub.Models
             Python = new PythonMetadata();
         }
 
-        public Repository BaseData { get; }
+        public GitHubRepository BaseData { get; }
 
         public string Name => BaseData.Name;
 
@@ -37,7 +37,7 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public List<(string Group, string Key, Uri Url)> Badges { get; private set; }
 
-        public List<RepositoryContributor> ResponsibleMembers { get; set; }
+        public List<GitHubRepositoryContributor> ResponsibleMembers { get; set; }
 
         public List<GitHubPath> FolderAndFilePaths { get; set; }
 
@@ -51,7 +51,7 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public PythonMetadata? Python { get; set; }
 
-        public List<Issue> OpenIssues { get; set; }
+        public List<GitHubIssue> OpenIssues { get; set; }
 
         public bool HasRootReadme => Root?.HasReadme ?? false;
 
