@@ -15,10 +15,12 @@ namespace AtcWeb.Domain.AtcApi
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OK.")]
         public async Task<(bool isSuccessful, GitHubApiRateLimits)> GetApiRateLimits(CancellationToken cancellationToken = default)
         {
+            const string url = $"{BaseAddress}/rate-limits";
+
             try
             {
                 using var httpClient = new HttpClient();
-                var responseMessage = await httpClient.GetAsync(BaseAddress, cancellationToken);
+                var responseMessage = await httpClient.GetAsync(url, cancellationToken);
                 if (!responseMessage.IsSuccessStatusCode)
                 {
                     return (isSuccessful: false, new GitHubApiRateLimits());
