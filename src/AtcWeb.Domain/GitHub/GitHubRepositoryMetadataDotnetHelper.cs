@@ -48,7 +48,7 @@ namespace AtcWeb.Domain.GitHub
                     .GetFileName()
                     .Replace(".csproj", string.Empty, StringComparison.Ordinal);
 
-                project.TargetFramework = GetSimpleXmlValueForCsproj(
+                project.CompilerSettings.TargetFramework = GetSimpleXmlValueForCsproj(
                     gitHubCsprojPath.Path,
                     project.RawCsproj,
                     rawDirectoryBuildPropsRoot,
@@ -56,7 +56,7 @@ namespace AtcWeb.Domain.GitHub
                     rawDirectoryBuildPropsTest,
                     "TargetFramework");
 
-                project.LangVersion = GetSimpleXmlValueForCsproj(
+                project.CompilerSettings.LangVersion = GetSimpleXmlValueForCsproj(
                     gitHubCsprojPath.Path,
                     project.RawCsproj,
                     rawDirectoryBuildPropsRoot,
@@ -64,16 +64,69 @@ namespace AtcWeb.Domain.GitHub
                     rawDirectoryBuildPropsTest,
                     "LangVersion");
 
-                project.Type = GetProjectTypeForCsproj(
+                project.CompilerSettings.GenerateDocumentationFile = "true".Equals(
+                    GetSimpleXmlValueForCsproj(
+                        gitHubCsprojPath.Path,
+                        project.RawCsproj,
+                        rawDirectoryBuildPropsRoot,
+                        rawDirectoryBuildPropsSrc,
+                        rawDirectoryBuildPropsTest,
+                        "GenerateDocumentationFile"),
+                    StringComparison.OrdinalIgnoreCase);
+
+                project.CompilerSettings.Type = GetProjectTypeForCsproj(
                     gitHubCsprojPath.Path,
                     project.RawCsproj);
 
-                var packageId = GetSimpleXmlValueForCsproj(
+                project.AnalyzerSettings.AnalysisMode = GetSimpleXmlValueForCsproj(
                     gitHubCsprojPath.Path,
                     project.RawCsproj,
-                    "PackageId");
+                    rawDirectoryBuildPropsRoot,
+                    rawDirectoryBuildPropsSrc,
+                    rawDirectoryBuildPropsTest,
+                    "AnalysisMode");
 
-                project.IsPackage = !string.IsNullOrEmpty(packageId);
+                project.AnalyzerSettings.AnalysisLevel = GetSimpleXmlValueForCsproj(
+                    gitHubCsprojPath.Path,
+                    project.RawCsproj,
+                    rawDirectoryBuildPropsRoot,
+                    rawDirectoryBuildPropsSrc,
+                    rawDirectoryBuildPropsTest,
+                    "AnalysisLevel");
+
+                project.AnalyzerSettings.AnalysisLevel = GetSimpleXmlValueForCsproj(
+                    gitHubCsprojPath.Path,
+                    project.RawCsproj,
+                    rawDirectoryBuildPropsRoot,
+                    rawDirectoryBuildPropsSrc,
+                    rawDirectoryBuildPropsTest,
+                    "AnalysisLevel");
+
+                project.AnalyzerSettings.EnableNetAnalyzers = "true".Equals(
+                    GetSimpleXmlValueForCsproj(
+                        gitHubCsprojPath.Path,
+                        project.RawCsproj,
+                        rawDirectoryBuildPropsRoot,
+                        rawDirectoryBuildPropsSrc,
+                        rawDirectoryBuildPropsTest,
+                        "EnableNETAnalyzers"),
+                    StringComparison.OrdinalIgnoreCase);
+
+                project.AnalyzerSettings.EnforceCodeStyleInBuild = "true".Equals(
+                    GetSimpleXmlValueForCsproj(
+                        gitHubCsprojPath.Path,
+                        project.RawCsproj,
+                        rawDirectoryBuildPropsRoot,
+                        rawDirectoryBuildPropsSrc,
+                        rawDirectoryBuildPropsTest,
+                        "EnforceCodeStyleInBuild"),
+                    StringComparison.OrdinalIgnoreCase);
+
+                project.IsPackage = !string.IsNullOrEmpty(
+                    GetSimpleXmlValueForCsproj(
+                        gitHubCsprojPath.Path,
+                        project.RawCsproj,
+                        "PackageId"));
 
                 project.PackageReferences = GetAllPackageReferencesForCsproj(
                     gitHubCsprojPath.Path,

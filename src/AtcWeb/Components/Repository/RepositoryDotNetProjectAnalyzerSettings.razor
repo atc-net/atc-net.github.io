@@ -1,0 +1,35 @@
+@using AtcWeb.State
+@using AtcWeb.Domain.GitHub.Models
+
+@if (StateContainer is not null &&
+     AnalyzerSettings is not null)
+{
+    <table class="atc-simple-table-clean table-no-padding">
+        <tr>
+            <td style="width: 50%">AnalysisMode:</td>
+            <td style="width: 50%">@AnalyzerSettings.AnalysisMode</td>
+        </tr>
+        <tr>
+            <td>AnalysisLevel:</td>
+            <td>@AnalyzerSettings.AnalysisLevel</td>
+        </tr>
+        <tr>
+            <td>EnableNETAnalyzers:</td>
+            <td><IconCheckmark IsSet="@AnalyzerSettings.EnableNetAnalyzers" /></td>
+        </tr>
+        <tr>
+            <td>EnforceCodeStyleInBuild:</td>
+            <td><IconCheckmark IsSet="@AnalyzerSettings.EnforceCodeStyleInBuild" /></td>
+        </tr>
+    </table>
+}
+
+@code {
+
+    [Inject]
+    private StateContainer? StateContainer { get; set; }
+
+    [Parameter]
+    public DotnetProjectAnalyzerSettings? AnalyzerSettings { get; set; }
+
+}

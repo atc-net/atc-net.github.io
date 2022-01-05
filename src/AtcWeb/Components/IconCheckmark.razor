@@ -1,0 +1,15 @@
+@if (IsSet)
+{
+    <i class="fa-solid fa-circle-check"></i>
+}
+else
+{
+    <i class="fa-regular fa-circle"></i>
+}
+
+@code {
+
+    [Parameter]
+    public bool IsSet { get; set; }
+
+}

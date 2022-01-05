@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AtcWeb.Domain.Data;
 
 namespace AtcWeb.Domain.GitHub.Models
 {
@@ -9,17 +8,11 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public string Name { get; set; } = string.Empty;
 
-        public string TargetFramework { get; set; } = string.Empty;
+        public DotnetProjectCompilerSettings CompilerSettings { get; set; } = new DotnetProjectCompilerSettings();
 
-        public string LangVersion { get; set; } = string.Empty;
-
-        public string Type { get; set; } = string.Empty;
+        public DotnetProjectAnalyzerSettings AnalyzerSettings { get; set; } = new DotnetProjectAnalyzerSettings();
 
         public bool IsPackage { get; set; }
-
-        public bool IsTargetFrameworkInLongTimeSupport => RepositoryMetadata.IsTargetFrameworkInLongTimeSupport(TargetFramework);
-
-        public bool IsLangVersionInAcceptedVersion => RepositoryMetadata.IsLangVersionInAcceptedVersion(LangVersion);
 
         public List<DotnetNugetPackageVersionExtended> PackageReferences { get; set; } = new List<DotnetNugetPackageVersionExtended>();
     }

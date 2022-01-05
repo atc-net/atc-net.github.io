@@ -1,0 +1,61 @@
+@using AtcWeb.State
+@using AtcWeb.Domain.GitHub.Models
+
+@if (StateContainer is not null &&
+     CompilerSettings is not null)
+{
+    <table class="atc-simple-table-clean table-no-padding">
+        <tr>
+            <td style="width: 50%">Target framework:</td>
+            <td style="width: 50%">
+                @if (CompilerSettings.IsTargetFrameworkInLongTimeSupport)
+                {
+                    <MudTooltip Text="@("TargetFramework is up to date.")">
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.TargetFramework</span>
+                    </MudTooltip>
+                }
+                else
+                {
+                    <MudTooltip Text="@("TargetFramework is not set to a correct version.")">
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.TargetFramework</span>
+                    </MudTooltip>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Language version:</td>
+            <td>
+                @if (CompilerSettings.IsLangVersionInAcceptedVersion)
+                {
+                    <MudTooltip Text="@("LangVersion is up to date.")">
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.LangVersion</span>
+                    </MudTooltip>
+                }
+                else
+                {
+                    <MudTooltip Text="@("LangVersion is not set to a correct version.")">
+                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.LangVersion</span>
+                    </MudTooltip>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Generate documentation file:</td>
+            <td><IconCheckmark IsSet="@CompilerSettings.GenerateDocumentationFile" /></td>
+        </tr>
+        <tr>
+            <td>Project type:</td>
+            <td>@CompilerSettings.Type</td>
+        </tr>
+    </table>
+}
+
+@code {
+
+    [Inject]
+    private StateContainer? StateContainer { get; set; }
+
+    [Parameter]
+    public DotnetProjectCompilerSettings? CompilerSettings { get; set; }
+
+}

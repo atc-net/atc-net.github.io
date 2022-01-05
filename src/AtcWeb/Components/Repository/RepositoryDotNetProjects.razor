@@ -22,55 +22,16 @@
                     <td>
                         <table class="atc-simple-table-clean-bottom-line">
                             <tr>
-                                <td style="width: 35%">Target framework:</td>
-                                <td style="width: 65%">
-                                    @if (project.IsTargetFrameworkInLongTimeSupport)
-                                    {
-                                        <MudTooltip Text="@("TargetFramework is up to date.")">
-                                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">@project.TargetFramework</span>
-                                        </MudTooltip>
-                                    }
-                                    else
-                                    {
-                                        <MudTooltip Text="@("TargetFramework is not set to a correct version.")">
-                                            <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@project.TargetFramework</span>
-                                        </MudTooltip>
-                                    }
-                                </td>
+                                <td style="vertical-align: top;">Compiler settings:</td>
+                                <td><RepositoryDotNetProjectCompilerSettings CompilerSettings="@project.CompilerSettings" /></td>
                             </tr>
                             <tr>
-                                <td>Language version:</td>
-                                <td>
-                                    @if (project.IsLangVersionInAcceptedVersion)
-                                    {
-                                        <MudTooltip Text="@("LangVersion is up to date.")">
-                                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">@project.LangVersion</span>
-                                        </MudTooltip>
-                                    }
-                                    else
-                                    {
-                                        <MudTooltip Text="@("LangVersion is not set to a correct version.")">
-                                            <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@project.LangVersion</span>
-                                        </MudTooltip>
-                                    }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Project type:</td>
-                                <td>@project.Type</td>
+                                <td style="vertical-align: top;">Analyzer settings:</td>
+                                <td><RepositoryDotNetProjectAnalyzerSettings AnalyzerSettings="@project.AnalyzerSettings" /></td>
                             </tr>
                             <tr>
                                 <td>Generates package:</td>
-                                <td>
-                                    @if (project.IsPackage)
-                                    {
-                                        <i class="fa-solid fa-circle-check"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="fa-regular fa-circle"></i>
-                                    }
-                                </td>
+                                <td><IconCheckmark IsSet="@project.IsPackage" /></td>
                             </tr>
                             <tr>
                                 <td style="vertical-align: top;">Package reference:</td>
