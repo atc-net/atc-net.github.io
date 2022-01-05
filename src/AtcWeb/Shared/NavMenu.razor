@@ -14,7 +14,7 @@
 
     @if (repositories is not null)
     {
-        foreach (var repository in repositories.OrderBy(x => x.Name))
+        foreach (var repository in repositories.Where(x => !x.BaseData.Private).OrderBy(x => x.Name))
         {
             var href = $"/repository/{repository.Name}";
             var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);

@@ -15,12 +15,12 @@
         }
         else
         {
-            foreach (var repository in Repositories.OrderBy(x => x.Name))
+            foreach (var repository in Repositories.Where(x => !x.BaseData.Private).OrderBy(x => x.Name))
             {
                 <DocsPageSection>
                     <SectionHeader Title="@repository.Name"
                                    TitleColor="Color.Primary"
-                                   TitleLink="@($"https://atc-net.github.io/repository/{repository.Name}")">
+                                   TitleLink="@($"/repository/{repository.Name}")">
                         <SubTitle>
                             <RepositoryDescription Repository="@repository" />
                         </SubTitle>
