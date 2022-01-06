@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Atc.DotNet;
 using AtcWeb.Domain.AtcApi;
 using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.GitHub.Models;
@@ -78,6 +79,12 @@ namespace AtcWeb.Domain.GitHub
                     gitHubCsprojPath.Path,
                     project.RawCsproj);
 
+                project.CompilerSettings.IsPackage = !string.IsNullOrEmpty(
+                    GetSimpleXmlValueForCsproj(
+                        gitHubCsprojPath.Path,
+                        project.RawCsproj,
+                        "PackageId"));
+
                 project.AnalyzerSettings.AnalysisMode = GetSimpleXmlValueForCsproj(
                     gitHubCsprojPath.Path,
                     project.RawCsproj,
@@ -121,12 +128,6 @@ namespace AtcWeb.Domain.GitHub
                         rawDirectoryBuildPropsTest,
                         "EnforceCodeStyleInBuild"),
                     StringComparison.OrdinalIgnoreCase);
-
-                project.IsPackage = !string.IsNullOrEmpty(
-                    GetSimpleXmlValueForCsproj(
-                        gitHubCsprojPath.Path,
-                        project.RawCsproj,
-                        "PackageId"));
 
                 project.PackageReferences = GetAllPackageReferencesForCsproj(
                     gitHubCsprojPath.Path,
@@ -185,14 +186,14 @@ namespace AtcWeb.Domain.GitHub
             return "Library";
         }
 
-        private static List<DotnetNugetPackageVersionExtended> GetAllPackageReferencesForCsproj(
+        private static List<Models.DotnetNugetPackage> GetAllPackageReferencesForCsproj(
             string filePath,
             string projectRawCsproj,
             string rawDirectoryBuildPropsRoot,
             string rawDirectoryBuildPropsSrc,
             string rawDirectoryBuildPropsTest)
         {
-            var data = new List<DotnetNugetPackageVersionExtended>();
+            var data = new List<Models.DotnetNugetPackage>();
 
             data.AddRange(GetPackageReferencesForCsproj(projectRawCsproj));
 
@@ -217,49 +218,16 @@ namespace AtcWeb.Domain.GitHub
                 .ToList();
         }
 
-        private static IEnumerable<DotnetNugetPackageVersionExtended> GetPackageReferencesForCsproj(string rawCsproj)
+        private static IEnumerable<Models.DotnetNugetPackage> GetPackageReferencesForCsproj(string rawCsproj)
         {
-            var data = new List<DotnetNugetPackageVersionExtended>();
-            foreach (var line in rawCsproj.EnsureEnvironmentNewLines().Split(Environment.NewLine))
+            var dotnetNugetPackageMetadataBases = DotnetNugetHelper.GetAllPackageReferences(rawCsproj);
+
+            var data = new List<Models.DotnetNugetPackage>();
+            foreach (var dotnetNugetPackageMetadataBase in dotnetNugetPackageMetadataBases)
             {
-                if (!line.Contains("<PackageReference ", StringComparison.Ordinal) ||
-                    !line.Contains("Include=", StringComparison.Ordinal) ||
-                    !line.Contains("Version=", StringComparison.Ordinal))
+                if (Version.TryParse(dotnetNugetPackageMetadataBase.Version, out var dotnetVersion))
                 {
-                    continue;
-                }
-
-                var attributes = line
-                    .Replace("<PackageReference ", string.Empty, StringComparison.Ordinal)
-                    .Replace("/>", string.Empty, StringComparison.Ordinal)
-                    .Replace(">", string.Empty, StringComparison.Ordinal)
-                    .Trim()
-                    .Split(' ');
-
-                var packageId = string.Empty;
-                var version = string.Empty;
-
-                foreach (var attribute in attributes)
-                {
-                    if (attribute.StartsWith("Include=", StringComparison.Ordinal))
-                    {
-                        packageId = attribute
-                            .Replace("Include=", string.Empty, StringComparison.Ordinal)
-                            .Replace("\"", string.Empty, StringComparison.Ordinal);
-                    }
-                    else if (attribute.StartsWith("Version=", StringComparison.Ordinal))
-                    {
-                        version = attribute
-                            .Replace("Version=", string.Empty, StringComparison.Ordinal)
-                            .Replace("\"", string.Empty, StringComparison.Ordinal);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(packageId) &&
-                    !string.IsNullOrEmpty(version) &&
-                    Version.TryParse(version, out var dotnetVersion))
-                {
-                    data.Add(new DotnetNugetPackageVersionExtended(packageId, dotnetVersion, dotnetVersion));
+                    data.Add(new Models.DotnetNugetPackage(dotnetNugetPackageMetadataBase.PackageId, dotnetVersion));
                 }
             }
 

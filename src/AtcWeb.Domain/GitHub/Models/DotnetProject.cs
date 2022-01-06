@@ -12,8 +12,6 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public DotnetProjectAnalyzerSettings AnalyzerSettings { get; set; } = new DotnetProjectAnalyzerSettings();
 
-        public bool IsPackage { get; set; }
-
-        public List<DotnetNugetPackageVersionExtended> PackageReferences { get; set; } = new List<DotnetNugetPackageVersionExtended>();
+        public List<DotnetNugetPackage> PackageReferences { get; set; } = new List<DotnetNugetPackage>();
     }
 }

@@ -12,6 +12,8 @@ namespace AtcWeb.Domain.GitHub.Models
 
         public bool GenerateDocumentationFile { get; set; }
 
+        public bool IsPackage { get; set; }
+
         public bool IsTargetFrameworkInLongTimeSupport => RepositoryMetadata.IsTargetFrameworkInLongTimeSupport(TargetFramework);
 
         public bool IsLangVersionInAcceptedVersion => RepositoryMetadata.IsLangVersionInAcceptedVersion(LangVersion);
