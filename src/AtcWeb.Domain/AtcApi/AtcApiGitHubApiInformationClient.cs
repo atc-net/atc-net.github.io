@@ -28,9 +28,7 @@ namespace AtcWeb.Domain.AtcApi
                 }
 
                 var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
-                Console.WriteLine("# " + content);
                 var result = JsonSerializer.Deserialize<GitHubApiRateLimits>(content, JsonSerializerOptionsFactory.Create());
-                Console.WriteLine("## " + result);
                 return result is null
                     ? (isSuccessful: false, new GitHubApiRateLimits())
                     : (isSuccessful: true, result);
