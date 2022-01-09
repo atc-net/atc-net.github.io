@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Atc.DotNet.Models;
 using Atc.Helpers;
 using Atc.Serialization;
 using AtcWeb.Domain.AtcApi.Models;
@@ -150,10 +151,10 @@ namespace AtcWeb.Domain.AtcApi
             }
         }
 
-        public async Task<(bool isSuccessful, List<DotnetNugetPackage>)> GetLatestNugetPackageVersionsUsed(CancellationToken cancellationToken = default)
+        public async Task<(bool isSuccessful, List<DotnetNugetPackageMetadataBase>)> GetLatestNugetPackageVersionsUsed(CancellationToken cancellationToken = default)
         {
             const string cacheKey = CacheConstants.CacheKeyNugetPackagesUsedByAtcRepositories;
-            if (memoryCache.TryGetValue(cacheKey, out List<DotnetNugetPackage> data))
+            if (memoryCache.TryGetValue(cacheKey, out List<DotnetNugetPackageMetadataBase> data))
             {
                 return (isSuccessful: true, data);
             }
@@ -165,14 +166,14 @@ namespace AtcWeb.Domain.AtcApi
                 var responseMessage = await httpClient.GetAsync(url, cancellationToken);
                 if (!responseMessage.IsSuccessStatusCode)
                 {
-                    return (isSuccessful: false, new List<DotnetNugetPackage>());
+                    return (isSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
                 }
 
                 var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
-                var result = JsonSerializer.Deserialize<List<DotnetNugetPackage>>(content, JsonSerializerOptionsFactory.Create());
+                var result = JsonSerializer.Deserialize<List<DotnetNugetPackageMetadataBase>>(content, JsonSerializerOptionsFactory.Create());
                 if (result is null)
                 {
-                    return (isSuccessful: false, new List<DotnetNugetPackage>());
+                    return (isSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
                 }
 
                 memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -180,7 +181,7 @@ namespace AtcWeb.Domain.AtcApi
             }
             catch
             {
-                return (isSuccessful: false, new List<DotnetNugetPackage>());
+                return (isSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
             }
         }
 
