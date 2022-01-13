@@ -186,23 +186,26 @@ namespace AtcWeb.Domain.GitHub
             return "Library";
         }
 
-        private static List<Models.DotnetNugetPackage> GetAllPackageReferencesForCsproj(
+        private static List<DotnetNugetPackage> GetAllPackageReferencesForCsproj(
             string filePath,
             string projectRawCsproj,
             string rawDirectoryBuildPropsRoot,
             string rawDirectoryBuildPropsSrc,
             string rawDirectoryBuildPropsTest)
         {
-            var data = new List<Models.DotnetNugetPackage>();
+            var data = new List<DotnetNugetPackage>();
 
-            data.AddRange(GetPackageReferencesForCsproj(projectRawCsproj));
+            if (!string.IsNullOrEmpty(projectRawCsproj))
+            {
+                data.AddRange(GetPackageReferencesForCsproj(projectRawCsproj));
+            }
 
-            if (string.IsNullOrEmpty(rawDirectoryBuildPropsSrc) &&
+            if (!string.IsNullOrEmpty(rawDirectoryBuildPropsSrc) &&
                 filePath.StartsWith("src", StringComparison.Ordinal))
             {
                 data.AddRange(GetPackageReferencesForCsproj(rawDirectoryBuildPropsSrc));
             }
-            else if (string.IsNullOrEmpty(rawDirectoryBuildPropsTest) &&
+            else if (!string.IsNullOrEmpty(rawDirectoryBuildPropsTest) &&
                      filePath.StartsWith("test", StringComparison.Ordinal))
             {
                 data.AddRange(GetPackageReferencesForCsproj(rawDirectoryBuildPropsTest));
@@ -218,16 +221,21 @@ namespace AtcWeb.Domain.GitHub
                 .ToList();
         }
 
-        private static IEnumerable<Models.DotnetNugetPackage> GetPackageReferencesForCsproj(string rawCsproj)
+        private static IEnumerable<DotnetNugetPackage> GetPackageReferencesForCsproj(string rawCsproj)
         {
+            if (string.IsNullOrEmpty(rawCsproj))
+            {
+                return new List<DotnetNugetPackage>();
+            }
+
             var dotnetNugetPackageMetadataBases = DotnetNugetHelper.GetAllPackageReferences(rawCsproj);
 
-            var data = new List<Models.DotnetNugetPackage>();
+            var data = new List<DotnetNugetPackage>();
             foreach (var dotnetNugetPackageMetadataBase in dotnetNugetPackageMetadataBases)
             {
                 if (Version.TryParse(dotnetNugetPackageMetadataBase.Version, out var dotnetVersion))
                 {
-                    data.Add(new Models.DotnetNugetPackage(dotnetNugetPackageMetadataBase.PackageId, dotnetVersion));
+                    data.Add(new DotnetNugetPackage(dotnetNugetPackageMetadataBase.PackageId, dotnetVersion));
                 }
             }
 
