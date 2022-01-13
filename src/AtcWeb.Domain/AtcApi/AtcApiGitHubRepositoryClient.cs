@@ -50,8 +50,14 @@ namespace AtcWeb.Domain.AtcApi
                     return (isSuccessful: false, new List<GitHubRepository>());
                 }
 
-                memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
-                return (isSuccessful: true, result.ToList());
+                var gitHubRepositories = result
+                    .Where(x => !x.Name.Equals("atc-dummy", StringComparison.Ordinal) &&
+                                !x.Name.Equals("atc-template-dotnet-package", StringComparison.Ordinal))
+                    .OrderBy(x => x.Name)
+                    .ToList();
+
+                memoryCache.Set(cacheKey, gitHubRepositories, CacheConstants.AbsoluteExpirationRelativeToNow);
+                return (isSuccessful: true, gitHubRepositories);
             }
             catch
             {
