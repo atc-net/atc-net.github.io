@@ -1,17 +1,23 @@
-.mud-nav-link-text, .mud-typography-h3, .mud-typography-h4, .mud-typography-h5 {
-  font-family: "Audiowide", "Roboto", "Helvetica", "Arial", "sans-serif" !important
+.app-loading-text {
+  font-family: "Audiowide", "Roboto", "Helvetica", "Arial", "sans-serif" !important;
+  font-size: 32px;
+  background: linear-gradient(82deg,#673AB7 0%,#EA80FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.mud-nav-link-text {
-  font-size: 1em;
+.atc-h1-gradient {
+  font-family: "Audiowide", "Roboto", "Helvetica", "Arial", "sans-serif" !important;
+  font-size: 64px;
+  font-weight: 600;
+  font-style: italic;
+  background: linear-gradient(82deg,#673AB7 0%,#EA80FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.mud-typography-h3 {
-  font-size: 2.7em;
-}
-
-.mud-typography-h4 {
-  font-size: 2.3em;
+.atc-appbar-brand-text {
+  font-family: "Audiowide", "Roboto", "Helvetica", "Arial", "sans-serif" !important;
 }
 
 .full-page-height {

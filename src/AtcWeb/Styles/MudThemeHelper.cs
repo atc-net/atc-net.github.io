@@ -20,15 +20,16 @@ namespace AtcWeb.Styles
 
         private static readonly Palette LightPalette = new Palette
         {
-            // Use MudBlazor default colors
+            Primary = "#2A91C4",
             Surface = Colors.Grey.Lighten3,
+            AppbarBackground = "#27272F",
         };
 
         private static readonly Palette DarkPalette = new Palette
         {
             Black = "#27272F",
             White = Colors.Shades.White,
-            Primary = "#AB74B5",
+            Primary = "#6EAEDF",
             PrimaryContrastText = Colors.Shades.White,
             Secondary = Colors.Grey.Lighten3,
             SecondaryContrastText = Colors.Shades.White,

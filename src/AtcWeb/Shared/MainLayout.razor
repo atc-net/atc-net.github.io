@@ -15,9 +15,10 @@
                            Color="Color.Inherit"
                            Edge="Edge.Start"
                            OnClick="@((e) => DrawerToggle())" />
-            <img src="/images/atc-logo.svg" alt="ATC" width="45" height="45" />
             <MudText Typo="Typo.h5"
-                     Class="atc-appbar-brand-text d-none d-md-flex">ATC</MudText>
+                     Class="atc-appbar-brand-text">
+                ATC
+            </MudText>
             <MudSpacer />
             <div class="d-none d-md-flex align-center">
                 <MudMenu EndIcon="@Icons.Filled.KeyboardArrowDown"
@@ -69,8 +70,10 @@
                    Breakpoint="Breakpoint.Lg"
                    Class="atc-appbar-band">
             <MudDrawerHeader Class="atc-brand"
+                             Style="margin: 20px auto 0"
                              LinkToIndex="true">
-                <MudIcon></MudIcon>
+                @*<MudIcon></MudIcon>*@
+                <img src="/images/atc-logo.svg" alt="ATC" />
             </MudDrawerHeader>
             <NavMenu @ref="@navMenuRef" />
         </MudDrawer>
