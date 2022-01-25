@@ -101,7 +101,7 @@
                     Currently we have the following repository workflow:
                     <ul>
                         <li>A PR will trigger 'pre-integration', that builds and tests the code.</li>
-                        <li>On a succesful PR, code can be approved.</li>
+                        <li>On a successful PR, code can be approved.</li>
                         <li>Once the PR is merged into the 'main' branch, this will trigger the 'post-integration' workflow, which; Builds, tests and publishes artifacts/packages to 'GitHub Package Registry' or PyPi test package index.</li>
                         <li>On a successful merge process, code can now be released to Nuget/PyPi package indexes.</li>
                         <li>Releasing, is a manual workflow trigger. Once used it will; Build and publish artifacts/packages to 'Nuget Package Registry'/PyPi package indexes.</li>
@@ -126,5 +126,18 @@
             </SectionContent>
         </DocsPageSection>
 
-        </DocsPageContent>
+        <DocsPageSection>
+            <SectionHeader Title="Other open-source projects that ATC depends upon" />
+            <SectionContent AutoMarginContent="false" FullWidth="true">
+                <p>
+                    ATC depends upon and contribute to other open-source project that we really like &#128515;
+                </p>
+                <p>
+                    Therefore a big thanks to:
+                </p>
+                <AtcFavouriteOpenSourceProjects />
+            </SectionContent>
+        </DocsPageSection>
+
+    </DocsPageContent>
 </DocsPage>
