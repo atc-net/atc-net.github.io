@@ -9,17 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.377" />
+    <PackageReference Include="Atc" Version="1.1.385" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
-    <PackageReference Include="HtmlSanitizer" Version="7.0.473" />
-    <PackageReference Include="Markdig" Version="0.26.0" />
+    <PackageReference Include="HtmlSanitizer" Version="7.1.475" />
+    <PackageReference Include="Markdig" Version="0.27.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.0.4" />
+    <PackageReference Include="MudBlazor" Version="6.0.5" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 

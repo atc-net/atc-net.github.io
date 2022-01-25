@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Atc.DotNet;
+using Atc.DotNet.Models;
 using AtcWeb.Domain.AtcApi;
 using AtcWeb.Domain.AtcApi.Models;
 using AtcWeb.Domain.GitHub.Models;
@@ -159,6 +161,7 @@ namespace AtcWeb.Domain.GitHub
                 if (isSuccessfulSolution)
                 {
                     data.RawSolution = rawSolution;
+                    data.SolutionMetadata = VisualStudioSolutionFileHelper.GetSolutionFileMetadata(data.RawSolution);
                 }
             }
 

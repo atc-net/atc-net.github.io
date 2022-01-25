@@ -270,12 +270,12 @@ namespace AtcWeb.Domain.GitHub
                 return value;
             }
 
-            if (string.IsNullOrEmpty(rawDirectoryBuildPropsSrc) &&
+            if (!string.IsNullOrEmpty(rawDirectoryBuildPropsSrc) &&
                 filePath.StartsWith("src", StringComparison.Ordinal))
             {
                 value = ExtractSimpleXmlElementValue(rawDirectoryBuildPropsSrc, xmlElement);
             }
-            else if (string.IsNullOrEmpty(rawDirectoryBuildPropsTest) &&
+            else if (!string.IsNullOrEmpty(rawDirectoryBuildPropsTest) &&
                      filePath.StartsWith("test", StringComparison.Ordinal))
             {
                 value = ExtractSimpleXmlElementValue(rawDirectoryBuildPropsTest, xmlElement);

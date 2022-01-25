@@ -34,6 +34,10 @@
                         @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
                         {
                             <div class="py-4">
+                                <h2>Solution</h2>
+                                <RepositoryDotNetSolution Repository="@repository" />
+                            </div>
+                            <div class="py-4">
                                 <h2>.NET projects</h2>
                                 <RepositoryDotNetProjects Repository="@repository" />
                             </div>

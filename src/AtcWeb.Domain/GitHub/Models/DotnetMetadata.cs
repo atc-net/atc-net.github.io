@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Atc.DotNet.Models;
+using AtcWeb.Domain.Data;
 
 namespace AtcWeb.Domain.GitHub.Models
 {
@@ -19,6 +21,11 @@ namespace AtcWeb.Domain.GitHub.Models
         public bool HasDirectoryBuildPropsSrc => !string.IsNullOrEmpty(RawDirectoryBuildPropsSrc);
 
         public bool HasDirectoryBuildPropsTest => !string.IsNullOrEmpty(RawDirectoryBuildPropsTest);
+
+        public bool IsVisualStudioNameInAcceptedVersion => SolutionMetadata is not null &&
+                                                           RepositoryMetadata.IsVisualStudioNameInAcceptedVersion(SolutionMetadata.VisualStudioName);
+
+        public VisualStudioSolutionFileMetadata? SolutionMetadata { get; set; }
 
         public List<DotnetProject> Projects { get; set; } = new List<DotnetProject>();
     }

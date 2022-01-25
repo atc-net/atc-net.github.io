@@ -1,5 +1,6 @@
 @using AtcWeb.State
 @using AtcWeb.Domain.GitHub.Models
+@using AtcWeb.Domain.Data
 
 @if (StateContainer is not null &&
      CompilerSettings is not null)
@@ -10,13 +11,13 @@
             <td style="width: 50%">
                 @if (CompilerSettings.IsTargetFrameworkInLongTimeSupport)
                 {
-                    <MudTooltip Text="@("TargetFramework is up to date.")">
+                    <MudTooltip Text="TargetFramework is up to date.">
                         <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.TargetFramework</span>
                     </MudTooltip>
                 }
                 else
                 {
-                    <MudTooltip Text="@("TargetFramework is not set to a correct version.")">
+                    <MudTooltip Text="TargetFramework is not set to a correct version.">
                         <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.TargetFramework</span>
                     </MudTooltip>
                 }
@@ -27,13 +28,13 @@
             <td>
                 @if (CompilerSettings.IsLangVersionInAcceptedVersion)
                 {
-                    <MudTooltip Text="@("LangVersion is up to date.")">
+                    <MudTooltip Text="LangVersion is up to date.">
                         <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.LangVersion</span>
                     </MudTooltip>
                 }
                 else
                 {
-                    <MudTooltip Text="@("LangVersion is not set to a correct version.")">
+                    <MudTooltip Text="@($"LangVersion should be updated to {RepositoryMetadata.RecommendedLangVersion}.")">
                         <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.LangVersion</span>
                     </MudTooltip>
                 }

@@ -6,6 +6,10 @@ namespace AtcWeb.Domain.Data
 {
     public static class RepositoryMetadata
     {
+        public static string RecommendedVisualStudioName => "Visual Studio 2022";
+
+        public static string RecommendedLangVersion => "10.0";
+
         private static readonly List<Tuple<string, string>> ResponsibleMembers = new List<Tuple<string, string>>
         {
             Tuple.Create("atc", "davidkallesen"),
@@ -66,13 +70,18 @@ namespace AtcWeb.Domain.Data
             return GetResponsibleMembersByName(name).Length < 2;
         }
 
+        public static bool IsVisualStudioNameInAcceptedVersion(string visualStudioName)
+            => !string.IsNullOrEmpty(visualStudioName) &&
+               visualStudioName.Equals(RecommendedVisualStudioName, StringComparison.Ordinal);
+
         public static bool IsTargetFrameworkInLongTimeSupport(string targetFramework)
             => !string.IsNullOrEmpty(targetFramework) && (
                targetFramework.Contains("net6.0", StringComparison.OrdinalIgnoreCase) ||
-               targetFramework.Contains("netstandard2.1", StringComparison.OrdinalIgnoreCase));
+               targetFramework.Contains("netstandard2.1", StringComparison.OrdinalIgnoreCase) ||
+               targetFramework.Contains("netstandard2.0", StringComparison.OrdinalIgnoreCase));
 
         public static bool IsLangVersionInAcceptedVersion(string langVersion)
             => !string.IsNullOrEmpty(langVersion) &&
-               langVersion.Contains("10.0", StringComparison.OrdinalIgnoreCase);
+               langVersion.Contains(RecommendedLangVersion, StringComparison.Ordinal);
     }
 }

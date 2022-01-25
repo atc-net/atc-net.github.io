@@ -1,0 +1,57 @@
+@using AtcWeb.Domain.GitHub.Models
+@using AtcWeb.State
+@using AtcWeb.Domain.Data
+
+@if (StateContainer is not null &&
+  Repository?.Dotnet?.SolutionMetadata is not null)
+{
+    <MudSimpleTable Bordered="true"
+                Elevation="0">
+        <tbody>
+            <tr>
+                <td>Visual Studio Name</td>
+                <td>
+                    @if (Repository.Dotnet.IsVisualStudioNameInAcceptedVersion)
+                    {
+                        <MudTooltip Text="Visual Studio Name is up to date.">
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">@Repository.Dotnet.SolutionMetadata.VisualStudioName</span>
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="@($"Visual Studio Name should be updated to {RepositoryMetadata.RecommendedVisualStudioName}.")">
+                            <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@Repository.Dotnet.SolutionMetadata.VisualStudioName</span>
+                        </MudTooltip>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>File Format Version</td>
+                <td>@Repository.Dotnet.SolutionMetadata.FileFormatVersion</td>
+            </tr>
+            <tr>
+                <td>Visual Studio Version Number</td>
+                <td>@Repository.Dotnet.SolutionMetadata.VisualStudioVersionNumber</td>
+            </tr>
+
+            <tr>
+                <td>Visual Studio Version</td>
+                <td>@Repository.Dotnet.SolutionMetadata.VisualStudioVersion</td>
+            </tr>
+            <tr>
+                <td>Minimum Visual Studio Version</td>
+                <td>@Repository.Dotnet.SolutionMetadata.MinimumVisualStudioVersion</td>
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+
+    [Inject]
+    private StateContainer? StateContainer { get; set; }
+
+    [Parameter]
+    public AtcRepository? Repository { get; set; }
+
+}
