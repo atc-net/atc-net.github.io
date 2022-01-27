@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable StringLiteralTypo
 namespace AtcWeb.Domain.Data
 {
     public static class RepositoryMetadata
@@ -10,12 +11,19 @@ namespace AtcWeb.Domain.Data
 
         public static string RecommendedLangVersion => "10.0";
 
+        public static IEnumerable<string> RecommendedTargetFramework => new[]
+        {
+            "net6.0",
+            "netstandard2.1",
+            "netstandard2.0",
+        };
+
         private static readonly List<Tuple<string, string>> ResponsibleMembers = new List<Tuple<string, string>>
         {
             Tuple.Create("atc", "davidkallesen"),
             Tuple.Create("atc", "perkops"),
             Tuple.Create("atc-autoformatter", "rickykaare"),
-            Tuple.Create("atc-azure-options", "kimlundjohansen "),
+            Tuple.Create("atc-azure-options", "kimlundjohansen"),
             Tuple.Create("atc-coding-rules", "davidkallesen"),
             Tuple.Create("atc-coding-rules", "perkops"),
             Tuple.Create("atc-coding-rules-updater", "davidkallesen"),
@@ -75,10 +83,8 @@ namespace AtcWeb.Domain.Data
                visualStudioName.Equals(RecommendedVisualStudioName, StringComparison.Ordinal);
 
         public static bool IsTargetFrameworkInLongTimeSupport(string targetFramework)
-            => !string.IsNullOrEmpty(targetFramework) && (
-               targetFramework.Contains("net6.0", StringComparison.OrdinalIgnoreCase) ||
-               targetFramework.Contains("netstandard2.1", StringComparison.OrdinalIgnoreCase) ||
-               targetFramework.Contains("netstandard2.0", StringComparison.OrdinalIgnoreCase));
+            => !string.IsNullOrEmpty(targetFramework) &&
+               RecommendedTargetFramework.Contains(targetFramework, StringComparer.OrdinalIgnoreCase);
 
         public static bool IsLangVersionInAcceptedVersion(string langVersion)
             => !string.IsNullOrEmpty(langVersion) &&
