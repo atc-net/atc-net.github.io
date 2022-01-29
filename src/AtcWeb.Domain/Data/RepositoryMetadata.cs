@@ -24,6 +24,8 @@ namespace AtcWeb.Domain.Data
             Tuple.Create("atc", "perkops"),
             Tuple.Create("atc-autoformatter", "rickykaare"),
             Tuple.Create("atc-azure-options", "kimlundjohansen"),
+            Tuple.Create("atc-blazor", "davidkallesen"),
+            Tuple.Create("atc-blazor", "perkops"),
             Tuple.Create("atc-coding-rules", "davidkallesen"),
             Tuple.Create("atc-coding-rules", "perkops"),
             Tuple.Create("atc-coding-rules-updater", "davidkallesen"),
