@@ -15,6 +15,11 @@ namespace AtcWeb.State
             get => currentTheme;
             set
             {
+                if (value == currentTheme)
+                {
+                    return;
+                }
+
                 currentTheme = value;
                 NotifyThemeStateChanged();
             }

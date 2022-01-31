@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Atc.Blazor.ColorThemePreference;
 using AtcWeb.State;
 using AtcWeb.Styles;
 using Microsoft.AspNetCore.Components;
@@ -14,6 +16,9 @@ namespace AtcWeb.Shared
         private StateContainer StateContainer { get; set; }
 
         [Inject]
+        private IColorThemePreferenceDetector ColorThemePreferenceDetector { get; set; }
+
+        [Inject]
         private NavigationManager NavigationManager { get; set; }
 
         private void DrawerToggle()
@@ -21,8 +26,13 @@ namespace AtcWeb.Shared
             drawerOpen = !drawerOpen;
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
+            var useDarkMode = await ColorThemePreferenceDetector.UseDarkMode();
+            StateContainer.CurrentTheme = useDarkMode
+                ? MudThemeHelper.DarkTheme
+                : MudThemeHelper.LightTheme;
+
             drawerOpen = true;
         }
 

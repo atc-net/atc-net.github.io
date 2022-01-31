@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Atc.Blazor.ColorThemePreference;
 using AtcWeb.Domain.AtcApi;
 using AtcWeb.Domain.GitHub;
 using AtcWeb.State;
@@ -38,6 +39,8 @@ namespace AtcWeb
             builder.Services.AddMemoryCache();
 
             builder.Services.AddMudServices();
+
+            builder.Services.AddColorThemePreferenceDetector();
 
             return builder.Build().RunAsync();
         }
