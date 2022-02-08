@@ -23,14 +23,21 @@ public class GitHubPath
             return string.Empty;
         }
 
-        if (!Path.Contains('/', StringComparison.Ordinal))
+        return Path.Contains('/', StringComparison.Ordinal)
+            ? Path.Split('/').Last()
+            : Path;
+    }
+
+    public string GetDirectoryFromFilePath()
+    {
+        if (!IsFile)
         {
-            return Path;
+            return string.Empty;
         }
 
-        return Path
-            .Split('/')
-            .Last();
+        return Path.Contains('/', StringComparison.Ordinal)
+            ? string.Join('/', Path.Split('/').SkipLast(1))
+            : Path;
     }
 
     public string GetFileExtension()
@@ -42,9 +49,7 @@ public class GitHubPath
             return string.Empty;
         }
 
-        return fileName
-            .Split('.')
-            .Last();
+        return fileName.Split('.').Last();
     }
 
     public override string ToString()

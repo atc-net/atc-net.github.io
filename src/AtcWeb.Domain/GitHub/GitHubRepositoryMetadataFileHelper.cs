@@ -77,14 +77,15 @@ public static class GitHubRepositoryMetadataFileHelper
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
         string repositoryName,
-        string defaultBranchName)
+        string defaultBranchName,
+        string path = "README.md")
     {
         var rawText = await GetFileByPathAndEnsureFullLinks(
             gitHubRepositoryClient,
             foldersAndFiles,
             repositoryName,
             defaultBranchName,
-            "README.md");
+            path);
 
         if (string.IsNullOrEmpty(rawText))
         {

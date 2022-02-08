@@ -49,6 +49,30 @@
                     </MudCard>
                 </SectionContent>
             </DocsPageSection>
+            @if ("C#".Equals(Repository.BaseData.Language, StringComparison.Ordinal) &&
+                 Repository.Dotnet is not null)
+            {
+                foreach (var dotnetProject in Repository.Dotnet.Projects
+                    .OrderBy(x => x.Name))
+                {
+                    if (dotnetProject.HasReadme)
+                    {
+                        <DocsPageSection>
+                            <SectionHeader Title="@($"Readme: {dotnetProject.Name}")"/>
+                            <SectionContent AutoMarginContent="false"
+                                            FullWidth="true">
+                                <MudCard Elevation="0">
+                                    <MudCardContent>
+                                        <MarkdownRepositoryContent RepositoryName="@Repository.Name"
+                                                                   RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                                   Content="@dotnetProject.RawReadme"/>
+                                    </MudCardContent>
+                                </MudCard>
+                            </SectionContent>
+                        </DocsPageSection>
+                    }
+                }
+            }
             <DocsPageSection>
                 <SectionHeader Title="Responsible members"/>
                 <SectionContent FullWidth="true">

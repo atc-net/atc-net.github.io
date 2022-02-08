@@ -12,7 +12,13 @@
         <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
     </MudNavGroup>
 
-    @if (repositories is not null)
+    @if (repositories is null)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+        </MudGrid>
+    }
+    else
     {
         foreach (var repository in repositories
             .Where(x => !x.BaseData.Private)

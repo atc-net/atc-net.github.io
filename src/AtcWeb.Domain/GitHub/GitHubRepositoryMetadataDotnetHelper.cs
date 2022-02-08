@@ -9,6 +9,7 @@ public static class GitHubRepositoryMetadataDotnetHelper
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
         string repositoryName,
+        string defaultBranchName,
         string rawDirectoryBuildPropsRoot,
         string rawDirectoryBuildPropsSrc,
         string rawDirectoryBuildPropsTest)
@@ -38,6 +39,21 @@ public static class GitHubRepositoryMetadataDotnetHelper
             project.Name = gitHubCsprojPath
                 .GetFileName()
                 .Replace(".csproj", string.Empty, StringComparison.Ordinal);
+
+            if (gitHubCsprojPath.Path.StartsWith("src", StringComparison.Ordinal))
+            {
+                var projectReadmePath = $"{gitHubCsprojPath.GetDirectoryFromFilePath()}/README.md";
+                var projectReadmeGitHubPath = foldersAndFiles.Find(x => x.IsFile && x.Path.Equals(projectReadmePath, StringComparison.Ordinal));
+                if (projectReadmeGitHubPath is not null)
+                {
+                    project.RawReadme = await GitHubRepositoryMetadataFileHelper.GetReadMeFile(
+                        gitHubRepositoryClient,
+                        foldersAndFiles,
+                        repositoryName,
+                        defaultBranchName,
+                        projectReadmePath);
+                }
+            }
 
             project.CompilerSettings.TargetFramework = GetSimpleXmlValueForCsproj(
                 gitHubCsprojPath.Path,

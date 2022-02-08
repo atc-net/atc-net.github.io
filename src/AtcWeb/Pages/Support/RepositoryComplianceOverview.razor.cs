@@ -2,7 +2,7 @@ namespace AtcWeb.Pages.Support;
 
 public class RepositoryComplianceOverviewBase : ComponentBase
 {
-    protected List<Domain.GitHub.Models.AtcRepository>? Repositories;
+    protected List<AtcRepository>? Repositories;
 
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }

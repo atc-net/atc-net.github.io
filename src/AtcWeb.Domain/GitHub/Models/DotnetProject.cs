@@ -6,6 +6,10 @@ public class DotnetProject
 
     public string Name { get; set; } = string.Empty;
 
+    public string RawReadme { get; set; } = string.Empty;
+
+    public bool HasReadme => !string.IsNullOrEmpty(RawReadme);
+
     public DotnetProjectCompilerSettings CompilerSettings { get; set; } = new DotnetProjectCompilerSettings();
 
     public DotnetProjectAnalyzerSettings AnalyzerSettings { get; set; } = new DotnetProjectAnalyzerSettings();

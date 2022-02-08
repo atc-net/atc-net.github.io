@@ -169,7 +169,8 @@ public class GitHubRepositoryService
             taskDotnet = GitHubRepositoryMetadataHelper.LoadDotnet(
                 atcApiGitHubRepositoryClient,
                 repository.FolderAndFilePaths,
-                repository.Name);
+                repository.Name,
+                repository.BaseData.DefaultBranch);
 
             tasks.Add(taskDotnet);
         }

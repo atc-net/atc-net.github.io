@@ -5,7 +5,7 @@ public partial class NavMenu
     private string? section;
     private string? componentLink;
 
-    protected List<Domain.GitHub.Models.AtcRepository>? repositories;
+    protected List<AtcRepository>? repositories;
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }

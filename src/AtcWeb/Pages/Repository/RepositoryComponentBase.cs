@@ -3,7 +3,7 @@ namespace AtcWeb.Pages.Repository;
 public class RepositoryComponentBase : ComponentBase
 {
     private readonly string repositoryName;
-    protected Domain.GitHub.Models.AtcRepository? repository;
+    protected AtcRepository? repository;
 
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
@@ -15,7 +15,7 @@ public class RepositoryComponentBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        repository = await RepositoryService.GetRepositoryByNameAsync(repositoryName, populateMetaDataBase: true, populateMetaDataAdvanced: false);
+        repository = await RepositoryService.GetRepositoryByNameAsync(repositoryName, populateMetaDataBase: true, populateMetaDataAdvanced: true);
         await base.OnInitializedAsync();
     }
 }

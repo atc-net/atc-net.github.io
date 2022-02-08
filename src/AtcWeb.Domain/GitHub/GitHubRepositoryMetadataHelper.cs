@@ -129,7 +129,8 @@ public static class GitHubRepositoryMetadataHelper
     public static async Task<DotnetMetadata> LoadDotnet(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
-        string repositoryName)
+        string repositoryName,
+        string defaultBranchName)
     {
         if (gitHubRepositoryClient is null)
         {
@@ -180,6 +181,7 @@ public static class GitHubRepositoryMetadataHelper
             gitHubRepositoryClient,
             foldersAndFiles,
             repositoryName,
+            defaultBranchName,
             data.RawDirectoryBuildPropsRoot,
             data.RawDirectoryBuildPropsSrc,
             data.RawDirectoryBuildPropsTest);
