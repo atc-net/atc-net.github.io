@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcAzureOptionsBase : RepositoryComponentBase
 {
-    public class AtcAzureOptionsBase : RepositoryComponentBase
+    public AtcAzureOptionsBase()
+        : base("atc-azure-options")
     {
-        public AtcAzureOptionsBase()
-            : base("atc-azure-options")
-        {
-        }
     }
 }

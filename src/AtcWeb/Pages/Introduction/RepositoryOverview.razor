@@ -15,7 +15,9 @@
         }
         else
         {
-            foreach (var repository in Repositories.Where(x => !x.BaseData.Private).OrderBy(x => x.Name))
+            foreach (var repository in Repositories
+                .Where(x => !x.BaseData.Private)
+                .OrderBy(x => x.Name))
             {
                 <DocsPageSection>
                     <SectionHeader Title="@repository.Name"

@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcAutoFormatterBase : RepositoryComponentBase
 {
-    public class AtcAutoFormatterBase : RepositoryComponentBase
+    public AtcAutoFormatterBase()
+        : base("atc-autoformatter")
     {
-        public AtcAutoFormatterBase()
-            : base("atc-autoformatter")
-        {
-        }
     }
 }

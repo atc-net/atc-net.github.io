@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcDataPlatformBase : RepositoryComponentBase
 {
-    public class AtcDataPlatformBase : RepositoryComponentBase
+    public AtcDataPlatformBase()
+        : base("atc-dataplatform")
     {
-        public AtcDataPlatformBase()
-            : base("atc-dataplatform")
-        {
-        }
     }
 }

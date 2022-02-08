@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcBlazorBase : RepositoryComponentBase
 {
-    public class AtcBlazorBase : RepositoryComponentBase
+    public AtcBlazorBase()
+        : base("atc-blazor")
     {
-        public AtcBlazorBase()
-            : base("atc-blazor")
-        {
-        }
     }
 }

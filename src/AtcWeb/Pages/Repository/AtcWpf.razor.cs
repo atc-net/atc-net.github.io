@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcWpfBase : RepositoryComponentBase
 {
-    public class AtcWpfBase : RepositoryComponentBase
+    public AtcWpfBase()
+        : base("atc-wpf")
     {
-        public AtcWpfBase()
-            : base("atc-wpf")
-        {
-        }
     }
 }

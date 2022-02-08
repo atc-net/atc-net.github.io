@@ -1,30 +1,25 @@
-using System;
-using AtcWeb.Styles;
-using MudBlazor;
+namespace AtcWeb.State;
 
-namespace AtcWeb.State
+public class StateContainer
 {
-    public class StateContainer
+    private MudTheme currentTheme = MudThemeHelper.DarkTheme;
+
+    public event Action<object, EventArgs>? OnThemeChange;
+
+    public MudTheme CurrentTheme
     {
-        private MudTheme currentTheme = MudThemeHelper.DarkTheme;
-
-        public event Action<object, EventArgs>? OnThemeChange;
-
-        public MudTheme CurrentTheme
+        get => currentTheme;
+        set
         {
-            get => currentTheme;
-            set
+            if (value == currentTheme)
             {
-                if (value == currentTheme)
-                {
-                    return;
-                }
-
-                currentTheme = value;
-                NotifyThemeStateChanged();
+                return;
             }
-        }
 
-        public void NotifyThemeStateChanged() => OnThemeChange?.Invoke(this, EventArgs.Empty);
+            currentTheme = value;
+            NotifyThemeStateChanged();
+        }
     }
+
+    public void NotifyThemeStateChanged() => OnThemeChange?.Invoke(this, EventArgs.Empty);
 }

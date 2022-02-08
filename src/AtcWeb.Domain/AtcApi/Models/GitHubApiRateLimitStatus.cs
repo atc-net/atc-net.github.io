@@ -1,6 +1,4 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
+// ReSharper disable InconsistentNaming
 namespace AtcWeb.Domain.AtcApi.Models;
 
 [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "OK.")]

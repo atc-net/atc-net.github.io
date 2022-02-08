@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcRestApiGeneratorBase : RepositoryComponentBase
 {
-    public class AtcRestApiGeneratorBase : RepositoryComponentBase
+    public AtcRestApiGeneratorBase()
+        : base("atc-rest-api-generator")
     {
-        public AtcRestApiGeneratorBase()
-            : base("atc-rest-api-generator")
-        {
-        }
     }
 }

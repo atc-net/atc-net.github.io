@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcCosmosSqlApiRepositoryBase : RepositoryComponentBase
 {
-    public class AtcCosmosSqlApiRepositoryBase : RepositoryComponentBase
+    public AtcCosmosSqlApiRepositoryBase()
+        : base("atc-cosmos-sql-api-repository")
     {
-        public AtcCosmosSqlApiRepositoryBase()
-            : base("atc-cosmos-sql-api-repository")
-        {
-        }
     }
 }

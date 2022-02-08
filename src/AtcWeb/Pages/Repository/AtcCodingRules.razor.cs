@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcCodingRulesBase : RepositoryComponentBase
 {
-    public class AtcCodingRulesBase : RepositoryComponentBase
+    public AtcCodingRulesBase()
+        : base("atc-coding-rules")
     {
-        public AtcCodingRulesBase()
-            : base("atc-coding-rules")
-        {
-        }
     }
 }

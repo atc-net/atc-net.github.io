@@ -1,5 +1,3 @@
-using System;
-
 namespace AtcWeb.Domain.GitHub.Models;
 
 public class DotnetNugetPackage

@@ -1,9 +1,6 @@
-using System;
+namespace AtcWeb.Domain.AtcApi.Models;
 
-namespace AtcWeb.Domain.AtcApi.Models
+public class GitHubIssue
 {
-    public class GitHubIssue
-    {
-        public DateTimeOffset CreatedAt { get; set; }
-    }
+    public DateTimeOffset CreatedAt { get; set; }
 }

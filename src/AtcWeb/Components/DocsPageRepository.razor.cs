@@ -1,14 +1,10 @@
-using AtcWeb.Domain.GitHub.Models;
-using Microsoft.AspNetCore.Components;
+namespace AtcWeb.Components;
 
-namespace AtcWeb.Components
+public class DocsPageRepositoryBase : ComponentBase
 {
-    public class DocsPageRepositoryBase : ComponentBase
-    {
-        [Parameter]
-        public AtcRepository? Repository { get; set; }
+    [Parameter]
+    public AtcRepository? Repository { get; set; }
 
-        [Parameter]
-        public RenderFragment? ChildContent { get; set; }
-    }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 }

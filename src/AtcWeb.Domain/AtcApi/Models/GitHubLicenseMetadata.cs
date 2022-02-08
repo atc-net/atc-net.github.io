@@ -1,9 +1,8 @@
-namespace AtcWeb.Domain.AtcApi.Models
-{
-    public class GitHubLicenseMetadata
-    {
-        public string Key { get; set; }
+namespace AtcWeb.Domain.AtcApi.Models;
 
-        public override string ToString() => $"{nameof(Key)}: {Key}";
-    }
+public class GitHubLicenseMetadata
+{
+    public string Key { get; set; }
+
+    public override string ToString() => $"{nameof(Key)}: {Key}";
 }

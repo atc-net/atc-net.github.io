@@ -1,10 +1,9 @@
-namespace AtcWeb.Pages.Repository
+namespace AtcWeb.Pages.Repository;
+
+public class AtcRestClientBase : RepositoryComponentBase
 {
-    public class AtcRestClientBase : RepositoryComponentBase
+    public AtcRestClientBase()
+        : base("atc-rest-client")
     {
-        public AtcRestClientBase()
-            : base("atc-rest-client")
-        {
-        }
     }
 }
