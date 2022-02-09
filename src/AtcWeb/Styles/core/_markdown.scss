@@ -21,17 +21,25 @@
   }
 
   & pre {
-    height: 100%;
-    margin: 8px 0px;
-    padding: 16px;
-    border-radius: 6px;
-    color: #ededed;
     background-color: var(--mud-palette-dark);
-    direction: ltr;
-    overflow: auto;
-    font-size: 85%;
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    -webkit-font-smoothing: subpixel-antialiased;
+    border-radius: 6px;
+
+    pre {
+      border-radius: 0px;
+    }
+
+    > code {
+      display: block;
+      height: 100%;
+      margin: 8px 0px;
+      padding: 16px;
+      color: #ededed;
+      direction: ltr;
+      overflow: auto;
+      font-size: 85%;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      -webkit-font-smoothing: subpixel-antialiased;
+    }
   }
 
   & p code {

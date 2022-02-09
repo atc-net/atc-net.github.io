@@ -58,13 +58,14 @@
                     if (dotnetProject.HasReadme)
                     {
                         <DocsPageSection>
-                            <SectionHeader Title="@($"Readme: {dotnetProject.Name}")"/>
+                            <SectionHeader Title="@dotnetProject.Name"/>
                             <SectionContent AutoMarginContent="false"
                                             FullWidth="true">
                                 <MudCard Elevation="0">
                                     <MudCardContent>
                                         <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                                    RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                                   HeaderName="@dotnetProject.Name"
                                                                    Content="@dotnetProject.RawReadme"/>
                                     </MudCardContent>
                                 </MudCard>
