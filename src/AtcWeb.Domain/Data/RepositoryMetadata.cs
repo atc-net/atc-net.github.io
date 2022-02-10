@@ -18,6 +18,8 @@ public static class RepositoryMetadata
     {
         Tuple.Create("atc", "davidkallesen"),
         Tuple.Create("atc", "perkops"),
+        Tuple.Create("atc-api", "davidkallesen"),
+        Tuple.Create("atc-api", "perkops"),
         Tuple.Create("atc-autoformatter", "rickykaare"),
         Tuple.Create("atc-azure-options", "kimlundjohansen"),
         Tuple.Create("atc-blazor", "davidkallesen"),
@@ -50,7 +52,6 @@ public static class RepositoryMetadata
         Tuple.Create("atc-snippets", "Mikael O. Hansen"),
         Tuple.Create("atc-snippets", "lupusbytes"),
         Tuple.Create("atc-test", "rickykaare"),
-        Tuple.Create("atc-test", "egil"),
         Tuple.Create("atc-wpf", "davidkallesen"),
     };
 
