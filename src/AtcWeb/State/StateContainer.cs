@@ -21,5 +21,7 @@ public class StateContainer
         }
     }
 
+    public bool IsFireAndForgetTriggerStarted { get; set; }
+
     public void NotifyThemeStateChanged() => OnThemeChange?.Invoke(this, EventArgs.Empty);
 }

@@ -1,3 +1,4 @@
+// ReSharper disable InvertIf
 namespace AtcWeb.Shared;
 
 public partial class MainLayout : LayoutComponentBase
@@ -13,6 +14,9 @@ public partial class MainLayout : LayoutComponentBase
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    protected GitHubRepositoryService RepositoryService { get; set; }
 
     private void DrawerToggle()
     {
@@ -32,6 +36,21 @@ public partial class MainLayout : LayoutComponentBase
     protected override void OnAfterRender(bool firstRender)
     {
         navMenuRef.Refresh();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!StateContainer.IsFireAndForgetTriggerStarted)
+        {
+            StateContainer.IsFireAndForgetTriggerStarted = true;
+            Task.Run(async () =>
+            {
+                await RepositoryService.GetContributorsAsync();
+                await RepositoryService.GetRepositoriesAsync(populateMetaDataBase: true, populateMetaDataAdvanced: true);
+            });
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     private void OnSwipe(SwipeDirection direction)
