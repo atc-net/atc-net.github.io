@@ -1,0 +1,27 @@
+@page "/manuals/devops-playbook"
+
+@inherits DevOpsPlaybookBase
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageContent>
+        @if (Sections is null)
+        {
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+        }
+        else
+        {
+            @foreach ((string title, string text) in Sections)
+            {
+                <DocsPageSection>
+                    <SectionHeader Title="@title" />
+                    <SectionContent AutoMarginContent="false" FullWidth="true">
+                        <MarkdownRepositoryContent RepositoryName="atc-docs"
+                                                   RepositoryBranch="main"
+                                                   UseImageObjectFit="false"
+                                                   Content="@text" />
+                    </SectionContent>
+                </DocsPageSection>
+            }
+        }
+    </DocsPageContent>
+</DocsPage>

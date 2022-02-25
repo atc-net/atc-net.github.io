@@ -105,6 +105,33 @@ public class GitHubRepositoryService
         return atcRepository;
     }
 
+    [SuppressMessage("Minor Code Smell", "S3267:Loops should be simplified with \"LINQ\" expressions", Justification = "OK.")]
+    public async Task<List<Tuple<string, string>>> GetDevOpsPlaybook()
+    {
+        const string repositoryName = "atc-docs";
+        var folderAndFilePaths = await GetDirectoryMetadata(repositoryName);
+
+        var data = new List<Tuple<string, string>>();
+        foreach (var folderAndFilePath in folderAndFilePaths
+                     .Where(x => x.IsFile &&
+                                 x.Path.StartsWith("devops-playbook", StringComparison.Ordinal) &&
+                                 x.GetFileExtension().Equals("md", StringComparison.Ordinal))
+                     .OrderBy(x => x.Path, new NumericAlphaComparer()))
+        {
+            var rawText = await GitHubRepositoryMetadataFileHelper.GetFileByPathAndEnsureFullLinks(
+                atcApiGitHubRepositoryClient,
+                folderAndFilePaths,
+                repositoryName,
+                "main",
+                folderAndFilePath.Path);
+
+            var isReadMe = folderAndFilePath.GetFileName().Equals("README.md", StringComparison.Ordinal);
+            data.Add(GetDevOpsPlaybookSection(isReadMe, rawText));
+        }
+
+        return data;
+    }
+
     private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName)
     {
         var (isSuccessful, gitHubPath) = await atcApiGitHubRepositoryClient.GetAllPathsByRepositoryByName(repositoryName);
@@ -212,5 +239,71 @@ public class GitHubRepositoryService
         }
 
         repository.SetBadges();
+    }
+
+    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
+    private static Tuple<string, string> GetDevOpsPlaybookSection(bool isReadMe, string rawText)
+    {
+        var lines = rawText.ToLines();
+        var title = string.Empty;
+        var titleIndex = 0;
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            if (!lines[i].StartsWith("# ", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            title = lines[i].Replace("# ", string.Empty, StringComparison.Ordinal);
+            titleIndex = i + 1;
+            break;
+        }
+
+        var sb = new StringBuilder();
+        for (var i = titleIndex; i < lines.Length; i++)
+        {
+            if (isReadMe && lines[i].StartsWith("# ", StringComparison.Ordinal))
+            {
+                break;
+            }
+
+            var line = lines[i];
+            if (line.Trim().Length == 0)
+            {
+                sb.AppendLine("<br />");
+                continue;
+            }
+
+            line = line
+                .Replace(
+                    "(images/",
+                    "(https://github.com/atc-net/atc-docs/blob/main/devops-playbook/images/",
+                    StringComparison.Ordinal)
+                .Replace(
+                    "![",
+                    "<br />![",
+                    StringComparison.Ordinal)
+                .Replace(
+                    "`TEXT-IS -MISSING`",
+                    "`TEXT-IS -MISSING`<br /><br />",
+                    StringComparison.Ordinal);
+
+            if (line.StartsWith("**", StringComparison.Ordinal) ||
+                line.StartsWith('*'))
+            {
+                line = "<br /><br />" + line;
+            }
+
+            if (line.EndsWith("**", StringComparison.Ordinal) ||
+                line.EndsWith(')'))
+            {
+                line += "<br /><br />";
+            }
+
+            sb.AppendLine(line);
+        }
+
+        return new Tuple<string, string>(title, sb.ToString());
     }
 }

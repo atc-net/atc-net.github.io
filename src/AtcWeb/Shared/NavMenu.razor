@@ -6,10 +6,16 @@
                  Icon="@Icons.Material.Filled.School"
                  Expanded="@(section == "introduction")"
                  ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/introduction/about-atc">About ATC</MudNavLink>
         <MudNavLink Href="/introduction/team-and-contributors">Team & Contributors</MudNavLink>
+        <MudNavLink Href="/introduction/about-atc">Contribution</MudNavLink>
         <MudNavLink Href="/introduction/general-rules-and-guidelines">General rules and guidelines</MudNavLink>
         <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Manuals"
+                 Icon="@Icons.Material.Filled.School"
+                 Expanded="@(section == "manuals")"
+                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
+        <MudNavLink Href="/manuals/devops-playbook">DevOps Playbook</MudNavLink>
     </MudNavGroup>
 
     @if (repositories is null)
