@@ -37,6 +37,9 @@ public class MarkdownRepositoryContentBase : ComponentBase
         }
     }
 
+    [Parameter]
+    public bool UseImageObjectFit { get; set; } = true;
+
     protected MarkupString HtmlContent { get; private set; }
 
     private MarkupString ConvertMarkdownToHtml(string markdownContent)
@@ -59,11 +62,6 @@ public class MarkdownRepositoryContentBase : ComponentBase
 
         var html = Markdown.ToHtml(markdownContent, markdownPipeline);
 
-        const string imgSrcRaw = "https://raw.githubusercontent.com/";
-        var imgSrc2from = $"https://github.com/atc-net/{RepositoryName}/blob/{RepositoryBranch}/";
-        var imgSrc2to = $"https://github.com/atc-net/{RepositoryName}/raw/{RepositoryBranch}/";
-        const string hrefBase = "https://github.com/atc-net/";
-
         if (html.Contains("language-csharp", StringComparison.Ordinal))
         {
             html = FormatHtmlCodeLanguage(html, "language-csharp", ColorCode.Languages.CSharp);
@@ -84,26 +82,60 @@ public class MarkdownRepositoryContentBase : ComponentBase
             html = html.Replace("<code>", "<code class=\"language-unknown\">", StringComparison.Ordinal);
         }
 
+        return SanitizeHtmlToMarkup(html);
+    }
+
+    private MarkupString SanitizeHtmlToMarkup(string html)
+    {
+        const string hrefBase = "https://github.com/atc-net/";
+        const string imgSrcRaw = "https://raw.githubusercontent.com/";
+        var hrefRepo = $"{hrefBase}{RepositoryName}/blob/{RepositoryBranch}/";
+        var imgSrc2To = $"{hrefBase}{RepositoryName}/raw/{RepositoryBranch}/";
+
         var sanitizedHtml = HtmlSanitizer
             .Sanitize(html)
             .Replace(
-                $"<img src=\"{imgSrcRaw}",
-                $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrcRaw}",
-                StringComparison.Ordinal)
-            .Replace(
-                $"<img src=\"{imgSrc2from}",
-                $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrc2to}",
-                StringComparison.Ordinal)
-            .Replace(
-                $"<a href=\"{hrefBase}",
-                $"<a target=\"_blank\" href=\"{hrefBase}",
+                "<a href=\"./",
+                $"<a target=\"_blank\" href=\"{hrefRepo}",
                 StringComparison.Ordinal);
+
+        if (UseImageObjectFit)
+        {
+            sanitizedHtml = sanitizedHtml
+                .Replace(
+                    $"<img src=\"{imgSrcRaw}",
+                    $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrcRaw}",
+                    StringComparison.Ordinal)
+                .Replace(
+                    $"<img src=\"{hrefRepo}",
+                    $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrc2To}",
+                    StringComparison.Ordinal)
+                .Replace(
+                    $"<a href=\"{hrefBase}",
+                    $"<a target=\"_blank\" href=\"{hrefBase}",
+                    StringComparison.Ordinal);
+        }
+        else
+        {
+            sanitizedHtml = sanitizedHtml
+                .Replace(
+                    $"<img src=\"{hrefRepo}",
+                    $"<img src=\"{imgSrc2To}",
+                    StringComparison.Ordinal)
+                .Replace(
+                    $"<a href=\"{hrefBase}",
+                    $"<a target=\"_blank\" href=\"{hrefBase}",
+                    StringComparison.Ordinal);
+        }
 
         return new MarkupString(sanitizedHtml);
     }
 
     [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "OK.")]
-    private static string FormatHtmlCodeLanguage(string html, string classLanguage, ColorCode.ILanguage colorCodeLanguages)
+    private static string FormatHtmlCodeLanguage(
+        string html,
+        string classLanguage,
+        ColorCode.ILanguage colorCodeLanguages)
     {
         var matches = Regex.Matches(html, $"<code class=\"{classLanguage}\">(.*?)</code>", RegexOptions.Singleline | RegexOptions.Compiled, TimeSpan.FromSeconds(5));
         foreach (Match match in matches)

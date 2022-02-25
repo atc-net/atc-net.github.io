@@ -3,8 +3,7 @@
 @inherits GeneralRulesAndGuidelinesBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
-    <DocsPageHeader Title="General Rules and Guidelines for ATC-Net organisation"
-                    SubTitle="- minutes of the meeting 22-01-2021 extended with some already existing ATC-team work">
+    <DocsPageHeader Title="General Rules and Guidelines for ATC-Net organisation">
     </DocsPageHeader>
     <DocsPageContent>
 
@@ -72,7 +71,7 @@
 
         <DocsPageSection>
             <SectionHeader Title="Repo-Responsible(s)"/>
-            <SectionContent>
+            <SectionContent AutoMarginContent="false" Style="background-color: transparent;">
                 @if (Repositories is null)
                 {
                     <MudGrid Justify="Justify.Center">
@@ -83,16 +82,18 @@
                 {
                     foreach (var repository in Repositories.OrderBy(x => x.Name))
                     {
-                        <MudLink Class="my-4"
-                                 Typo="Typo.h5"
-                                 Href="@repository.Url"
-                                 Target="_blank">
-                            @repository.Name
-                        </MudLink>
-                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
-                                               RepositoryName="@repository.Name"
-                                               ItemTitle="Responsible member"
-                                               Justify="Justify.FlexStart"/>
+                        <MudElement HtmlTag="div"
+                                    Class="mb-12">
+                            <MudLink Typo="Typo.h5"
+                                     Href="@repository.Url"
+                                     Target="_blank">
+                                @repository.Name
+                            </MudLink>
+                            <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
+                                                   RepositoryName="@repository.Name"
+                                                   ItemTitle="Responsible member"
+                                                   Justify="Justify.FlexStart" />
+                        </MudElement>
                     }
                 }
             </SectionContent>
