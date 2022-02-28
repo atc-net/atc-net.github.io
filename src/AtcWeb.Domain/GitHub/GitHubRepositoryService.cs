@@ -106,12 +106,12 @@ public class GitHubRepositoryService
     }
 
     [SuppressMessage("Minor Code Smell", "S3267:Loops should be simplified with \"LINQ\" expressions", Justification = "OK.")]
-    public async Task<List<Tuple<string, string>>> GetDevOpsPlaybook()
+    public async Task<DocumentMetadata> GetDevOpsPlaybook()
     {
         const string repositoryName = "atc-docs";
         var folderAndFilePaths = await GetDirectoryMetadata(repositoryName);
 
-        var data = new List<Tuple<string, string>>();
+        var documentMetadata = new DocumentMetadata();
         foreach (var folderAndFilePath in folderAndFilePaths
                      .Where(x => x.IsFile &&
                                  x.Path.StartsWith("devops-playbook", StringComparison.Ordinal) &&
@@ -126,10 +126,10 @@ public class GitHubRepositoryService
                 folderAndFilePath.Path);
 
             var isReadMe = folderAndFilePath.GetFileName().Equals("README.md", StringComparison.Ordinal);
-            data.Add(GetDevOpsPlaybookSection(isReadMe, rawText));
+            documentMetadata.SubSection.Add(GetDevOpsPlaybookSection(isReadMe, rawText));
         }
 
-        return data;
+        return documentMetadata;
     }
 
     private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName)
@@ -242,7 +242,7 @@ public class GitHubRepositoryService
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    private static Tuple<string, string> GetDevOpsPlaybookSection(bool isReadMe, string rawText)
+    private static DocumentSectionMetadata GetDevOpsPlaybookSection(bool isReadMe, string rawText)
     {
         var lines = rawText.ToLines();
         var title = string.Empty;
@@ -260,7 +260,16 @@ public class GitHubRepositoryService
             break;
         }
 
-        var sb = new StringBuilder();
+        var documentSectionMetadata = new DocumentSectionMetadata
+        {
+            Title = title,
+        };
+
+        var sbBody = new StringBuilder();
+        var subTitle = string.Empty;
+        var sbSubBody = new StringBuilder();
+        var workOnSub = false;
+        var level = 0;
         for (var i = titleIndex; i < lines.Length; i++)
         {
             if (isReadMe && lines[i].StartsWith("# ", StringComparison.Ordinal))
@@ -269,41 +278,108 @@ public class GitHubRepositoryService
             }
 
             var line = lines[i];
-            if (line.Trim().Length == 0)
+
+            if (line.StartsWith("# ", StringComparison.Ordinal) ||
+                line.StartsWith("## ", StringComparison.Ordinal))
             {
-                sb.AppendLine("<br />");
-                continue;
+                if (workOnSub && !string.IsNullOrEmpty(subTitle))
+                {
+                    documentSectionMetadata.SubSection.Add(
+                        new DocumentSectionMetadata
+                        {
+                            Level = level,
+                            Title = subTitle,
+                            Body = sbSubBody.ToString(),
+                        });
+                }
+
+                workOnSub = true;
+                sbSubBody = new StringBuilder();
+                if (line.StartsWith("# ", StringComparison.Ordinal))
+                {
+                    level = 1;
+                    subTitle = line.Replace("# ", string.Empty, StringComparison.Ordinal);
+                }
+                else if (line.StartsWith("## ", StringComparison.Ordinal))
+                {
+                    level = 2;
+                    subTitle = line.Replace("## ", string.Empty, StringComparison.Ordinal);
+                }
             }
-
-            line = line
-                .Replace(
-                    "(images/",
-                    "(https://github.com/atc-net/atc-docs/blob/main/devops-playbook/images/",
-                    StringComparison.Ordinal)
-                .Replace(
-                    "![",
-                    "<br />![",
-                    StringComparison.Ordinal)
-                .Replace(
-                    "`TEXT-IS -MISSING`",
-                    "`TEXT-IS -MISSING`<br /><br />",
-                    StringComparison.Ordinal);
-
-            if (line.StartsWith("**", StringComparison.Ordinal) ||
-                line.StartsWith('*'))
+            else
             {
-                line = "<br /><br />" + line;
+                if (line.Trim().Length == 0)
+                {
+                    if (workOnSub)
+                    {
+                        sbSubBody.AppendLine("<br />");
+                    }
+                    else
+                    {
+                        sbBody.AppendLine("<br />");
+                    }
+                }
+                else
+                {
+                    line = FormatLine(line);
+                    if (workOnSub)
+                    {
+                        sbSubBody.AppendLine(line);
+                    }
+                    else
+                    {
+                        sbBody.AppendLine(line);
+                    }
+                }
             }
-
-            if (line.EndsWith("**", StringComparison.Ordinal) ||
-                line.EndsWith(')'))
-            {
-                line += "<br /><br />";
-            }
-
-            sb.AppendLine(line);
         }
 
-        return new Tuple<string, string>(title, sb.ToString());
+        if (workOnSub && !string.IsNullOrEmpty(subTitle))
+        {
+            documentSectionMetadata.SubSection.Add(
+                new DocumentSectionMetadata
+                {
+                    Level = level,
+                    Title = subTitle,
+                    Body = sbSubBody.ToString(),
+                });
+
+            sbBody.AppendLine("<br /><br /><br />");
+        }
+
+        documentSectionMetadata.Body = sbBody.ToString();
+
+        return documentSectionMetadata;
+    }
+
+    private static string FormatLine(string line)
+    {
+        line = line
+            .Replace(
+                "(images/",
+                "(https://github.com/atc-net/atc-docs/blob/main/devops-playbook/images/",
+                StringComparison.Ordinal)
+            .Replace(
+                "![",
+                "<br />![",
+                StringComparison.Ordinal)
+            .Replace(
+                "`TEXT-IS -MISSING`",
+                "`TEXT-IS -MISSING`<br /><br />",
+                StringComparison.Ordinal);
+
+        if (line.StartsWith("**", StringComparison.Ordinal) ||
+            line.StartsWith('*'))
+        {
+            line = "<br /><br />" + line;
+        }
+
+        if (line.EndsWith("**", StringComparison.Ordinal) ||
+            line.EndsWith(')'))
+        {
+            line += "<br /><br />";
+        }
+
+        return line;
     }
 }

@@ -4,6 +4,7 @@ public partial class DocsPage : ComponentBase
 {
     private readonly Queue<DocsSectionLink> bufferedSections = new ();
     private MudPageContentNavigation? contentNavigation;
+    private Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new ();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -24,9 +25,21 @@ public partial class DocsPage : ComponentBase
         }
     }
 
-    internal void AddSection(DocsSectionLink section)
+    public string GetParentTitle(DocsPageSection section)
     {
-        bufferedSections.Enqueue(section);
+        if (section?.ParentSection is null ||
+            !sectionMapper.ContainsKey(section.ParentSection))
+        {
+            return string.Empty;
+        }
+
+        var item = sectionMapper[section.ParentSection];
+        return item.Title;
+    }
+
+    internal void AddSection(DocsSectionLink sectionLinkInfo, DocsPageSection section)
+    {
+        bufferedSections.Enqueue(sectionLinkInfo);
 
         if (contentNavigation is null)
         {
@@ -37,9 +50,18 @@ public partial class DocsPage : ComponentBase
         {
             var item = bufferedSections.Dequeue();
 
-            if (contentNavigation.Sections.FirstOrDefault(x => x.Id == section.Id) == default)
+            if (contentNavigation.Sections.FirstOrDefault(x => x.Id == sectionLinkInfo.Id) == default)
             {
-                contentNavigation.AddSection(item.Title, item.Id, forceUpdate: false);
+                MudPageContentSection? parentInfo = null;
+                if (section.ParentSection is not null &&
+                    sectionMapper.ContainsKey(section.ParentSection))
+                {
+                    parentInfo = sectionMapper[section.ParentSection];
+                }
+
+                var info = new MudPageContentSection(sectionLinkInfo.Title, sectionLinkInfo.Id, section.Level, parentInfo);
+                sectionMapper.Add(section, info);
+                contentNavigation.AddSection(info, forceUpdate: false);
             }
         }
 

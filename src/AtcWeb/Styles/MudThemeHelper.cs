@@ -24,7 +24,7 @@ public static class MudThemeHelper
 
     private static readonly Palette DarkPalette = new Palette
     {
-        Black = "#27272F",
+        Black = "#1A1A1A",
         White = Colors.Shades.White,
         Primary = "#6EAEDF",
         PrimaryContrastText = Colors.Shades.White,

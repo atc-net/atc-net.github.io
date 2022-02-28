@@ -21,6 +21,18 @@
 .docs-page-content {
 }
 
+.docs-page-content-navigation-drawer .title {
+  font-weight: 500;
+}
+
+.docs-page-content-navigation-drawer .navigation-level-0 .mud-nav-link-text {
+  padding-inline-start: 0;
+}
+
+.docs-page-content-navigation-drawer .navigation-level-1 .mud-nav-link-text {
+  padding-inline-start: 14px;
+}
+
 .docs-page-section {
   margin-bottom: 50px;
 

@@ -3,22 +3,42 @@
 @inherits DevOpsPlaybookBase
 
 <DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="DevOps Playbook"
+                    SubTitle="Getting started with DevOps Playbook for better development process." />
     <DocsPageContent>
-        @if (Sections is null)
+        @if (DocumentMetadata is null)
         {
-            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true"/>
         }
         else
         {
-            @foreach ((string title, string text) in Sections)
+            @foreach (var pageSection in DocumentMetadata.SubSection)
             {
                 <DocsPageSection>
-                    <SectionHeader Title="@title" />
-                    <SectionContent AutoMarginContent="false" FullWidth="true">
+                    <SectionHeader Title="@pageSection.Title"/>
+                    <SectionContent AutoMarginContent="false"
+                                    FullWidth="true">
                         <MarkdownRepositoryContent RepositoryName="atc-docs"
                                                    RepositoryBranch="main"
-                                                   UseImageObjectFit="false"
-                                                   Content="@text" />
+                                                   Content="@pageSection.Body"/>
+                        @if (pageSection.SubSection.Any())
+                        {
+                            <SectionSubGroups>
+                                @foreach (var subSection in pageSection.SubSection)
+                                {
+                                    <DocsPageSection>
+                                        <SectionHeader Title="@subSection.Title"
+                                                       TitleType="@(@subSection.Level == 1 ? Typo.h4 : Typo.h5)"/>
+                                        <SectionContent AutoMarginContent="false"
+                                                        FullWidth="true">
+                                            <MarkdownRepositoryContent RepositoryName="atc-docs"
+                                                                       RepositoryBranch="main"
+                                                                       Content="@subSection.Body"/>
+                                        </SectionContent>
+                                    </DocsPageSection>
+                                }
+                            </SectionSubGroups>
+                        }
                     </SectionContent>
                 </DocsPageSection>
             }

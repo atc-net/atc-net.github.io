@@ -5,7 +5,7 @@
     {
         if (string.IsNullOrEmpty(TitleLink))
         {
-            <MudText Typo="@Typo.h4"
+            <MudText Typo="@TitleType"
                      Color="@TitleColor">
                 @Title
             </MudText>
@@ -39,6 +39,10 @@
 
     [CascadingParameter] private DocsPage? DocsPage { get; set; }
 
+    [CascadingParameter] private SectionSubGroups? SubGroup { get; set; }
+
+    [CascadingParameter] private DocsPageSection? Section { get; set; }
+
     protected string Classname =>
         new CssBuilder("docs-section-header")
             .AddClass(Class)
@@ -48,6 +52,8 @@
 
     [Parameter] public string? Title { get; set; }
 
+    [Parameter] public Typo TitleType { get; set; } = Typo.h4;
+
     [Parameter] public string? TitleLink { get; set; }
 
     [Parameter] public Color TitleColor { get; set; } = Color.Default;
@@ -56,7 +62,7 @@
 
     [Parameter] public RenderFragment? Description { get; set; }
 
-    public DocsSectionLink? Section { get; set; }
+    public DocsSectionLink? SectionInfo { get; set; }
 
     public ElementReference SectionReference;
 
@@ -64,14 +70,24 @@
     {
         base.OnInitialized();
 
-        if (DocsPage != null && !string.IsNullOrWhiteSpace(Title))
+        if (DocsPage == null || string.IsNullOrWhiteSpace(Title))
         {
-            Section = new DocsSectionLink
-            {
-                Id = Title.Replace(" ", "-").ToLower(),
-                Title = Title,
-            };
+            return;
         }
+
+        var parentTitle = DocsPage.GetParentTitle(Section!);
+        if (string.IsNullOrEmpty(parentTitle) == false)
+        {
+            parentTitle += '-';
+        }
+
+        var id = (parentTitle + Title).Replace(" ", "-").ToLower();
+
+        SectionInfo = new DocsSectionLink
+        {
+            Id = id,
+            Title = Title,
+        };
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -80,16 +96,15 @@
         if (firstRender &&
             DocsPage is not null &&
             !string.IsNullOrWhiteSpace(Title) &&
+            SectionInfo is not null && 
             Section is not null)
         {
-            DocsPage.AddSection(Section);
+            DocsPage.AddSection(SectionInfo, Section);
         }
     }
 
     private string GetSectionId()
-    {
-        return Section is null
+        => SectionInfo?.Id is null
             ? Guid.NewGuid().ToString()
-            : Section.Id;
-    }
+            : SectionInfo.Id;
 }

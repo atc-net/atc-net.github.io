@@ -37,9 +37,6 @@ public class MarkdownRepositoryContentBase : ComponentBase
         }
     }
 
-    [Parameter]
-    public bool UseImageObjectFit { get; set; } = true;
-
     protected MarkupString HtmlContent { get; private set; }
 
     private MarkupString ConvertMarkdownToHtml(string markdownContent)
@@ -97,36 +94,19 @@ public class MarkdownRepositoryContentBase : ComponentBase
             .Replace(
                 "<a href=\"./",
                 $"<a target=\"_blank\" href=\"{hrefRepo}",
+                StringComparison.Ordinal)
+            .Replace(
+                $"<img src=\"{imgSrcRaw}",
+                $"<img style='max-width: 100%; height: auto;' src=\"{imgSrcRaw}",
+                StringComparison.Ordinal)
+            .Replace(
+                $"<img src=\"{hrefRepo}",
+                $"<img style='max-width: 100%; height: auto;' src=\"{imgSrc2To}",
+                StringComparison.Ordinal)
+            .Replace(
+                $"<a href=\"{hrefBase}",
+                $"<a target=\"_blank\" href=\"{hrefBase}",
                 StringComparison.Ordinal);
-
-        if (UseImageObjectFit)
-        {
-            sanitizedHtml = sanitizedHtml
-                .Replace(
-                    $"<img src=\"{imgSrcRaw}",
-                    $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrcRaw}",
-                    StringComparison.Ordinal)
-                .Replace(
-                    $"<img src=\"{hrefRepo}",
-                    $"<img style='height: 100%; width: 100%; object-fit: contain' src=\"{imgSrc2To}",
-                    StringComparison.Ordinal)
-                .Replace(
-                    $"<a href=\"{hrefBase}",
-                    $"<a target=\"_blank\" href=\"{hrefBase}",
-                    StringComparison.Ordinal);
-        }
-        else
-        {
-            sanitizedHtml = sanitizedHtml
-                .Replace(
-                    $"<img src=\"{hrefRepo}",
-                    $"<img src=\"{imgSrc2To}",
-                    StringComparison.Ordinal)
-                .Replace(
-                    $"<a href=\"{hrefBase}",
-                    $"<a target=\"_blank\" href=\"{hrefBase}",
-                    StringComparison.Ordinal);
-        }
 
         return new MarkupString(sanitizedHtml);
     }
