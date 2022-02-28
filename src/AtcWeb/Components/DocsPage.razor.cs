@@ -48,21 +48,23 @@ public partial class DocsPage : ComponentBase
 
         while (bufferedSections.Count > 0)
         {
-            var item = bufferedSections.Dequeue();
+            bufferedSections.Dequeue();
 
-            if (contentNavigation.Sections.FirstOrDefault(x => x.Id == sectionLinkInfo.Id) == default)
+            if (contentNavigation.Sections.FirstOrDefault(x => x.Id == sectionLinkInfo.Id) != default)
             {
-                MudPageContentSection? parentInfo = null;
-                if (section.ParentSection is not null &&
-                    sectionMapper.ContainsKey(section.ParentSection))
-                {
-                    parentInfo = sectionMapper[section.ParentSection];
-                }
-
-                var info = new MudPageContentSection(sectionLinkInfo.Title, sectionLinkInfo.Id, section.Level, parentInfo);
-                sectionMapper.Add(section, info);
-                contentNavigation.AddSection(info, forceUpdate: false);
+                continue;
             }
+
+            MudPageContentSection? parentInfo = null;
+            if (section.ParentSection is not null &&
+                sectionMapper.ContainsKey(section.ParentSection))
+            {
+                parentInfo = sectionMapper[section.ParentSection];
+            }
+
+            var info = new MudPageContentSection(sectionLinkInfo.Title, sectionLinkInfo.Id, section.Level, parentInfo);
+            sectionMapper.Add(section, info);
+            contentNavigation.AddSection(info, forceUpdate: false);
         }
 
         contentNavigation.Update();

@@ -27,7 +27,7 @@
 @code {
 
     [Inject]
-    private StateContainer StateContainer { get; set; }
+    private StateContainer? StateContainer { get; set; }
 
     [Parameter]
     public string AvatarLink { get; set; } = string.Empty;
@@ -46,7 +46,7 @@
 
     protected override void OnInitialized()
     {
-        StateContainer.OnThemeChange += OnThemeChange;
+        StateContainer!.OnThemeChange += OnThemeChange;
         base.OnInitialized();
     }
 
@@ -57,7 +57,7 @@
 
     private string GetStyle()
     {
-        return StateContainer.CurrentTheme == MudThemeHelper.DarkTheme
+        return StateContainer!.CurrentTheme == MudThemeHelper.DarkTheme
             ? $"background-color: {MudThemeHelper.DarkTheme.Palette.Black};"
             : $"background-color: {MudThemeHelper.LightTheme.Palette.Surface};";
     }
