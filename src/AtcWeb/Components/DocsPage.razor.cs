@@ -3,8 +3,8 @@ namespace AtcWeb.Components;
 public partial class DocsPage : ComponentBase
 {
     private readonly Queue<DocsSectionLink> bufferedSections = new ();
+    private readonly Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new ();
     private MudPageContentNavigation? contentNavigation;
-    private Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new ();
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }

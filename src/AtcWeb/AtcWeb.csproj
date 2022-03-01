@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.36" />
-    <PackageReference Include="Atc.Blazor.ColorThemePreference" Version="1.0.5" />
+    <PackageReference Include="Atc" Version="2.0.74" />
+    <PackageReference Include="Atc.Blazor.ColorThemePreference" Version="1.0.13" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
     <PackageReference Include="ColorCode.HTML" Version="2.0.13" />
-    <PackageReference Include="HtmlSanitizer" Version="7.1.475" />
+    <PackageReference Include="HtmlSanitizer" Version="7.1.488" />
     <PackageReference Include="Markdig" Version="0.27.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.2" PrivateAssets="all" />
@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.0.6" />
+    <PackageReference Include="MudBlazor" Version="6.0.7" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 

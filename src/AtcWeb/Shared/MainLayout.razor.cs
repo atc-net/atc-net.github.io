@@ -1,4 +1,5 @@
 // ReSharper disable InvertIf
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace AtcWeb.Shared;
 
 public partial class MainLayout : LayoutComponentBase
@@ -11,9 +12,6 @@ public partial class MainLayout : LayoutComponentBase
 
     [Inject]
     private IColorThemePreferenceDetector ColorThemePreferenceDetector { get; set; }
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
 
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
@@ -53,7 +51,7 @@ public partial class MainLayout : LayoutComponentBase
         return base.OnAfterRenderAsync(firstRender);
     }
 
-    private void OnSwipe(SwipeDirection direction)
+    protected void OnSwipe(SwipeDirection direction)
     {
         switch (direction)
         {
