@@ -1,3 +1,4 @@
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable LoopCanBeConvertedToQuery
 namespace AtcWeb.Domain.GitHub;
 
@@ -130,6 +131,28 @@ public class GitHubRepositoryService
         }
 
         return documentMetadata;
+    }
+
+    public async Task<List<NewsItem>> GetNews()
+    {
+        var news = new List<NewsItem>();
+        news.AddRange(NewsMetadata.GetNews());
+
+        var repositories = await GetRepositoriesAsync(populateMetaDataBase: true);
+        foreach (var atcRepository in repositories)
+        {
+            news.Add(
+                new NewsItem(
+                    atcRepository.BaseData.CreatedAt,
+                    NewsItemAction.RepositoryNew,
+                    atcRepository.Name,
+                    string.Empty,
+                    string.Empty));
+        }
+
+        return news
+            .OrderByDescending(x => x.Time)
+            .ToList();
     }
 
     private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName)

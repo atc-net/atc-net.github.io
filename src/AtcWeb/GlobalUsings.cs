@@ -7,6 +7,7 @@ global using Atc;
 global using Atc.Blazor.ColorThemePreference;
 
 global using AtcWeb.Domain.AtcApi.Models;
+global using AtcWeb.Domain.Data.Models;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
 global using AtcWeb.Extensions;

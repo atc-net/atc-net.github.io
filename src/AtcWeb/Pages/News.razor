@@ -1,0 +1,52 @@
+@page "/news"
+
+@inherits NewsBase
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="ATC News"
+                    SubTitle="The timeline for all good initiatives">
+    </DocsPageHeader>
+    <DocsPageContent>
+        @if (News is null)
+        {
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+        }
+        else
+        {
+            <MudTable Items="@News"
+                  Dense="false"
+                  Hover="true"
+                  Bordered="false"
+                  Striped="true"
+                  RowsPerPage="25"
+                  Filter="new Func<NewsItem,bool>(FilterFunc)">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                    <MudSpacer />
+                    <MudTextField @bind-Value="filter"
+                                  Placeholder="Filter"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  IconSize="Size.Medium"
+                              Class="mt-0">
+                    </MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Time</MudTh>
+                    <MudTh>Area</MudTh>
+                    <MudTh>Repository</MudTh>
+                    <MudTh>What</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Time">@context.Time.ToString("dd-MM-yyy")</MudTd>
+                    <MudTd DataLabel="Area">@context.Action.GetDescription()</MudTd>
+                    <MudTd DataLabel="Repository">@context.RepositoryName</MudTd>
+                    <MudTd DataLabel="What">@context.Title</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        }
+    </DocsPageContent>
+</DocsPage>

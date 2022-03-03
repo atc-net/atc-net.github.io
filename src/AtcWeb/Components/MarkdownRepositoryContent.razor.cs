@@ -10,6 +10,7 @@ public class MarkdownRepositoryContentBase : ComponentBase
 {
     private readonly MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
+        .UseEmojiAndSmiley()
         .Build();
 
     private string content;
