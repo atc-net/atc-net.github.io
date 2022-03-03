@@ -23,6 +23,7 @@ public class NewsBase : ComponentBase
         => string.IsNullOrWhiteSpace(filterString) ||
            element.Title.Contains(filterString, StringComparison.OrdinalIgnoreCase) ||
            element.Body.Contains(filterString, StringComparison.OrdinalIgnoreCase) ||
+           element.RepositoryName.Contains(filterString, StringComparison.OrdinalIgnoreCase) ||
            element.Time.ToString("dd-MM-yyy", GlobalizationConstants.EnglishCultureInfo).Contains(filterString, StringComparison.Ordinal) ||
            element.Action.GetDescription().Contains(filterString, StringComparison.OrdinalIgnoreCase);
 }
