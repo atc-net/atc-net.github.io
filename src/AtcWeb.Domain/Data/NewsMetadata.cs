@@ -6,8 +6,9 @@ public static class NewsMetadata
     {
         Create(2022, 3, 3, NewsItemAction.FeatureNew, "atc-net.github.io", "News (this)", string.Empty),
         Create(2022, 2, 26, NewsItemAction.FeatureNew, "atc-net.github.io", "Manuals -> DevOps Playbook", string.Empty),
+        Create(2022, 1, 31, NewsItemAction.FeatureNew, "atc-net.github.io", "Utilizing Atc.Blazor.ColorThemePreference", string.Empty),
         Create(2022, 2, 23, NewsItemAction.FeatureNew, "atc-docs", "DevOps Playbook", string.Empty),
-        Create(2019, 12, 10, NewsItemAction.Organization, "atc-net", "was born", string.Empty),
+        Create(2019, 12, 10, NewsItemAction.Organization, "atc-net", "Was born", string.Empty),
     };
 
     private static NewsItem Create(

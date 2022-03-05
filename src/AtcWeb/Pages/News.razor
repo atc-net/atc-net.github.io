@@ -7,34 +7,53 @@
                     SubTitle="The timeline for all good initiatives">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (News is null)
+        @if (Repositories is null || News is null)
         {
             <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
         }
         else
         {
             <MudTable Items="@News"
-                  Dense="false"
-                  Hover="true"
-                  Bordered="false"
-                  Striped="true"
-                  RowsPerPage="25"
-                  Filter="new Func<NewsItem,bool>(FilterFunc)">
+                      Dense="false"
+                      Hover="true"
+                      Bordered="false"
+                      Striped="false"
+                      RowsPerPage="10"
+                      Filter="new Func<NewsItem, bool>(FilterFunc)">
                 <ToolBarContent>
-                    <MudText Typo="Typo.h6">Periodic Elements</MudText>
-                    <MudSpacer />
-                    <MudTextField @bind-Value="filter"
-                                  Placeholder="Filter"
+                    <MudSelect T="int?"
+                               Label="Year"
+                               Clearable="true"
+                               @bind-Value="@SelectedYear">
+                        @foreach (var year in Years.OrderByDescending(x => x))
+                        {
+                            <MudSelectItem T="int?" Value="@year"/>
+                        }
+                    </MudSelect>
+                    <MudSpacer/>
+                    <MudSelect T="string"
+                               Label="Repository"
+                               Clearable="true"
+                               @bind-Value="@SelectedRepositoryName">
+                        @foreach (var repository in Repositories.OrderBy(x => x.Name))
+                        {
+                            <MudSelectItem T="string" Value="@repository.Name"/>
+                        }
+                    </MudSelect>
+                    <MudSpacer/>
+                    <MudTextField Placeholder="Filter"
                                   Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search"
                                   IconSize="Size.Medium"
-                              Class="mt-0">
+                                  Class="mt-0"
+                                  Immediate="true"
+                                  @bind-Value="FilterString">
                     </MudTextField>
                 </ToolBarContent>
                 <HeaderContent>
-                    <MudTh>Time</MudTh>
-                    <MudTh>Area</MudTh>
-                    <MudTh>Repository</MudTh>
+                    <MudTh Style="width: 110px">Time</MudTh>
+                    <MudTh Style="width: 150px">Area</MudTh>
+                    <MudTh Style="width: 250px">Repository</MudTh>
                     <MudTh>What</MudTh>
                 </HeaderContent>
                 <RowTemplate>

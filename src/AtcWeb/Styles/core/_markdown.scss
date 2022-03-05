@@ -53,6 +53,7 @@
 
 
   & table {
+    border-collapse: collapse;
     border: 1px groove var(--mud-palette-table-lines) !important;
 
     tr th {
