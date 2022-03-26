@@ -38,6 +38,8 @@ public static class RepositoryMetadata
         Tuple.Create("atc-dataplatform-tools", "mrmasterplan"),
         Tuple.Create("atc-docs", "davidkallesen"),
         Tuple.Create("atc-docs", "perkops"),
+        Tuple.Create("atc-kepware", "davidkallesen"),
+        Tuple.Create("atc-kepware", "perkops"),
         Tuple.Create("atc-opc-ua", "davidkallesen"),
         Tuple.Create("atc-opc-ua", "perkops"),
         Tuple.Create("atc-net.github.io", "davidkallesen"),
