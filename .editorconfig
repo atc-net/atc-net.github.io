@@ -514,6 +514,9 @@ dotnet_diagnostic.CA2007.severity = none            # Do not directly await a Ta
 dotnet_diagnostic.CA2227.severity = none            # For Now - Read-only property setter
 dotnet_diagnostic.CA2234.severity = none            # For Now
 
+dotnet_diagnostic.CS8600.severity = none            # For Now
+dotnet_diagnostic.CS8625.severity = none            # For Now
+
 dotnet_diagnostic.SA1313.severity = none            # For Now - Records
 dotnet_diagnostic.SA1401.severity = none            # For Now - FieldsMustBePrivate (hard in Blazor Project)
 dotnet_diagnostic.SA1601.severity = none            # For Now

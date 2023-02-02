@@ -1,9 +1,3 @@
-using System.Text.RegularExpressions;
-using System.Web;
-using ColorCode.Styling;
-using Ganss.XSS;
-using Markdig;
-
 namespace AtcWeb.Components;
 
 public class MarkdownRepositoryContentBase : ComponentBase
@@ -28,6 +22,7 @@ public class MarkdownRepositoryContentBase : ComponentBase
     public string HeaderName { get; set; }
 
     [Parameter]
+    [SuppressMessage("Usage", "BL0007:Component parameters should be auto properties", Justification = "OK.")]
     public string Content
     {
         get => this.content;

@@ -22,6 +22,7 @@ public static class RepositoryMetadata
         Tuple.Create("atc-api", "perkops"),
         Tuple.Create("atc-autoformatter", "rickykaare"),
         Tuple.Create("atc-azure-digitaltwin", "perkops"),
+        Tuple.Create("atc-azure-messaging", "christianhelle"),
         Tuple.Create("atc-azure-options", "kimlundjohansen"),
         Tuple.Create("atc-blazor", "davidkallesen"),
         Tuple.Create("atc-blazor", "perkops"),
@@ -36,6 +37,7 @@ public static class RepositoryMetadata
         Tuple.Create("atc-dataplatform", "mrmasterplan"),
         Tuple.Create("atc-dataplatform", "LauJohansson"),
         Tuple.Create("atc-dataplatform-tools", "mrmasterplan"),
+        Tuple.Create("atc-dataplatform-tools", "LauJohansson"),
         Tuple.Create("atc-docs", "davidkallesen"),
         Tuple.Create("atc-docs", "perkops"),
         Tuple.Create("atc-kepware", "davidkallesen"),
@@ -44,6 +46,9 @@ public static class RepositoryMetadata
         Tuple.Create("atc-opc-ua", "perkops"),
         Tuple.Create("atc-net.github.io", "davidkallesen"),
         Tuple.Create("atc-net.github.io", "perkops"),
+        Tuple.Create("atc-network", "davidkallesen"),
+        Tuple.Create("atc-network", "perkops"),
+        Tuple.Create("atc-react", "MogensFogh"),
         Tuple.Create("atc-rest-api-generator", "davidkallesen"),
         Tuple.Create("atc-rest-api-generator", "perkops"),
         Tuple.Create("atc-rest-client", "davidkallesen"),
@@ -63,14 +68,14 @@ public static class RepositoryMetadata
         {
             return ResponsibleMembers
                 .Select(x => x.Item2)
-                .OrderBy(x => x)
+                .OrderBy(x => x, StringComparer.Ordinal)
                 .ToArray();
         }
 
         return ResponsibleMembers
             .Where(x => x.Item1.Equals(name, StringComparison.Ordinal))
             .Select(x => x.Item2)
-            .OrderBy(x => x)
+            .OrderBy(x => x, StringComparer.Ordinal)
             .ToArray();
     }
 

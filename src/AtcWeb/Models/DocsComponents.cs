@@ -7,7 +7,7 @@ public class DocsComponents
     /// <summary>
     /// The elements of the list of atc-components
     /// </summary>
-    internal IEnumerable<AtcComponent> Elements => atcComponents.OrderBy(e => e.Name);
+    internal IEnumerable<AtcComponent> Elements => atcComponents.OrderBy(e => e.Name, StringComparer.Ordinal);
 
     public DocsComponents AddItem(string name, Type component, params Type[] childComponents)
     {

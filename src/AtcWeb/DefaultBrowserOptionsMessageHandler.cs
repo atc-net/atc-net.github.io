@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components.WebAssembly.Http;
-
 namespace AtcWeb;
 
 public sealed class DefaultBrowserOptionsMessageHandler : DelegatingHandler

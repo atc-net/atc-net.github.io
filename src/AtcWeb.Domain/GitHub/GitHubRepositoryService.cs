@@ -36,7 +36,7 @@ public class GitHubRepositoryService
         var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
         var gitHubContributors = await GetContributorsAsync();
         var data = new List<GitHubRepositoryContributor>();
-        foreach (var memberName in memberNames.OrderBy(x => x))
+        foreach (var memberName in memberNames.OrderBy(x => x, StringComparer.Ordinal))
         {
             var gitHubContributor =
                 gitHubContributors.Find(x => x.Login.Equals(memberName, StringComparison.OrdinalIgnoreCase));
@@ -59,7 +59,7 @@ public class GitHubRepositoryService
         }
 
         var tasks = repositories
-            .OrderBy(x => x.Name)
+            .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(async repository =>
             {
                 var atcRepository = new AtcRepository(repository);

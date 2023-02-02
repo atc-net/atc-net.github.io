@@ -1,8 +1,8 @@
 namespace AtcWeb.Pages.Repository;
 
-public class AtcIotDigitalTwinBase : RepositoryComponentBase
+public class AtcAzureDigitalTwinBase : RepositoryComponentBase
 {
-    public AtcIotDigitalTwinBase()
+    public AtcAzureDigitalTwinBase()
         : base("atc-azure-digitaltwin")
     {
     }
