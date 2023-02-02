@@ -110,7 +110,7 @@ public class CodingRulesMetadata
         }
 
         return list
-            .OrderBy(x => x.Key)
+            .OrderBy(x => x.Key, StringComparer.Ordinal)
             .ToList();
     }
 }

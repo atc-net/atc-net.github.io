@@ -17,7 +17,7 @@ public static class GitHubRepositoryMetadataDotnetHelper
         var data = new List<DotnetProject>();
         var gitHubCsprojPaths = foldersAndFiles
             .Where(x => x.IsFile && x.Path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(x => x.Path)
+            .OrderBy(x => x.Path, StringComparer.Ordinal)
             .ToList();
 
         foreach (var gitHubCsprojPath in gitHubCsprojPaths)
@@ -223,7 +223,7 @@ public static class GitHubRepositoryMetadataDotnetHelper
         }
 
         return data
-            .OrderBy(x => x.PackageId)
+            .OrderBy(x => x.PackageId, StringComparer.Ordinal)
             .ToList();
     }
 
@@ -245,7 +245,7 @@ public static class GitHubRepositoryMetadataDotnetHelper
             }
         }
 
-        return data.OrderBy(x => x.PackageId);
+        return data.OrderBy(x => x.PackageId, StringComparer.Ordinal);
     }
 
     private static string GetSimpleXmlValueForCsproj(

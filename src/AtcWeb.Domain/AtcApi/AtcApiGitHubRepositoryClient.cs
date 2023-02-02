@@ -15,7 +15,7 @@ public class AtcApiGitHubRepositoryClient
         const string cacheKey = CacheConstants.CacheKeyRepositories;
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepository> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -38,7 +38,7 @@ public class AtcApiGitHubRepositoryClient
             var gitHubRepositories = result
                 .Where(x => !x.Name.Equals("atc-dummy", StringComparison.Ordinal) &&
                             !x.Name.Equals("atc-template-dotnet-package", StringComparison.Ordinal))
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .ToList();
 
             memoryCache.Set(cacheKey, gitHubRepositories, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -70,7 +70,7 @@ public class AtcApiGitHubRepositoryClient
         const string cacheKey = CacheConstants.CacheKeyContributors;
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepositoryContributor> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -114,7 +114,7 @@ public class AtcApiGitHubRepositoryClient
         var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepositoryContributor> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -147,7 +147,7 @@ public class AtcApiGitHubRepositoryClient
         const string cacheKey = CacheConstants.CacheKeyNugetPackagesUsedByAtcRepositories;
         if (memoryCache.TryGetValue(cacheKey, out List<DotnetNugetPackageMetadataBase> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -182,7 +182,7 @@ public class AtcApiGitHubRepositoryClient
         var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubPath> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -216,7 +216,7 @@ public class AtcApiGitHubRepositoryClient
         var cacheKey = $"{CacheConstants.CacheKeyRepositoryFile}_{url}";
         if (memoryCache.TryGetValue(cacheKey, out string data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try
@@ -258,7 +258,7 @@ public class AtcApiGitHubRepositoryClient
         var cacheKey = $"{CacheConstants.CacheKeyIssues}_{url}";
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubIssue> data))
         {
-            return (isSuccessful: true, data);
+            return (isSuccessful: true, data!);
         }
 
         try

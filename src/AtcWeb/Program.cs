@@ -1,12 +1,3 @@
-using Atc.Blazor.ColorThemePreference;
-using AtcWeb.Domain.AtcApi;
-using AtcWeb.Domain.GitHub;
-using AtcWeb.State;
-using Ganss.XSS;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.Components.WebAssembly.Http;
-using MudBlazor.Services;
-
 namespace AtcWeb;
 
 public static class Program
