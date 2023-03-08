@@ -10,8 +10,9 @@ public static class RepositoryMetadata
     public static IEnumerable<string> RecommendedTargetFramework => new[]
     {
         "net6.0",
-        "netstandard2.1",
+        "net7.0",
         "netstandard2.0",
+        "netstandard2.1",
     };
 
     private static readonly List<Tuple<string, string>> ResponsibleMembers = new ()
