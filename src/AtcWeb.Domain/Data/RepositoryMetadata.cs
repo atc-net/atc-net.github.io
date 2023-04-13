@@ -58,6 +58,8 @@ public static class RepositoryMetadata
         Tuple.Create("atc-rest-client", "perkops"),
         Tuple.Create("atc-rest-client", "LarsSkovslund"),
         Tuple.Create("atc-rest-client", "egil"),
+        Tuple.Create("atc-rest-minimalapi", "davidkallesen"),
+        Tuple.Create("atc-rest-minimalapi", "perkops"),
         Tuple.Create("atc-snippets", "perkops"),
         Tuple.Create("atc-snippets", "Mikael O. Hansen"),
         Tuple.Create("atc-snippets", "lupusbytes"),
