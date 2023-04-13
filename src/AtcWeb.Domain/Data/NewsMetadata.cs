@@ -2,7 +2,7 @@ namespace AtcWeb.Domain.Data;
 
 public static class NewsMetadata
 {
-    private static readonly List<NewsItem> News = new ()
+    private static readonly List<NewsItem> News = new()
     {
         Create(2022, 3, 3, NewsItemAction.FeatureNew, "atc-net.github.io", "News (this)", string.Empty),
         Create(2022, 2, 26, NewsItemAction.FeatureNew, "atc-net.github.io", "Manuals -> DevOps Playbook", string.Empty),
@@ -19,7 +19,7 @@ public static class NewsMetadata
         string repositoryName,
         string title,
         string body)
-        => new (
+        => new(
             new DateTimeOffset(year, month, day, 0, 0, 0, TimeSpan.Zero),
             newsItemAction,
             repositoryName,

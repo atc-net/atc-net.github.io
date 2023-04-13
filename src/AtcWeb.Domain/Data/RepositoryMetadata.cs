@@ -15,7 +15,7 @@ public static class RepositoryMetadata
         "netstandard2.1",
     };
 
-    private static readonly List<Tuple<string, string>> ResponsibleMembers = new ()
+    private static readonly List<Tuple<string, string>> ResponsibleMembers = new()
     {
         Tuple.Create("atc", "davidkallesen"),
         Tuple.Create("atc", "perkops"),

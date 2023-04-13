@@ -2,7 +2,7 @@ namespace AtcWeb;
 
 public sealed class DefaultBrowserOptionsMessageHandler : DelegatingHandler
 {
-    private static readonly HttpRequestOptionsKey<IDictionary<string, object>> FetchRequestOptionsKey = new ("WebAssemblyFetchOptions");
+    private static readonly HttpRequestOptionsKey<IDictionary<string, object>> FetchRequestOptionsKey = new("WebAssemblyFetchOptions");
 
     public DefaultBrowserOptionsMessageHandler()
     {

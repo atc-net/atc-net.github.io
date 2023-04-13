@@ -2,8 +2,8 @@ namespace AtcWeb.Components;
 
 public partial class DocsPage : ComponentBase
 {
-    private readonly Queue<DocsSectionLink> bufferedSections = new ();
-    private readonly Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new ();
+    private readonly Queue<DocsSectionLink> bufferedSections = new();
+    private readonly Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new();
     private MudPageContentNavigation? contentNavigation;
 
     [Inject]

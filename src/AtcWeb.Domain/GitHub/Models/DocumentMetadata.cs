@@ -6,5 +6,5 @@ public class DocumentMetadata
 
     public string Body { get; set; }
 
-    public List<DocumentSectionMetadata> SubSection { get; set; } = new ();
+    public List<DocumentSectionMetadata> SubSection { get; set; } = new();
 }

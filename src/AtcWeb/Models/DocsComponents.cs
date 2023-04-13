@@ -2,7 +2,7 @@ namespace AtcWeb.Models;
 
 public class DocsComponents
 {
-    private readonly List<AtcComponent> atcComponents = new ();
+    private readonly List<AtcComponent> atcComponents = new();
 
     /// <summary>
     /// The elements of the list of atc-components

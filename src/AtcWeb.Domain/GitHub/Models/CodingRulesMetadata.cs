@@ -2,11 +2,11 @@ namespace AtcWeb.Domain.GitHub.Models;
 
 public class CodingRulesMetadata
 {
-    public static Version LatestVersionRoot => new (1, 0, 7);
+    public static Version LatestVersionRoot => new(1, 0, 7);
 
-    public static Version LatestVersionSrc => new (1, 0, 5);
+    public static Version LatestVersionSrc => new(1, 0, 5);
 
-    public static Version LatestVersionTest => new (1, 0, 7);
+    public static Version LatestVersionTest => new(1, 0, 7);
 
     public string RawEditorConfigRoot { get; set; } = string.Empty;
 
