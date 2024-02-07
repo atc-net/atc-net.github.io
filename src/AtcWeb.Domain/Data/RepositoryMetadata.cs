@@ -66,6 +66,8 @@ public static class RepositoryMetadata
         Tuple.Create("atc-snippets", "Mikael O. Hansen"),
         Tuple.Create("atc-snippets", "lupusbytes"),
         Tuple.Create("atc-test", "rickykaare"),
+        Tuple.Create("atc-winget-configurations", "davidkallesen"),
+        Tuple.Create("atc-winget-configurations", "perkops"),
         Tuple.Create("atc-wpf", "davidkallesen"),
     };
 
