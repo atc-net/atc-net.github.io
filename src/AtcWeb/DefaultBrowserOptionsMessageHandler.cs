@@ -21,10 +21,7 @@ public sealed class DefaultBrowserOptionsMessageHandler : DelegatingHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         // Get the existing options to not override them if set explicitly
         if (!request.Options.TryGetValue(FetchRequestOptionsKey, out var fetchOptions))

@@ -10,15 +10,8 @@ public static class GitHubRepositoryMetadataFileHelper
         string repositoryName,
         string path)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
         if (gitHubFile is not null)
@@ -40,15 +33,8 @@ public static class GitHubRepositoryMetadataFileHelper
         string defaultBranchName,
         string path)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
         if (gitHubFile is not null)

@@ -7,7 +7,9 @@ public class AtcApiGitHubRepositoryClient
 
     public AtcApiGitHubRepositoryClient(IMemoryCache memoryCache)
     {
-        this.memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        ArgumentNullException.ThrowIfNull(memoryCache);
+
+        this.memoryCache = memoryCache;
     }
 
     public async Task<(bool IsSuccessful, List<GitHubRepository> GitHubRepositories)> GetRepositories(CancellationToken cancellationToken = default)

@@ -28,12 +28,12 @@ public partial class DocsPage : ComponentBase
     public string GetParentTitle(DocsPageSection section)
     {
         if (section?.ParentSection is null ||
-            !sectionMapper.ContainsKey(section.ParentSection))
+            !sectionMapper.TryGetValue(section.ParentSection, out var value))
         {
             return string.Empty;
         }
 
-        var item = sectionMapper[section.ParentSection];
+        var item = value;
         return item.Title;
     }
 
@@ -57,9 +57,9 @@ public partial class DocsPage : ComponentBase
 
             MudPageContentSection? parentInfo = null;
             if (section.ParentSection is not null &&
-                sectionMapper.ContainsKey(section.ParentSection))
+                sectionMapper.TryGetValue(section.ParentSection, out var value))
             {
-                parentInfo = sectionMapper[section.ParentSection];
+                parentInfo = value;
             }
 
             var info = new MudPageContentSection(sectionLinkInfo.Title, sectionLinkInfo.Id, section.Level, parentInfo);
