@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+// ReSharper disable ReturnTypeCanBeEnumerable.Local
 namespace AtcWeb.Pages;
 
 public class NewsBase : ComponentBase
@@ -27,9 +28,11 @@ public class NewsBase : ComponentBase
         await base.OnInitializedAsync();
     }
 
-    protected bool FilterFunc(NewsItem element) => Filter(element);
+    protected bool FilterFunc(NewsItem element)
+        => Filter(element);
 
-    private bool Filter(NewsItem element)
+    private bool Filter(
+        NewsItem element)
     {
         var isYear = !(SelectedYear is not null &&
                        element.Time.Year != SelectedYear);
@@ -47,11 +50,12 @@ public class NewsBase : ComponentBase
                isFilter;
     }
 
-    private static IEnumerable<int> GetYears(IEnumerable<NewsItem> items)
+    private static List<int> GetYears(
+        IEnumerable<NewsItem> items)
     {
         var firstYear = items.Min(x => x.Time).Year;
         var years = new List<int>();
-        for (int i = firstYear; i <= DateTimeOffset.Now.Year; i++)
+        for (var i = firstYear; i <= DateTimeOffset.Now.Year; i++)
         {
             years.Add(i);
         }

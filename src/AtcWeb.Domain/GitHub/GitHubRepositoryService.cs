@@ -11,8 +11,11 @@ public class GitHubRepositoryService
         AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient,
         AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient)
     {
-        this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient ?? throw new ArgumentNullException(nameof(atcApiGitHubApiInformationClient));
-        this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient ?? throw new ArgumentNullException(nameof(atcApiGitHubRepositoryClient));
+        ArgumentNullException.ThrowIfNull(atcApiGitHubApiInformationClient);
+        ArgumentNullException.ThrowIfNull(atcApiGitHubRepositoryClient);
+
+        this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient;
+        this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient;
     }
 
     public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()

@@ -11,15 +11,8 @@ public static class GitHubRepositoryMetadataHelper
         string repositoryName,
         string defaultBranchName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var data = new RootMetadata
         {
@@ -38,15 +31,8 @@ public static class GitHubRepositoryMetadataHelper
         List<GitHubPath> foldersAndFiles,
         string repositoryName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var data = new WorkflowMetadata
         {
@@ -77,15 +63,8 @@ public static class GitHubRepositoryMetadataHelper
         List<GitHubPath> foldersAndFiles,
         string repositoryName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var data = new CodingRulesMetadata
         {
@@ -115,10 +94,7 @@ public static class GitHubRepositoryMetadataHelper
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         string repositoryName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
 
         var (isSuccessful, issues) = await gitHubRepositoryClient.GetIssuesOpenByRepositoryByName(repositoryName);
         return isSuccessful
@@ -132,15 +108,8 @@ public static class GitHubRepositoryMetadataHelper
         string repositoryName,
         string defaultBranchName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var data = new DotnetMetadata();
 
@@ -194,15 +163,8 @@ public static class GitHubRepositoryMetadataHelper
         List<GitHubPath> foldersAndFiles,
         string repositoryName)
     {
-        if (gitHubRepositoryClient is null)
-        {
-            throw new ArgumentNullException(nameof(gitHubRepositoryClient));
-        }
-
-        if (foldersAndFiles is null)
-        {
-            throw new ArgumentNullException(nameof(foldersAndFiles));
-        }
+        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
         var data = new PythonMetadata();
 

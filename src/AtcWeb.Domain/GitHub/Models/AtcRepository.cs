@@ -5,7 +5,9 @@ public class AtcRepository
 {
     public AtcRepository(GitHubRepository repository)
     {
-        this.BaseData = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+
+        BaseData = repository;
         Badges = new List<(string Group, string Key, Uri Url)>();
         FolderAndFilePaths = new List<GitHubPath>();
         Root = new RootMetadata();
