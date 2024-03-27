@@ -41,7 +41,7 @@ public partial class MainLayout : LayoutComponentBase
         if (!StateContainer.IsFireAndForgetTriggerStarted)
         {
             StateContainer.IsFireAndForgetTriggerStarted = true;
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 await RepositoryService.GetContributorsAsync();
                 await RepositoryService.GetRepositoriesAsync(populateMetaDataBase: true, populateMetaDataAdvanced: true);

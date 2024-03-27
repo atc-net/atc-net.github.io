@@ -532,3 +532,4 @@ dotnet_diagnostic.IDE1006.severity = none           # For Now
 
 dotnet_diagnostic.S1075.severity = none             # For Now - Hardcoded Uri
 dotnet_diagnostic.S1172.severity = none             # For Now
+dotnet_diagnostic.S6608.severity = none             # Indexing at Count-1 should be used instead of the "Enumerable" extension method "Last"
