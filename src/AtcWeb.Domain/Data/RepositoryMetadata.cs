@@ -23,6 +23,8 @@ public static class RepositoryMetadata
         Tuple.Create("atc-api", "perkops"),
         Tuple.Create("atc-autoformatter", "rickykaare"),
         Tuple.Create("atc-azure-digitaltwin", "perkops"),
+        Tuple.Create("atc-azure-iot", "davidkallesen"),
+        Tuple.Create("atc-azure-iot", "perkops"),
         Tuple.Create("atc-azure-messaging", "christianhelle"),
         Tuple.Create("atc-azure-options", "kimlundjohansen"),
         Tuple.Create("atc-blazor", "davidkallesen"),
