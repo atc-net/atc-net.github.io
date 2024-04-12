@@ -26,4 +26,3 @@ global using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 global using MudBlazor;
 global using MudBlazor.Services;
-global using MudBlazor.Utilities;

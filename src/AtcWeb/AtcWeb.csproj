@@ -9,15 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.433" />
+    <PackageReference Include="Atc" Version="2.0.465" />
     <PackageReference Include="Atc.Blazor" Version="1.0.22" />
     <PackageReference Include="Atc.Blazor.ColorThemePreference" Version="1.0.22" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
     <PackageReference Include="ColorCode.HTML" Version="2.0.15" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.843" />
-    <PackageReference Include="Markdig" Version="0.36.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.9.5" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
