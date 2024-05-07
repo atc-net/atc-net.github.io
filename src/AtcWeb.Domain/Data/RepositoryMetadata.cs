@@ -7,16 +7,16 @@ public static class RepositoryMetadata
 
     public static string RecommendedLangVersion => "12.0";
 
-    public static IEnumerable<string> RecommendedTargetFramework => new[]
-    {
+    public static IEnumerable<string> RecommendedTargetFramework =>
+    [
         "net6.0",
         "net8.0",
         "netstandard2.0",
         "netstandard2.1",
-    };
+    ];
 
-    private static readonly List<Tuple<string, string>> ResponsibleMembers = new()
-    {
+    private static readonly List<Tuple<string, string>> ResponsibleMembers =
+    [
         Tuple.Create("atc", "davidkallesen"),
         Tuple.Create("atc", "perkops"),
         Tuple.Create("atc-api", "davidkallesen"),
@@ -68,9 +68,10 @@ public static class RepositoryMetadata
         Tuple.Create("atc-winget-configurations", "davidkallesen"),
         Tuple.Create("atc-winget-configurations", "perkops"),
         Tuple.Create("atc-wpf", "davidkallesen"),
-    };
+    ];
 
-    public static string[] GetResponsibleMembersByName(string name)
+    public static string[] GetResponsibleMembersByName(
+        string name)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -87,18 +88,22 @@ public static class RepositoryMetadata
             .ToArray();
     }
 
-    public static bool HasNotRequiredResponsibleMembersByName(string name)
+    public static bool HasNotRequiredResponsibleMembersByName(
+        string name)
         => GetResponsibleMembersByName(name).Length < 2;
 
-    public static bool IsVisualStudioNameInAcceptedVersion(string visualStudioName)
+    public static bool IsVisualStudioNameInAcceptedVersion(
+        string visualStudioName)
         => !string.IsNullOrEmpty(visualStudioName) &&
            visualStudioName.Equals(RecommendedVisualStudioName, StringComparison.Ordinal);
 
-    public static bool IsTargetFrameworkInLongTimeSupport(string targetFramework)
+    public static bool IsTargetFrameworkInLongTimeSupport(
+        string targetFramework)
         => !string.IsNullOrEmpty(targetFramework) &&
            RecommendedTargetFramework.Contains(targetFramework, StringComparer.OrdinalIgnoreCase);
 
-    public static bool IsLangVersionInAcceptedVersion(string langVersion)
+    public static bool IsLangVersionInAcceptedVersion(
+        string langVersion)
         => !string.IsNullOrEmpty(langVersion) &&
            langVersion.Contains(RecommendedLangVersion, StringComparison.Ordinal);
 }
