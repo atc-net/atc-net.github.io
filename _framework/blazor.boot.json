@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "AtcWeb",
   "resources": {
-    "hash": "sha256-U+yPsuWp9rhJzJKHzxyI+WrGn+x91HFHbrMf+WRV0DA=",
+    "hash": "sha256-v3irrDXyk4uF/5OxmfluLeMvowh4Lq95PuNfQ2Ovq20=",
     "jsModuleNative": {
       "dotnet.native.8.0.4.6vlmefabfv.js": "sha256-ju0+XWE0ihz554eKEj0HQ8Opa61xpbUIaX5/MNo8we4="
     },
@@ -23,8 +23,8 @@
       "Atc.Blazor.wasm": "sha256-Kpssl5csUpMNI6iZqf7GFtqWGE2a4uZbKMB1QgF1byA=",
       "Atc.DotNet.wasm": "sha256-AEdM52Bpv7K7QAtQcsx20lTcnv/f2ZqMHwYwooX00v8=",
       "Atc.wasm": "sha256-U20AyX/FjBbcV+34cDPely1t6BzE4vokZeQJl+et5L8=",
-      "AtcWeb.Domain.wasm": "sha256-uDLffJwrvDD6FdwAU91KtdvSxqpATX/moaNkhMo/PU4=",
-      "AtcWeb.wasm": "sha256-2IBGD/GhRBB6b/HyRJ0qM3jD7E72vNb5zuTsoRCf0l8=",
+      "AtcWeb.Domain.wasm": "sha256-DV8kr/zI1jOtjABUcALYilHllUhnGsR4UPuZXs9ZhVg=",
+      "AtcWeb.wasm": "sha256-IPGly1VydKL7wVTOwzyHwflT0XcexDPclwmG2iw6t0s=",
       "ColorCode.Core.wasm": "sha256-MU1CG0WM9yn7fhjNqezPvT3DIqEUOz9cPFedLWKX2YQ=",
       "ColorCode.HTML.wasm": "sha256-gfdkROdz/vh5Y8eCvHzcmc6mAAKWKXQGcuQcbr0hRPQ=",
       "HtmlSanitizer.wasm": "sha256-QDY9hu22RjTLrYzpPYqbdxnqB1A8KHIXwGDH0GxbTH0=",
