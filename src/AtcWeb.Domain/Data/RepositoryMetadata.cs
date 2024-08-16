@@ -45,6 +45,8 @@ public static class RepositoryMetadata
         Tuple.Create("atc-installer", "perkops"),
         Tuple.Create("atc-kepware", "davidkallesen"),
         Tuple.Create("atc-kepware", "perkops"),
+        Tuple.Create("atc-kusto", "davidkallesen"),
+        Tuple.Create("atc-kusto", "perkops"),
         Tuple.Create("atc-logviewer", "davidkallesen"),
         Tuple.Create("atc-logviewer", "perkops"),
         Tuple.Create("atc-microsoft-graph-client", "davidkallesen"),
