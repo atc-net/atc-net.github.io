@@ -556,6 +556,8 @@ dotnet_diagnostic.S6605.severity = none             # Collection-specific "Exist
 ##########################################
 [*.cs]
 
+dotnet_diagnostic.AsyncFixer02.severity = none		# False/Positiv - ToListAsync should be used instead of
+
 dotnet_diagnostic.CA1002.severity = none            # For Now - Use Collection, ReadonlyCollection, KeyedCollection
 dotnet_diagnostic.CA1031.severity = none            # For Now
 dotnet_diagnostic.CA1051.severity = none            # For Now - Do not declare visible instance fields (hard in Blazor Project)
