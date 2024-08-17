@@ -34,7 +34,8 @@ public class GitHubRepositoryService
             : new List<GitHubRepositoryContributor>();
     }
 
-    public async Task<List<GitHubRepositoryContributor>> GetResponsibleMembersAsGitHubContributor(string repositoryName)
+    public async Task<List<GitHubRepositoryContributor>> GetResponsibleMembersAsGitHubContributor(
+        string repositoryName)
     {
         var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
         var gitHubContributors = await GetContributorsAsync();
@@ -52,7 +53,9 @@ public class GitHubRepositoryService
         return data;
     }
 
-    public async Task<List<AtcRepository>> GetRepositoriesAsync(bool populateMetaDataBase = false, bool populateMetaDataAdvanced = false)
+    public async Task<List<AtcRepository>> GetRepositoriesAsync(
+        bool populateMetaDataBase = false,
+        bool populateMetaDataAdvanced = false)
     {
         var bag = new ConcurrentBag<AtcRepository>();
         var (isSuccessfulRepositories, repositories) = await atcApiGitHubRepositoryClient.GetRepositories();
@@ -86,7 +89,10 @@ public class GitHubRepositoryService
         return atcRepositories;
     }
 
-    public async Task<AtcRepository?> GetRepositoryByNameAsync(string repositoryName, bool populateMetaDataBase = false, bool populateMetaDataAdvanced = false)
+    public async Task<AtcRepository?> GetRepositoryByNameAsync(
+        string repositoryName,
+        bool populateMetaDataBase = false,
+        bool populateMetaDataAdvanced = false)
     {
         var (isSuccessful, repository) = await atcApiGitHubRepositoryClient.GetRepositoryByName(repositoryName);
         if (!isSuccessful || repository is null)
@@ -158,7 +164,8 @@ public class GitHubRepositoryService
             .ToList();
     }
 
-    private async Task<List<GitHubPath>> GetDirectoryMetadata(string repositoryName)
+    private async Task<List<GitHubPath>> GetDirectoryMetadata(
+        string repositoryName)
     {
         var (isSuccessful, gitHubPath) = await atcApiGitHubRepositoryClient.GetAllPathsByRepositoryByName(repositoryName);
 
@@ -167,7 +174,9 @@ public class GitHubRepositoryService
             : new List<GitHubPath>();
     }
 
-    private async Task PopulateMetaDataBase(AtcRepository repository, GitHubRepository gitHubRepository)
+    private async Task PopulateMetaDataBase(
+        AtcRepository repository,
+        GitHubRepository gitHubRepository)
     {
         repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
 
@@ -198,7 +207,8 @@ public class GitHubRepositoryService
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    private async Task PopulateMetaDataAdvanced(AtcRepository repository)
+    private async Task PopulateMetaDataAdvanced(
+        AtcRepository repository)
     {
         var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
             atcApiGitHubRepositoryClient,
@@ -268,7 +278,9 @@ public class GitHubRepositoryService
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    private static DocumentSectionMetadata GetDevOpsPlaybookSection(bool isReadMe, string rawText)
+    private static DocumentSectionMetadata GetDevOpsPlaybookSection(
+        bool isReadMe,
+        string rawText)
     {
         var lines = rawText.ToLines();
         var title = string.Empty;
@@ -378,7 +390,8 @@ public class GitHubRepositoryService
         return documentSectionMetadata;
     }
 
-    private static string FormatLine(string line)
+    private static string FormatLine(
+        string line)
     {
         line = line
             .Replace(
