@@ -29,8 +29,6 @@ public static class Program
 
         builder.Services.AddMudServices();
 
-        builder.Services.AddColorThemePreferenceDetector();
-
         return builder.Build().RunAsync();
     }
 }

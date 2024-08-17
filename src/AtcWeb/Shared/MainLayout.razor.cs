@@ -10,8 +10,6 @@ public partial class MainLayout : LayoutComponentBase
     [Inject]
     private StateContainer StateContainer { get; set; }
 
-    [Inject]
-    private IColorThemePreferenceDetector ColorThemePreferenceDetector { get; set; }
 
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
@@ -23,10 +21,6 @@ public partial class MainLayout : LayoutComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var useDarkMode = await ColorThemePreferenceDetector.UseDarkMode();
-        StateContainer.CurrentTheme = useDarkMode
-            ? MudThemeHelper.DarkTheme
-            : MudThemeHelper.LightTheme;
 
         drawerOpen = true;
     }
