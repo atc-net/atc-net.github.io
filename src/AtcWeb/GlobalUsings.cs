@@ -3,7 +3,6 @@ global using System.Text.RegularExpressions;
 global using System.Web;
 
 global using Atc;
-global using Atc.Helpers;
 global using AtcWeb.Domain.AtcApi;
 global using AtcWeb.Domain.AtcApi.Models;
 global using AtcWeb.Domain.Data.Models;
