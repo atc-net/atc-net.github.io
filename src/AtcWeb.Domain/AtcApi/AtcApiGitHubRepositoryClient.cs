@@ -4,8 +4,14 @@ public class AtcApiGitHubRepositoryClient
 {
     private const string BaseAddress = "https://atc-api.azurewebsites.net/github/repository";
     private readonly IMemoryCache memoryCache;
+    private static readonly SemaphoreSlim SemaphoreRepositories = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreContributors = new(1, 1);
+    private static readonly SemaphoreSlim SemaphorePaths = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
 
-    public AtcApiGitHubRepositoryClient(IMemoryCache memoryCache)
+    public AtcApiGitHubRepositoryClient(
+        IMemoryCache memoryCache)
     {
         ArgumentNullException.ThrowIfNull(memoryCache);
 
@@ -20,6 +26,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreRepositories.WaitAsync(cancellationToken);
 
         try
         {
@@ -50,6 +58,10 @@ public class AtcApiGitHubRepositoryClient
         catch
         {
             return (IsSuccessful: false, new List<GitHubRepository>());
+        }
+        finally
+        {
+            SemaphoreRepositories.Release();
         }
     }
 
@@ -124,6 +136,8 @@ public class AtcApiGitHubRepositoryClient
             return (IsSuccessful: true, data!);
         }
 
+        await SemaphoreContributors.WaitAsync(cancellationToken);
+
         try
         {
             using var httpClient = new HttpClient();
@@ -146,6 +160,10 @@ public class AtcApiGitHubRepositoryClient
         catch
         {
             return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
+        }
+        finally
+        {
+            SemaphoreContributors.Release();
         }
     }
 
@@ -195,6 +213,8 @@ public class AtcApiGitHubRepositoryClient
             return (IsSuccessful: true, data!);
         }
 
+        await SemaphorePaths.WaitAsync(cancellationToken);
+
         try
         {
             using var httpClient = new HttpClient();
@@ -218,9 +238,12 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: false, new List<GitHubPath>());
         }
+        finally
+        {
+            SemaphorePaths.Release();
+        }
     }
 
-    public async Task<(bool IsSuccessful, string FilePath)> GetFileByRepositoryNameAndFilePath(string repositoryName, string filePath, CancellationToken cancellationToken = default)
     public async Task<(bool IsSuccessful, string FilePath)> GetFileByRepositoryNameAndFilePath(
         string repositoryName,
         string filePath,
@@ -232,6 +255,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreFiles.WaitAsync(cancellationToken);
 
         try
         {
@@ -254,6 +279,10 @@ public class AtcApiGitHubRepositoryClient
         catch
         {
             return (IsSuccessful: false, string.Empty);
+        }
+        finally
+        {
+            SemaphoreFiles.Release();
         }
     }
 
@@ -284,6 +313,8 @@ public class AtcApiGitHubRepositoryClient
             return (IsSuccessful: true, data!);
         }
 
+        await SemaphoreIssues.WaitAsync(cancellationToken);
+
         try
         {
             using var httpClient = new HttpClient();
@@ -306,6 +337,10 @@ public class AtcApiGitHubRepositoryClient
         catch
         {
             return (IsSuccessful: false, new List<GitHubIssue>());
+        }
+        finally
+        {
+            SemaphoreIssues.Release();
         }
     }
 }
