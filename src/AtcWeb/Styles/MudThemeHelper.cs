@@ -16,7 +16,7 @@ public static class MudThemeHelper
 
     public static readonly LayoutProperties LayoutProperties = new()
     {
-        DrawerWidthLeft = "300px"
+        DrawerWidthLeft = "300px",
     };
 
     public static MudTheme Create()

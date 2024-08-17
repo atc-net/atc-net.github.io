@@ -17,7 +17,8 @@ public class RepositoryComponentBase : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         repository = await RepositoryService.GetRepositoryByNameAsync(
-            repositoryName, populateMetaDataBase: true,
+            repositoryName,
+            populateMetaDataBase: true,
             populateMetaDataAdvanced: true);
 
         await base.OnInitializedAsync();
