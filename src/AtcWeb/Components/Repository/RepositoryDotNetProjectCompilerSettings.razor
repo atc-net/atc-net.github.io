@@ -3,7 +3,7 @@
 @using AtcWeb.Domain.Data
 
 @if (StateContainer is not null &&
-     CompilerSettings is not null)
+   CompilerSettings is not null)
 {
     <table class="atc-simple-table-clean table-no-padding">
         <tr>
@@ -12,13 +12,17 @@
                 @if (CompilerSettings.IsTargetFrameworkInLongTimeSupport)
                 {
                     <MudTooltip Text="TargetFramework is up to date.">
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.TargetFramework</span>
+                        <span style="color: @StateContainer.SuccessColor">
+                            @CompilerSettings.TargetFramework
+                        </span>
                     </MudTooltip>
                 }
                 else
                 {
                     <MudTooltip Text="TargetFramework is not set to a correct version.">
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.TargetFramework</span>
+                        <span style="color: @StateContainer.WarningColor">
+                            @CompilerSettings.TargetFramework
+                        </span>
                     </MudTooltip>
                 }
             </td>
@@ -29,13 +33,17 @@
                 @if (CompilerSettings.IsLangVersionInAcceptedVersion)
                 {
                     <MudTooltip Text="LangVersion is up to date.">
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Success">@CompilerSettings.LangVersion</span>
+                        <span style="color: @StateContainer.SuccessColor">
+                            @CompilerSettings.LangVersion
+                        </span>
                     </MudTooltip>
                 }
                 else
                 {
                     <MudTooltip Text="@($"LangVersion should be updated to {RepositoryMetadata.RecommendedLangVersion}.")">
-                        <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@CompilerSettings.LangVersion</span>
+                        <span style="color: @StateContainer.WarningColor">
+                            @CompilerSettings.LangVersion
+                        </span>
                     </MudTooltip>
                 }
             </td>

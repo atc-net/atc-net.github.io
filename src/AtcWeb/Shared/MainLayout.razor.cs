@@ -6,10 +6,10 @@ public partial class MainLayout : LayoutComponentBase
 {
     private bool drawerOpen;
     private NavMenu navMenuRef;
+    private MudThemeProvider mudThemeProviderRef;
 
     [Inject]
     private StateContainer StateContainer { get; set; }
-
 
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
@@ -19,51 +19,25 @@ public partial class MainLayout : LayoutComponentBase
         drawerOpen = !drawerOpen;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-
         drawerOpen = true;
+
+        base.OnInitialized();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(
+        bool firstRender)
     {
-        navMenuRef.Refresh();
-    }
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!StateContainer.IsFireAndForgetTriggerStarted)
+        if (firstRender)
         {
-            StateContainer.IsFireAndForgetTriggerStarted = true;
-            _ = Task.Run(async () =>
-            {
-                await RepositoryService.GetContributorsAsync();
-                await RepositoryService.GetRepositoriesAsync(populateMetaDataBase: true, populateMetaDataAdvanced: true);
-            });
+            StateContainer.UseDarkMode(await mudThemeProviderRef.GetSystemPreference());
+
+            navMenuRef.Refresh();
+
+            StateHasChanged();
         }
 
-        return base.OnAfterRenderAsync(firstRender);
-    }
-
-    protected void OnSwipe(SwipeDirection direction)
-    {
-        switch (direction)
-        {
-            case SwipeDirection.LeftToRight when !drawerOpen:
-                drawerOpen = true;
-                StateHasChanged();
-                break;
-            case SwipeDirection.RightToLeft when drawerOpen:
-                drawerOpen = false;
-                StateHasChanged();
-                break;
-        }
-    }
-
-    private void DarkMode()
-    {
-        StateContainer.CurrentTheme = StateContainer.CurrentTheme == MudThemeHelper.LightTheme
-            ? MudThemeHelper.DarkTheme
-            : MudThemeHelper.LightTheme;
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

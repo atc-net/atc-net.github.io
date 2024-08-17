@@ -1,20 +1,20 @@
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="StateContainer.CurrentTheme" />
+<MudThemeProvider @ref="mudThemeProviderRef" Theme="@StateContainer.Theme" IsDarkMode="StateContainer.IsDarkMode" />
+<MudPopoverProvider />
 <MudDialogProvider FullWidth="true"
                    MaxWidth="MaxWidth.ExtraSmall"
                    CloseButton="true"
-                   DisableBackdropClick="true"
                    Position="DialogPosition.Center" />
 <MudSnackbarProvider />
 
-<MudSwipeArea OnSwipe="@OnSwipe" Class="full-page-height">
+<MudSwipeArea Class="full-page-height">
     <MudLayout>
         <MudAppBar Elevation="25">
             <MudIconButton Icon="@Icons.Material.Filled.Menu"
                            Color="Color.Inherit"
                            Edge="Edge.Start"
-                           OnClick="@((e) => DrawerToggle())" />
+                           OnClick="@((_) => DrawerToggle())" />
             <MudText Typo="Typo.h5"
                      Class="atc-appbar-brand-text">
                 ATC
@@ -29,8 +29,8 @@
                          OffsetY="true">
                     <MudText Typo="Typo.body2"
                              Class="px-4 py-2"><b>Maintenance</b></MudText>
-                    <MudMenuItem Link="/support/repository-compliance-overview">Repository compliance overview</MudMenuItem>
-                    <MudMenuItem Link="/support/api-rate-limits">GitHub API rate limits</MudMenuItem>
+                    <MudMenuItem Href="/support/repository-compliance-overview">Repository compliance overview</MudMenuItem>
+                    <MudMenuItem Href="/support/api-rate-limits">GitHub API rate limits</MudMenuItem>
                 </MudMenu>
                 <MudDivider Vertical="true"
                             FlexItem="true"
@@ -39,11 +39,13 @@
                 <MudTooltip Text="Toggle light/dark theme">
                     <MudIconButton Icon="@Icons.Material.Filled.Brightness4"
                                    Color="Color.Inherit"
-                                   OnClick="@((e) => DarkMode())"/>
+                                   OnClick="@((_) => StateContainer.DarkModeToggle())" />
                 </MudTooltip>
                 <MudTooltip Text="GitHub repository">
                     <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
-                                   Color="Color.Inherit" Link="https://github.com/atc-net/" Target="_blank"/>
+                                   Color="Color.Inherit"
+                                   Href="https://github.com/atc-net/"
+                                   Target="_blank" />
                 </MudTooltip>
             </div>
             <MudMenu Icon="@Icons.Material.Filled.Settings"
@@ -55,10 +57,11 @@
                 <div class="px-2">
                     <MudIconButton Icon="@Icons.Material.Filled.Brightness4"
                                    Color="Color.Inherit"
-                                   OnClick="@((e) => DarkMode())" />
+                                   OnClick="@((_) => StateContainer.DarkModeToggle())" />
                     <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
                                    Color="Color.Inherit"
-                                   Link="https://github.com/atc-net/" Target="_blank" />
+                                   Href="https://github.com/atc-net/"
+                                   Target="_blank" />
                 </div>
                 <MudText Typo="Typo.body2"
                          Class="px-4 py-2"><b>Community Support</b></MudText>

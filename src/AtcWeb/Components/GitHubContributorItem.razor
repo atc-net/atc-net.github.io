@@ -1,9 +1,10 @@
-<MudCard Elevation="4" Style="@GetStyle()">
+<MudCard Elevation="4">
     <MudCardHeader>
         <CardHeaderAvatar>
-            <MudAvatar Image="@AvatarLink"
-                       Size="Size.Large"
-                       Class="mud-elevation-4"/>
+            <MudAvatar Size="Size.Large"
+                       Class="mud-elevation-4">
+                <MudImage Src="@AvatarLink" />
+            </MudAvatar>
         </CardHeaderAvatar>
         <CardHeaderContent>
             <MudText Typo="Typo.body1">@Name</MudText>
@@ -11,9 +12,9 @@
         </CardHeaderContent>
         <CardHeaderActions>
             <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
-                           Link="@GithubLink"
                            Color="Color.Dark"
-                           Target="_blank"/>
+                           Href="@GithubLink.Replace("api.github.com/users", "github.com", StringComparison.Ordinal)"
+                           Target="_blank" />
         </CardHeaderActions>
     </MudCardHeader>
     @if (ChildContent != null)
@@ -43,22 +44,4 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
-
-    protected override void OnInitialized()
-    {
-        StateContainer!.OnThemeChange += OnThemeChange;
-        base.OnInitialized();
-    }
-
-    private void OnThemeChange(object sender, EventArgs args)
-    {
-        StateHasChanged();
-    }
-
-    private string GetStyle()
-    {
-        return StateContainer!.CurrentTheme == MudThemeHelper.DarkTheme
-            ? $"background-color: {MudThemeHelper.DarkTheme.Palette.Black};"
-            : $"background-color: {MudThemeHelper.LightTheme.Palette.Surface};";
-    }
 }

@@ -17,7 +17,8 @@ public partial class DocsPage : ComponentBase
 
     private bool contentDrawerOpen = true;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(
+        bool firstRender)
     {
         if (firstRender && contentNavigation is not null)
         {
@@ -25,19 +26,21 @@ public partial class DocsPage : ComponentBase
         }
     }
 
-    public string GetParentTitle(DocsPageSection section)
+    public string GetParentTitle(
+        DocsPageSection section)
     {
-        if (section?.ParentSection is null ||
+        if (section.ParentSection is null ||
             !sectionMapper.TryGetValue(section.ParentSection, out var value))
         {
             return string.Empty;
         }
 
-        var item = value;
-        return item.Title;
+        return value.Title;
     }
 
-    internal void AddSection(DocsSectionLink sectionLinkInfo, DocsPageSection section)
+    internal void AddSection(
+        DocsSectionLink sectionLinkInfo,
+        DocsPageSection section)
     {
         bufferedSections.Enqueue(sectionLinkInfo);
 
@@ -62,11 +65,14 @@ public partial class DocsPage : ComponentBase
                 parentInfo = value;
             }
 
-            var info = new MudPageContentSection(sectionLinkInfo.Title, sectionLinkInfo.Id, section.Level, parentInfo);
-            sectionMapper.Add(section, info);
-            contentNavigation.AddSection(info, forceUpdate: false);
-        }
+            var info = new MudPageContentSection(
+                sectionLinkInfo.Title,
+                sectionLinkInfo.Id,
+                section.Level,
+                parentInfo);
 
-        contentNavigation.Update();
+            sectionMapper.Add(section, info);
+            contentNavigation.AddSection(info, forceUpdate: true);
+        }
     }
 }
