@@ -14,7 +14,7 @@
                 <GitHubContributorItem Name="@contributor.Login"
                                        Title="@ItemTitle"
                                        AvatarLink="@contributor.AvatarUrl"
-                                       GithubLink="@contributor.Url"/>
+                                       GithubLink="@contributor.Url" />
             </MudItem>
         }
 
@@ -23,7 +23,7 @@
         {
             var itemClass = $"d-flex {Justify.FlexStart.GetDescription()}";
             <MudItem xs="12" md="12" Class="@itemClass">
-                <MudChip Color="Color.Error">
+                <MudChip T="string" Color="Color.Error">
                     We are missing a member or two to take responsibility for this repository.
                 </MudChip>
             </MudItem>

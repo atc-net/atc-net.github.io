@@ -4,21 +4,30 @@ public class AtcApiGitHubRepositoryClient
 {
     private const string BaseAddress = "https://atc-api.azurewebsites.net/github/repository";
     private readonly IMemoryCache memoryCache;
+    private static readonly SemaphoreSlim SemaphoreRepositories = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreContributors = new(1, 1);
+    private static readonly SemaphoreSlim SemaphorePaths = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
 
-    public AtcApiGitHubRepositoryClient(IMemoryCache memoryCache)
+    public AtcApiGitHubRepositoryClient(
+        IMemoryCache memoryCache)
     {
         ArgumentNullException.ThrowIfNull(memoryCache);
 
         this.memoryCache = memoryCache;
     }
 
-    public async Task<(bool IsSuccessful, List<GitHubRepository> GitHubRepositories)> GetRepositories(CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, List<GitHubRepository> GitHubRepositories)> GetRepositories(
+        CancellationToken cancellationToken = default)
     {
         const string cacheKey = CacheConstants.CacheKeyRepositories;
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepository> data))
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreRepositories.WaitAsync(cancellationToken);
 
         try
         {
@@ -50,9 +59,15 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: false, new List<GitHubRepository>());
         }
+        finally
+        {
+            SemaphoreRepositories.Release();
+        }
     }
 
-    public async Task<(bool IsSuccessful, GitHubRepository? GitHubRepository)> GetRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, GitHubRepository? GitHubRepository)> GetRepositoryByName(
+        string repositoryName,
+        CancellationToken cancellationToken = default)
     {
         var (isSuccessful, repositories) = await GetRepositories(cancellationToken);
         if (!isSuccessful)
@@ -67,7 +82,8 @@ public class AtcApiGitHubRepositoryClient
             : (IsSuccessful: true, gitHubRepository: repository);
     }
 
-    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributors(CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributors(
+        CancellationToken cancellationToken = default)
     {
         const string cacheKey = CacheConstants.CacheKeyContributors;
         if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepositoryContributor> data))
@@ -110,7 +126,8 @@ public class AtcApiGitHubRepositoryClient
         }
     }
 
-    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributorsByRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributorsByRepositoryByName(
+        string repositoryName, CancellationToken cancellationToken = default)
     {
         var url = $"{BaseAddress}/contributors/{repositoryName}";
         var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
@@ -118,6 +135,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreContributors.WaitAsync(cancellationToken);
 
         try
         {
@@ -142,9 +161,14 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
         }
+        finally
+        {
+            SemaphoreContributors.Release();
+        }
     }
 
-    public async Task<(bool IsSuccessful, List<DotnetNugetPackageMetadataBase> DotnetNugetPackagesMetadata)> GetLatestNugetPackageVersionsUsed(CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, List<DotnetNugetPackageMetadataBase> DotnetNugetPackagesMetadata)> GetLatestNugetPackageVersionsUsed(
+        CancellationToken cancellationToken = default)
     {
         const string cacheKey = CacheConstants.CacheKeyNugetPackagesUsedByAtcRepositories;
         if (memoryCache.TryGetValue(cacheKey, out List<DotnetNugetPackageMetadataBase> data))
@@ -178,7 +202,9 @@ public class AtcApiGitHubRepositoryClient
         }
     }
 
-    public async Task<(bool IsSuccessful, List<GitHubPath> GitHubPaths)> GetAllPathsByRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, List<GitHubPath> GitHubPaths)> GetAllPathsByRepositoryByName(
+        string repositoryName,
+        CancellationToken cancellationToken = default)
     {
         var url = $"{BaseAddress}/{repositoryName}/paths";
         var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
@@ -186,6 +212,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphorePaths.WaitAsync(cancellationToken);
 
         try
         {
@@ -210,9 +238,16 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: false, new List<GitHubPath>());
         }
+        finally
+        {
+            SemaphorePaths.Release();
+        }
     }
 
-    public async Task<(bool IsSuccessful, string FilePath)> GetFileByRepositoryNameAndFilePath(string repositoryName, string filePath, CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccessful, string FilePath)> GetFileByRepositoryNameAndFilePath(
+        string repositoryName,
+        string filePath,
+        CancellationToken cancellationToken = default)
     {
         var url = $"{BaseAddress}/{repositoryName}/file?filePath={filePath}";
         var cacheKey = $"{CacheConstants.CacheKeyRepositoryFile}_{url}";
@@ -220,6 +255,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreFiles.WaitAsync(cancellationToken);
 
         try
         {
@@ -243,18 +280,31 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: false, string.Empty);
         }
+        finally
+        {
+            SemaphoreFiles.Release();
+        }
     }
 
-    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesAllByRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesAllByRepositoryByName(
+        string repositoryName,
+        CancellationToken cancellationToken = default)
         => GetIssuesByRepositoryByName(repositoryName, "all", cancellationToken);
 
-    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesOpenByRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesOpenByRepositoryByName(
+        string repositoryName,
+        CancellationToken cancellationToken = default)
         => GetIssuesByRepositoryByName(repositoryName, "open", cancellationToken);
 
-    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesClosedByRepositoryByName(string repositoryName, CancellationToken cancellationToken = default)
+    public Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesClosedByRepositoryByName(
+        string repositoryName,
+        CancellationToken cancellationToken = default)
         => GetIssuesByRepositoryByName(repositoryName, "closed", cancellationToken);
 
-    private async Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesByRepositoryByName(string repositoryName, string state, CancellationToken cancellationToken = default)
+    private async Task<(bool IsSuccessful, List<GitHubIssue> GitHubIssues)> GetIssuesByRepositoryByName(
+        string repositoryName,
+        string state,
+        CancellationToken cancellationToken = default)
     {
         var url = $"{BaseAddress}/{repositoryName}/issues/{state}";
         var cacheKey = $"{CacheConstants.CacheKeyIssues}_{url}";
@@ -262,6 +312,8 @@ public class AtcApiGitHubRepositoryClient
         {
             return (IsSuccessful: true, data!);
         }
+
+        await SemaphoreIssues.WaitAsync(cancellationToken);
 
         try
         {
@@ -285,6 +337,10 @@ public class AtcApiGitHubRepositoryClient
         catch
         {
             return (IsSuccessful: false, new List<GitHubIssue>());
+        }
+        finally
+        {
+            SemaphoreIssues.Release();
         }
     }
 }

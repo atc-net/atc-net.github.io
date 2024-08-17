@@ -11,7 +11,6 @@
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.513" />
     <PackageReference Include="Atc.Blazor" Version="1.0.22" />
-    <PackageReference Include="Atc.Blazor.ColorThemePreference" Version="1.0.22" />
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
     <PackageReference Include="ColorCode.HTML" Version="2.0.15" />
     <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
@@ -22,7 +21,7 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.9.5" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.19.1" />
+    <PackageReference Include="MudBlazor" Version="7.6.0" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
 

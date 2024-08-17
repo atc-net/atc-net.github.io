@@ -1,10 +1,8 @@
-@using System.Collections
-@using Atc.Data.Models
 @using AtcWeb.Domain.GitHub.Models
 @using AtcWeb.State
 
 @if (StateContainer is not null &&
-     PackageReferences is not null)
+   PackageReferences is not null)
 {
     <table class="atc-simple-table-clean table-no-padding">
         @foreach (var packageReference in PackageReferences)
@@ -15,13 +13,17 @@
                     @if (packageReference.IsNewest)
                     {
                         <MudTooltip Text="@($"{packageReference.PackageId} has the latest version {packageReference.NewestVersion}")">
-                            <span style="color: @StateContainer.CurrentTheme.Palette.Success">@packageReference.Version</span>
+                            <span style="color: @StateContainer.SuccessColor">
+                                @packageReference.Version
+                            </span>
                         </MudTooltip>
                     }
                     else
                     {
                         <MudTooltip Text="@($"{packageReference.PackageId} has a newer version {packageReference.NewestVersion}")">
-                            <span style="color: @StateContainer.CurrentTheme.Palette.Warning">@packageReference.Version</span>
+                            <span style="color: @StateContainer.WarningColor">
+                                @packageReference.Version
+                            </span>
                         </MudTooltip>
                     }
                 </td>

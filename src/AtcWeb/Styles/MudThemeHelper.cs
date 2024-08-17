@@ -2,42 +2,28 @@ namespace AtcWeb.Styles;
 
 public static class MudThemeHelper
 {
-    private static readonly Typography AtcTypography = new()
+    public static readonly PaletteLight LightPalette = new()
     {
-        Default = new Default
-        {
-            // Use MudBlazor default fonts
-        },
-    };
-
-    private static readonly LayoutProperties AtcLayoutProperties = new()
-    {
-        DrawerWidthLeft = "320px",
-    };
-
-    private static readonly PaletteLight LightPalette = new()
-    {
-        Primary = "#2A91C4",
-        Surface = Colors.Grey.Lighten3,
+        Primary = "#6EAEDF",
+        Surface = Colors.Gray.Lighten3,
         AppbarBackground = "#27272F",
     };
 
-    private static readonly PaletteDark DarkPalette = new()
+    public static readonly PaletteDark DarkPalette = new()
     {
         Primary = "#6EAEDF",
     };
 
-    public static readonly MudTheme LightTheme = new()
+    public static readonly LayoutProperties LayoutProperties = new()
     {
-        Palette = LightPalette,
-        LayoutProperties = AtcLayoutProperties,
-        Typography = AtcTypography,
+        DrawerWidthLeft = "300px"
     };
 
-    public static readonly MudTheme DarkTheme = new()
-    {
-        Palette = DarkPalette,
-        LayoutProperties = AtcLayoutProperties,
-        Typography = AtcTypography,
-    };
+    public static MudTheme Create()
+        => new()
+        {
+            PaletteLight = LightPalette,
+            PaletteDark = DarkPalette,
+            LayoutProperties = LayoutProperties,
+        };
 }

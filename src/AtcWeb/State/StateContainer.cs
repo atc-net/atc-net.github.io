@@ -2,26 +2,48 @@ namespace AtcWeb.State;
 
 public class StateContainer
 {
-    private MudTheme currentTheme = MudThemeHelper.DarkTheme;
+    private bool isDarkMode;
 
     public event Action<object, EventArgs>? OnThemeChange;
 
-    public MudTheme CurrentTheme
+    public MudTheme Theme { get; } = MudThemeHelper.Create();
+
+    public bool IsDarkMode
     {
-        get => currentTheme;
+        get => isDarkMode;
         set
         {
-            if (value == currentTheme)
+            isDarkMode = value;
+            if (isDarkMode == value)
             {
                 return;
             }
 
-            currentTheme = value;
+            isDarkMode = value;
             NotifyThemeStateChanged();
         }
     }
 
-    public bool IsFireAndForgetTriggerStarted { get; set; }
+    public void DarkModeToggle()
+        => IsDarkMode = !IsDarkMode;
 
-    public void NotifyThemeStateChanged() => OnThemeChange?.Invoke(this, EventArgs.Empty);
+    public void UseDarkMode(
+        bool useDarkMode)
+        => IsDarkMode = !IsDarkMode;
+
+    public string SuccessColor
+        => IsDarkMode
+            ? Theme.PaletteDark.Success.Value
+            : Theme.PaletteLight.Success.Value;
+
+    public string WarningColor => IsDarkMode
+        ? Theme.PaletteDark.Warning.Value
+        : Theme.PaletteLight.Warning.Value;
+
+    public string ErrorColor => IsDarkMode
+        ? Theme.PaletteDark.Error.Value
+        : Theme.PaletteLight.Error.Value;
+
+    public void NotifyThemeStateChanged()
+        => OnThemeChange?.Invoke(this, EventArgs.Empty);
 }
