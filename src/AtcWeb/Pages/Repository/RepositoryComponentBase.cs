@@ -8,8 +8,7 @@ public class RepositoryComponentBase : ComponentBase
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
 
-    protected RepositoryComponentBase(
-        string repositoryName)
+    protected RepositoryComponentBase(string repositoryName)
     {
         this.repositoryName = repositoryName;
     }

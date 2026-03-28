@@ -14,5 +14,10 @@ public class GitHubApiRateLimitStatus
 
     public DateTimeOffset RateLimitReset_DateTime { get; set; }
 
-    public override string ToString() => $"{nameof(RateLimitReset_TimeRemaining)}: {RateLimitReset_TimeRemaining}, {nameof(RateLimit)}: {RateLimit}, {nameof(RemainingRequestCount)}: {RemainingRequestCount}, {nameof(RateLimitReset_UnixEpochSeconds)}: {RateLimitReset_UnixEpochSeconds}, {nameof(RateLimitReset_DateTime)}: {RateLimitReset_DateTime}";
+    public override string ToString()
+        => $"{nameof(RateLimitReset_TimeRemaining)}: {RateLimitReset_TimeRemaining}, " +
+           $"{nameof(RateLimit)}: {RateLimit}, " +
+           $"{nameof(RemainingRequestCount)}: {RemainingRequestCount}, " +
+           $"{nameof(RateLimitReset_UnixEpochSeconds)}: {RateLimitReset_UnixEpochSeconds}, " +
+           $"{nameof(RateLimitReset_DateTime)}: {RateLimitReset_DateTime}";
 }

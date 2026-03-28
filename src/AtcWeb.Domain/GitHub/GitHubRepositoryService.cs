@@ -207,8 +207,7 @@ public class GitHubRepositoryService
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    private async Task PopulateMetaDataAdvanced(
-        AtcRepository repository)
+    private async Task PopulateMetaDataAdvanced(AtcRepository repository)
     {
         var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
             atcApiGitHubRepositoryClient,
@@ -390,8 +389,7 @@ public class GitHubRepositoryService
         return documentSectionMetadata;
     }
 
-    private static string FormatLine(
-        string line)
+    private static string FormatLine(string line)
     {
         line = line
             .Replace(

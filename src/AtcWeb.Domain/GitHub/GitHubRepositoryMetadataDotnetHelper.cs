@@ -227,7 +227,8 @@ public static class GitHubRepositoryMetadataDotnetHelper
             .ToList();
     }
 
-    private static IEnumerable<DotnetNugetPackage> GetPackageReferencesForCsproj(string rawCsproj)
+    private static IEnumerable<DotnetNugetPackage> GetPackageReferencesForCsproj(
+        string rawCsproj)
     {
         if (string.IsNullOrEmpty(rawCsproj))
         {
@@ -252,15 +253,13 @@ public static class GitHubRepositoryMetadataDotnetHelper
         string filePath,
         string rawCsproj,
         string xmlElement)
-    {
-        return GetSimpleXmlValueForCsproj(
+        => GetSimpleXmlValueForCsproj(
             filePath,
             rawCsproj,
             string.Empty,
             string.Empty,
             string.Empty,
             xmlElement);
-    }
 
     private static string GetSimpleXmlValueForCsproj(
         string filePath,
@@ -297,7 +296,9 @@ public static class GitHubRepositoryMetadataDotnetHelper
             : ExtractSimpleXmlElementValue(rawDirectoryBuildPropsRoot, xmlElement);
     }
 
-    private static string ExtractSimpleXmlElementValue(string input, string xmlElement)
+    private static string ExtractSimpleXmlElementValue(
+        string input,
+        string xmlElement)
     {
         var match = Regex.Match(
             input,

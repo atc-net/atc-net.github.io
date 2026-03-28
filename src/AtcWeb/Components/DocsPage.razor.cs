@@ -17,8 +17,7 @@ public partial class DocsPage : ComponentBase
 
     private bool contentDrawerOpen = true;
 
-    protected override async Task OnAfterRenderAsync(
-        bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && contentNavigation is not null)
         {
@@ -26,8 +25,7 @@ public partial class DocsPage : ComponentBase
         }
     }
 
-    public string GetParentTitle(
-        DocsPageSection section)
+    public string GetParentTitle(DocsPageSection section)
     {
         ArgumentNullException.ThrowIfNull(section);
 

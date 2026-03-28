@@ -6,7 +6,9 @@ public class NavigationFooterLink
     {
     }
 
-    public NavigationFooterLink(string name, string link)
+    public NavigationFooterLink(
+        string name,
+        string link)
     {
         Name = name;
         Link = link;
@@ -17,7 +19,5 @@ public class NavigationFooterLink
     public string Link { get; set; }
 
     public override string ToString()
-    {
-        return $"{nameof(Name)}: {Name}, {nameof(Link)}: {Link}";
-    }
+        => $"{nameof(Name)}: {Name}, {nameof(Link)}: {Link}";
 }

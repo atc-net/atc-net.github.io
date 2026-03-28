@@ -10,8 +10,7 @@ public class AtcApiGitHubRepositoryClient
     private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
 
-    public AtcApiGitHubRepositoryClient(
-        IMemoryCache memoryCache)
+    public AtcApiGitHubRepositoryClient(IMemoryCache memoryCache)
     {
         ArgumentNullException.ThrowIfNull(memoryCache);
 
@@ -127,7 +126,8 @@ public class AtcApiGitHubRepositoryClient
     }
 
     public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributorsByRepositoryByName(
-        string repositoryName, CancellationToken cancellationToken = default)
+        string repositoryName,
+        CancellationToken cancellationToken = default)
     {
         var url = $"{BaseAddress}/contributors/{repositoryName}";
         var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";

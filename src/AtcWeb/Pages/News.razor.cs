@@ -31,8 +31,7 @@ public class NewsBase : ComponentBase
     protected bool FilterFunc(NewsItem element)
         => Filter(element);
 
-    private bool Filter(
-        NewsItem element)
+    private bool Filter(NewsItem element)
     {
         var isYear = !(SelectedYear is not null &&
                        element.Time.Year != SelectedYear);
@@ -50,8 +49,7 @@ public class NewsBase : ComponentBase
                isFilter;
     }
 
-    private static List<int> GetYears(
-        IEnumerable<NewsItem> items)
+    private static List<int> GetYears(IEnumerable<NewsItem> items)
     {
         var firstYear = items.Min(x => x.Time).Year;
         var years = new List<int>();

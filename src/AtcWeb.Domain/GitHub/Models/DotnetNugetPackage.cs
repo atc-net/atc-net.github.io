@@ -2,14 +2,19 @@ namespace AtcWeb.Domain.GitHub.Models;
 
 public class DotnetNugetPackage
 {
-    public DotnetNugetPackage(string packageId, Version currentVersion)
+    public DotnetNugetPackage(
+        string packageId,
+        Version currentVersion)
     {
         this.PackageId = packageId;
         this.Version = currentVersion;
         this.NewestVersion = currentVersion;
     }
 
-    public DotnetNugetPackage(string packageId, Version currentVersion, Version newestVersion)
+    public DotnetNugetPackage(
+        string packageId,
+        Version currentVersion,
+        Version newestVersion)
     {
         this.PackageId = packageId;
         this.Version = currentVersion;

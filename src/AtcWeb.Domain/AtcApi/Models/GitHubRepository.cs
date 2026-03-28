@@ -26,5 +26,6 @@ public class GitHubRepository
 
     public DateTimeOffset? PushedAt { get; set; }
 
-    public override string ToString() => $"{nameof(Name)}: {Name}, {nameof(Language)}: {Language}";
+    public override string ToString()
+        => $"{nameof(Name)}: {Name}, {nameof(Language)}: {Language}";
 }

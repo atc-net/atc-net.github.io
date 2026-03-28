@@ -50,29 +50,39 @@ public class AtcRepository
 
     public bool HasRootReadme => Root?.HasReadme ?? false;
 
-    public bool HasWorkflowPreIntegration => Workflow?.HasPreIntegration ?? false;
+    public bool HasWorkflowPreIntegration
+        => Workflow?.HasPreIntegration ?? false;
 
-    public bool HasWorkflowPostIntegration => Workflow?.HasPostIntegration ?? false;
+    public bool HasWorkflowPostIntegration
+        => Workflow?.HasPostIntegration ?? false;
 
     public bool HasWorkflowRelease => Workflow?.HasRelease ?? false;
 
-    public bool HasCodingRulesEditorConfigRoot => CodingRules?.HasRoot ?? false;
+    public bool HasCodingRulesEditorConfigRoot
+        => CodingRules?.HasRoot ?? false;
 
-    public bool HasCodingRulesEditorConfigSrc => CodingRules?.HasSrc ?? false;
+    public bool HasCodingRulesEditorConfigSrc
+        => CodingRules?.HasSrc ?? false;
 
-    public bool HasCodingRulesEditorConfigTest => CodingRules?.HasTest ?? false;
+    public bool HasCodingRulesEditorConfigTest
+        => CodingRules?.HasTest ?? false;
 
     public bool HasDotnetSolution => Dotnet?.HasSolution ?? false;
 
-    public bool HasDotnetDirectoryBuildPropsRoot => Dotnet?.HasDirectoryBuildPropsRoot ?? false;
+    public bool HasDotnetDirectoryBuildPropsRoot
+        => Dotnet?.HasDirectoryBuildPropsRoot ?? false;
 
-    public bool HasDotnetDirectoryBuildPropsSrc => Dotnet?.HasDirectoryBuildPropsSrc ?? false;
+    public bool HasDotnetDirectoryBuildPropsSrc
+        => Dotnet?.HasDirectoryBuildPropsSrc ?? false;
 
-    public bool HasDotnetDirectoryBuildPropsTest => Dotnet?.HasDirectoryBuildPropsTest ?? false;
+    public bool HasDotnetDirectoryBuildPropsTest
+        => Dotnet?.HasDirectoryBuildPropsTest ?? false;
 
-    public bool IsDotnetSolution => "C#".Equals(BaseData.Language, StringComparison.Ordinal);
+    public bool IsDotnetSolution
+        => "C#".Equals(BaseData.Language, StringComparison.Ordinal);
 
-    public bool IsPythonSolution => "Python".Equals(BaseData.Language, StringComparison.Ordinal);
+    public bool IsPythonSolution
+        => "Python".Equals(BaseData.Language, StringComparison.Ordinal);
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     public void SetBadges()
@@ -186,11 +196,26 @@ public class AtcRepository
         return OpenIssues.Min(x => x.CreatedAt);
     }
 
-    public LogCategoryType GetOpenIssuesNewestState(int monthWarning, int monthError) => GetOpenIssuesState(GetOpenIssuesNewest(), monthWarning, monthError);
+    public LogCategoryType GetOpenIssuesNewestState(
+        int monthWarning,
+        int monthError)
+        => GetOpenIssuesState(
+            GetOpenIssuesNewest(),
+            monthWarning,
+            monthError);
 
-    public LogCategoryType GetOpenIssuesOldestState(int monthWarning, int monthError) => GetOpenIssuesState(GetOpenIssuesOldest(), monthWarning, monthError);
+    public LogCategoryType GetOpenIssuesOldestState(
+        int monthWarning,
+        int monthError)
+        => GetOpenIssuesState(
+            GetOpenIssuesOldest(),
+            monthWarning,
+            monthError);
 
-    private static LogCategoryType GetOpenIssuesState(DateTimeOffset? date, int monthWarning, int monthError)
+    private static LogCategoryType GetOpenIssuesState(
+        DateTimeOffset? date,
+        int monthWarning,
+        int monthError)
     {
         var logCategoryType = LogCategoryType.Information;
         if (date is not null)

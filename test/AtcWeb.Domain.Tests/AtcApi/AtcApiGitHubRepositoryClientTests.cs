@@ -3,14 +3,14 @@ namespace AtcWeb.Domain.Tests.AtcApi;
 public class AtcApiGitHubRepositoryClientTests
 {
     [Theory, AutoNSubstituteData]
-    public async Task GetRepositories(
-        [Frozen] IMemoryCache memoryCache)
+    public async Task GetRepositories([Frozen] IMemoryCache memoryCache)
     {
         // Arrange
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubRepositories) = await client.GetRepositories();
+        var (isSuccessful, gitHubRepositories) = await client.GetRepositories(
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -23,13 +23,14 @@ public class AtcApiGitHubRepositoryClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task GetRepositoryByName(
-        [Frozen] IMemoryCache memoryCache)
+    public async Task GetRepositoryByName([Frozen] IMemoryCache memoryCache)
     {
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubRepository) = await client.GetRepositoryByName("atc");
+        var (isSuccessful, gitHubRepository) = await client.GetRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -40,14 +41,14 @@ public class AtcApiGitHubRepositoryClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task GetContributors(
-        [Frozen] IMemoryCache memoryCache)
+    public async Task GetContributors([Frozen] IMemoryCache memoryCache)
     {
         // Arrange
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubContributors) = await client.GetContributors();
+        var (isSuccessful, gitHubContributors) = await client.GetContributors(
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -67,7 +68,9 @@ public class AtcApiGitHubRepositoryClientTests
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubContributors) = await client.GetContributorsByRepositoryByName("atc");
+        var (isSuccessful, gitHubContributors) = await client.GetContributorsByRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -80,14 +83,15 @@ public class AtcApiGitHubRepositoryClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task GetAllPathsByRepository(
-        [Frozen] IMemoryCache memoryCache)
+    public async Task GetAllPathsByRepository([Frozen] IMemoryCache memoryCache)
     {
         // Arrange
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubPaths) = await client.GetAllPathsByRepositoryByName("atc");
+        var (isSuccessful, gitHubPaths) = await client.GetAllPathsByRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -107,7 +111,10 @@ public class AtcApiGitHubRepositoryClientTests
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubRaw) = await client.GetFileByRepositoryNameAndFilePath("atc", "README.md");
+        var (isSuccessful, gitHubRaw) = await client.GetFileByRepositoryNameAndFilePath(
+            "atc",
+            "README.md",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -125,7 +132,9 @@ public class AtcApiGitHubRepositoryClientTests
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubIssues) = await client.GetIssuesAllByRepositoryByName("atc");
+        var (isSuccessful, gitHubIssues) = await client.GetIssuesAllByRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -145,7 +154,9 @@ public class AtcApiGitHubRepositoryClientTests
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubIssues) = await client.GetIssuesOpenByRepositoryByName("atc");
+        var (isSuccessful, gitHubIssues) = await client.GetIssuesOpenByRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);
@@ -165,7 +176,9 @@ public class AtcApiGitHubRepositoryClientTests
         var client = new AtcApiGitHubRepositoryClient(memoryCache);
 
         // Act
-        var (isSuccessful, gitHubIssues) = await client.GetIssuesClosedByRepositoryByName("atc");
+        var (isSuccessful, gitHubIssues) = await client.GetIssuesClosedByRepositoryByName(
+            "atc",
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.True(isSuccessful);

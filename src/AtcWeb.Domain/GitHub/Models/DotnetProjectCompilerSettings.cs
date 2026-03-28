@@ -12,7 +12,9 @@ public class DotnetProjectCompilerSettings
 
     public bool IsPackage { get; set; }
 
-    public bool IsTargetFrameworkInLongTimeSupport => RepositoryMetadata.IsTargetFrameworkInLongTimeSupport(TargetFramework);
+    public bool IsTargetFrameworkInLongTimeSupport
+        => RepositoryMetadata.IsTargetFrameworkInLongTimeSupport(TargetFramework);
 
-    public bool IsLangVersionInAcceptedVersion => RepositoryMetadata.IsLangVersionInAcceptedVersion(LangVersion);
+    public bool IsLangVersionInAcceptedVersion
+        => RepositoryMetadata.IsLangVersionInAcceptedVersion(LangVersion);
 }

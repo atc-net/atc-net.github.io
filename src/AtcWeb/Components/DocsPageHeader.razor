@@ -26,8 +26,6 @@
 
     [Parameter] public RenderFragment? Description { get; set; }
 
-    string GetTitle() => $"..:: {Title} ::..";
-
     string GetSubTitle()
     {
         return string.IsNullOrEmpty(SubTitle)

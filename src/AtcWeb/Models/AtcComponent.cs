@@ -16,7 +16,8 @@ public class AtcComponent
 
     public Type[] ChildComponents { get; set; }
 
-    public string ComponentName => Component.Name.Replace("`1", "<T>", StringComparison.Ordinal);
+    public string ComponentName
+        => Component.Name.Replace("`1", "<T>", StringComparison.Ordinal);
 
     public override string ToString()
         => $"{nameof(Name)}: {Name}, {nameof(Link)}: {Link}, {nameof(IsNavGroup)}: {IsNavGroup}, {nameof(NavGroupExpanded)}: {NavGroupExpanded}, {nameof(GroupItems)}: {GroupItems}, {nameof(Component)}: {Component}, {nameof(ChildComponents)}: {ChildComponents}, {nameof(ComponentName)}: {ComponentName}";
