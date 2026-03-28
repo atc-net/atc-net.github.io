@@ -64,7 +64,7 @@
 
     public DocsSectionLink? SectionInfo { get; set; }
 
-    public ElementReference SectionReference;
+    public ElementReference SectionReference { get; set; }
 
     protected override void OnInitialized()
     {
@@ -76,7 +76,7 @@
         }
 
         var parentTitle = DocsPage.GetParentTitle(Section!);
-        if (string.IsNullOrEmpty(parentTitle) == false)
+        if (!string.IsNullOrEmpty(parentTitle))
         {
             parentTitle += '-';
         }

@@ -10,7 +10,7 @@ public static class RepositoryMetadata
     public static IEnumerable<string> RecommendedTargetFramework =>
     [
         "net6.0",
-        "net8.0",
+        "net9.0",
         "netstandard2.0",
         "netstandard2.1",
     ];
@@ -74,8 +74,7 @@ public static class RepositoryMetadata
         Tuple.Create("atc-wpf", "davidkallesen"),
     ];
 
-    public static string[] GetResponsibleMembersByName(
-        string name)
+    public static string[] GetResponsibleMembersByName(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -92,8 +91,7 @@ public static class RepositoryMetadata
             .ToArray();
     }
 
-    public static bool HasNotRequiredResponsibleMembersByName(
-        string name)
+    public static bool HasNotRequiredResponsibleMembersByName(string name)
         => GetResponsibleMembersByName(name).Length < 2;
 
     public static bool IsVisualStudioNameInAcceptedVersion(
@@ -106,8 +104,7 @@ public static class RepositoryMetadata
         => !string.IsNullOrEmpty(targetFramework) &&
            RecommendedTargetFramework.Contains(targetFramework, StringComparer.OrdinalIgnoreCase);
 
-    public static bool IsLangVersionInAcceptedVersion(
-        string langVersion)
+    public static bool IsLangVersionInAcceptedVersion(string langVersion)
         => !string.IsNullOrEmpty(langVersion) &&
            langVersion.Contains(RecommendedLangVersion, StringComparison.Ordinal);
 }

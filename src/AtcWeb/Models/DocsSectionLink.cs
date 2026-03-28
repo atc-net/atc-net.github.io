@@ -9,7 +9,5 @@ public class DocsSectionLink
     public bool Active { get; set; }
 
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Active)}: {Active}";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Active)}: {Active}";
 }

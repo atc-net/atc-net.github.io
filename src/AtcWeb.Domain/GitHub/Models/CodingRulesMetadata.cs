@@ -20,23 +20,32 @@ public class CodingRulesMetadata
 
     public bool HasTest => !string.IsNullOrEmpty(RawEditorConfigTest);
 
-    public bool IsLatestVersionRoot => IsLatestVersion(LatestVersionRoot, RawEditorConfigRoot);
+    public bool IsLatestVersionRoot
+        => IsLatestVersion(LatestVersionRoot, RawEditorConfigRoot);
 
-    public bool IsLatestVersionSrc => IsLatestVersion(LatestVersionSrc, RawEditorConfigSrc);
+    public bool IsLatestVersionSrc
+        => IsLatestVersion(LatestVersionSrc, RawEditorConfigSrc);
 
-    public bool IsLatestVersionTest => IsLatestVersion(LatestVersionTest, RawEditorConfigTest);
+    public bool IsLatestVersionTest
+        => IsLatestVersion(LatestVersionTest, RawEditorConfigTest);
 
-    public Version GetCurrentVersionRoot() => GetCurrentVersion(RawEditorConfigRoot);
+    public Version GetCurrentVersionRoot()
+        => GetCurrentVersion(RawEditorConfigRoot);
 
-    public Version GetCurrentVersionSrc() => GetCurrentVersion(RawEditorConfigSrc);
+    public Version GetCurrentVersionSrc()
+        => GetCurrentVersion(RawEditorConfigSrc);
 
-    public Version GetCurrentVersionTest() => GetCurrentVersion(RawEditorConfigTest);
+    public Version GetCurrentVersionTest()
+        => GetCurrentVersion(RawEditorConfigTest);
 
-    public List<KeyValueItem> GetLocalSuppressRulesRoot() => GetLocalSuppressRules(RawEditorConfigRoot);
+    public List<KeyValueItem> GetLocalSuppressRulesRoot()
+        => GetLocalSuppressRules(RawEditorConfigRoot);
 
-    public List<KeyValueItem> GetLocalSuppressRulesSrc() => GetLocalSuppressRules(RawEditorConfigSrc);
+    public List<KeyValueItem> GetLocalSuppressRulesSrc()
+        => GetLocalSuppressRules(RawEditorConfigSrc);
 
-    public List<KeyValueItem> GetLocalSuppressRulesTest() => GetLocalSuppressRules(RawEditorConfigTest);
+    public List<KeyValueItem> GetLocalSuppressRulesTest()
+        => GetLocalSuppressRules(RawEditorConfigTest);
 
     private static Version GetCurrentVersion(string rawText)
     {
@@ -63,7 +72,9 @@ public class CodingRulesMetadata
         return new Version();
     }
 
-    private static bool IsLatestVersion(Version latestVersion, string rawText)
+    private static bool IsLatestVersion(
+        Version latestVersion,
+        string rawText)
     {
         if (string.IsNullOrEmpty(rawText))
         {

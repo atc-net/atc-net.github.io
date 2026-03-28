@@ -26,12 +26,11 @@ public partial class MainLayout : LayoutComponentBase
         base.OnInitialized();
     }
 
-    protected override async Task OnAfterRenderAsync(
-        bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            StateContainer.UseDarkMode(await mudThemeProviderRef.GetSystemPreference());
+            StateContainer.UseDarkMode(await mudThemeProviderRef.GetSystemDarkModeAsync());
 
             navMenuRef.Refresh();
 

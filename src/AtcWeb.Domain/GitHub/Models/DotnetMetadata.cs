@@ -12,14 +12,18 @@ public class DotnetMetadata
 
     public bool HasSolution => !string.IsNullOrEmpty(RawSolution);
 
-    public bool HasDirectoryBuildPropsRoot => !string.IsNullOrEmpty(RawDirectoryBuildPropsRoot);
+    public bool HasDirectoryBuildPropsRoot
+        => !string.IsNullOrEmpty(RawDirectoryBuildPropsRoot);
 
-    public bool HasDirectoryBuildPropsSrc => !string.IsNullOrEmpty(RawDirectoryBuildPropsSrc);
+    public bool HasDirectoryBuildPropsSrc
+        => !string.IsNullOrEmpty(RawDirectoryBuildPropsSrc);
 
-    public bool HasDirectoryBuildPropsTest => !string.IsNullOrEmpty(RawDirectoryBuildPropsTest);
+    public bool HasDirectoryBuildPropsTest
+        => !string.IsNullOrEmpty(RawDirectoryBuildPropsTest);
 
-    public bool IsVisualStudioNameInAcceptedVersion => SolutionMetadata is not null &&
-                                                       RepositoryMetadata.IsVisualStudioNameInAcceptedVersion(SolutionMetadata.VisualStudioName);
+    public bool IsVisualStudioNameInAcceptedVersion
+        => SolutionMetadata is not null &&
+           RepositoryMetadata.IsVisualStudioNameInAcceptedVersion(SolutionMetadata.VisualStudioName);
 
     public VisualStudioSolutionFileMetadata? SolutionMetadata { get; set; }
 

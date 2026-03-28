@@ -19,7 +19,9 @@ public sealed class DefaultBrowserOptionsMessageHandler : DelegatingHandler
 
     public BrowserRequestMode DefaultBrowserRequestMode { get; set; }
 
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 

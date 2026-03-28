@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace AtcWeb.Domain.Data.Models;
 
 public enum NewsItemAction
