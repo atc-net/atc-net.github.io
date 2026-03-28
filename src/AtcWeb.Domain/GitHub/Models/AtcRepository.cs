@@ -17,6 +17,7 @@ public class AtcRepository
         CodingRules = new CodingRulesMetadata();
         Dotnet = new DotnetMetadata();
         Python = new PythonMetadata();
+        Wiki = new WikiMetadata();
     }
 
     public GitHubRepository BaseData { get; }
@@ -47,6 +48,8 @@ public class AtcRepository
     public DotnetMetadata? Dotnet { get; set; }
 
     public PythonMetadata? Python { get; set; }
+
+    public WikiMetadata Wiki { get; set; }
 
     public List<GitHubIssue> OpenIssues { get; set; }
 

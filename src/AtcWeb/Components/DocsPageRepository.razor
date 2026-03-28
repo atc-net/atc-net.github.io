@@ -58,6 +58,40 @@
                     </MudCard>
                 </SectionContent>
             </DocsPageSection>
+            @if (Repository.Wiki.HasWiki)
+            {
+                <DocsPageSection>
+                    <SectionHeader Title="Wiki" />
+                    <SectionContent AutoMarginContent="false" FullWidth="true">
+                        @foreach (var wikiPage in Repository.Wiki.Pages)
+                        {
+                            <DocsPageSection>
+                                <SectionHeader Title="@wikiPage.Title" />
+                                <SectionContent AutoMarginContent="false" FullWidth="true">
+                                    <MudCard Elevation="0">
+                                        @if (wikiPage.IsLoaded)
+                                        {
+                                            <MudCardContent>
+                                                <MarkdownRepositoryContent RepositoryName="@Repository.Name"
+                                                                           RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                                           Content="@wikiPage.RawContent" />
+                                            </MudCardContent>
+                                        }
+                                        else
+                                        {
+                                            <MudCardContent>
+                                                <MudProgressCircular Color="Color.Primary"
+                                                                     Size="Size.Small"
+                                                                     Indeterminate="true" />
+                                            </MudCardContent>
+                                        }
+                                    </MudCard>
+                                </SectionContent>
+                            </DocsPageSection>
+                        }
+                    </SectionContent>
+                </DocsPageSection>
+            }
             @if (Repository.IsDotnetSolution && Repository.Dotnet is not null)
             {
                 foreach (var dotnetProject in Repository.Dotnet.Projects
