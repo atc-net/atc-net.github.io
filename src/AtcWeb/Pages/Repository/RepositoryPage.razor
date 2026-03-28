@@ -1,0 +1,10 @@
+@page "/repository/{RepositoryName}"
+
+@if (isLoaded && repository is null)
+{
+    <MudText Typo="Typo.h5">Repository '@RepositoryName' was not found.</MudText>
+}
+else
+{
+    <DocsPageRepository Repository="@repository" />
+}
