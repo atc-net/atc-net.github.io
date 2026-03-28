@@ -70,12 +70,12 @@
     {
         base.OnInitialized();
 
-        if (DocsPage == null || string.IsNullOrWhiteSpace(Title))
+        if (DocsPage is null || Section is null || string.IsNullOrWhiteSpace(Title))
         {
             return;
         }
 
-        var parentTitle = DocsPage.GetParentTitle(Section!);
+        var parentTitle = DocsPage.GetParentTitle(Section);
         if (!string.IsNullOrEmpty(parentTitle))
         {
             parentTitle += '-';

@@ -78,31 +78,52 @@ public class MarkdownRepositoryContentBase : ComponentBase
         return SanitizeHtmlToMarkup(html);
     }
 
+    [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "Capture groups are used in replacements.")]
     private MarkupString SanitizeHtmlToMarkup(string html)
     {
         const string hrefBase = "https://github.com/atc-net/";
-        const string imgSrcRaw = "https://raw.githubusercontent.com/";
+        const string imgSrcRaw = "https://raw.githubusercontent.com/atc-net/";
         var hrefRepo = $"{hrefBase}{RepositoryName}/blob/{RepositoryBranch}/";
-        var imgSrc2To = $"{hrefBase}{RepositoryName}/raw/{RepositoryBranch}/";
+        var hrefRepoTree = $"{hrefBase}{RepositoryName}/tree/{RepositoryBranch}/";
+        var imgRepoRaw = $"{imgSrcRaw}{RepositoryName}/{RepositoryBranch}/";
 
-        var sanitizedHtml = HtmlSanitizer
-            .Sanitize(html)
-            .Replace(
-                "<a href=\"./",
-                $"<a target=\"_blank\" href=\"{hrefRepo}",
-                StringComparison.Ordinal)
-            .Replace(
-                $"<img src=\"{imgSrcRaw}",
-                $"<img style='max-width: 100%; height: auto;' src=\"{imgSrcRaw}",
-                StringComparison.Ordinal)
-            .Replace(
-                $"<img src=\"{hrefRepo}",
-                $"<img style='max-width: 100%; height: auto;' src=\"{imgSrc2To}",
-                StringComparison.Ordinal)
-            .Replace(
-                $"<a href=\"{hrefBase}",
-                $"<a target=\"_blank\" href=\"{hrefBase}",
-                StringComparison.Ordinal);
+        var sanitizedHtml = HtmlSanitizer.Sanitize(html);
+
+        // Rewrite relative image sources to raw GitHub URLs
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<img src=""(?!https?://)([^""]+)""",
+            $@"<img style='max-width: 100%; height: auto;' src=""{imgRepoRaw}$1""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
+        // Add responsive styling to absolute raw.githubusercontent images
+        sanitizedHtml = sanitizedHtml.Replace(
+            "<img src=\"https://raw.githubusercontent.com/",
+            "<img style='max-width: 100%; height: auto;' src=\"https://raw.githubusercontent.com/",
+            StringComparison.Ordinal);
+
+        // Rewrite relative src/ links to GitHub tree URLs
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<a href=""(?!https?://|#|mailto:)(?:\./)?(src/)([^""]+)""",
+            $@"<a target=""_blank"" href=""{hrefRepoTree}src/$2""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
+        // Rewrite remaining relative links to GitHub blob URLs
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<a href=""(?!https?://|#|mailto:)(?:\./)?([^""]+)""",
+            $@"<a target=""_blank"" href=""{hrefRepo}$1""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
+        // Add target="_blank" to absolute atc-net GitHub links
+        sanitizedHtml = sanitizedHtml.Replace(
+            $"<a href=\"{hrefBase}",
+            $"<a target=\"_blank\" href=\"{hrefBase}",
+            StringComparison.Ordinal);
 
         return new MarkupString(sanitizedHtml);
     }

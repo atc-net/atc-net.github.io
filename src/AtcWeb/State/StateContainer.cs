@@ -13,7 +13,6 @@ public class StateContainer
         get => isDarkMode;
         set
         {
-            isDarkMode = value;
             if (isDarkMode == value)
             {
                 return;
@@ -28,7 +27,7 @@ public class StateContainer
         => IsDarkMode = !IsDarkMode;
 
     public void UseDarkMode(bool useDarkMode)
-        => IsDarkMode = !IsDarkMode;
+        => IsDarkMode = useDarkMode;
 
     public string SuccessColor
         => IsDarkMode
