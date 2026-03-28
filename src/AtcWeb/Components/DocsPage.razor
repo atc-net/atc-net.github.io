@@ -14,7 +14,8 @@
         Elevation="0"
         Color="Color.Transparent"
         Class="docs-page-content-navigation-drawer">
-        <MudPageContentNavigation SectionClassSelector="docs-section-header"
+        <MudPageContentNavigation @key="navigationKey"
+                                  SectionClassSelector="docs-section-header"
                                   @ref="contentNavigation"
                                   ActivateFirstSectionAsDefault="true" />
     </MudDrawer>

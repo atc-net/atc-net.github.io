@@ -3,90 +3,59 @@ namespace AtcWeb.Domain.Data;
 
 public static class RepositoryMetadata
 {
-    public static string RecommendedVisualStudioName => "Visual Studio 2022";
+    public static string RecommendedVisualStudioName => "Visual Studio 2026";
 
-    public static string RecommendedLangVersion => "12.0";
+    public static string RecommendedLangVersion => "14.0";
 
     public static IEnumerable<string> RecommendedTargetFramework =>
     [
-        "net6.0",
-        "net9.0",
+        "net8.0",
+        "net10.0",
         "netstandard2.0",
         "netstandard2.1",
     ];
 
-    private static readonly List<Tuple<string, string>> ResponsibleMembers =
-    [
-        Tuple.Create("atc", "davidkallesen"),
-        Tuple.Create("atc", "perkops"),
-        Tuple.Create("atc-api", "davidkallesen"),
-        Tuple.Create("atc-api", "perkops"),
-        Tuple.Create("atc-autoformatter", "rickykaare"),
-        Tuple.Create("atc-azure-digitaltwin", "perkops"),
-        Tuple.Create("atc-azure-iot", "davidkallesen"),
-        Tuple.Create("atc-azure-iot", "perkops"),
-        Tuple.Create("atc-azure-messaging", "christianhelle"),
-        Tuple.Create("atc-azure-options", "kimlundjohansen"),
-        Tuple.Create("atc-blazor", "davidkallesen"),
-        Tuple.Create("atc-blazor", "perkops"),
-        Tuple.Create("atc-coding-rules", "davidkallesen"),
-        Tuple.Create("atc-coding-rules", "perkops"),
-        Tuple.Create("atc-coding-rules-updater", "davidkallesen"),
-        Tuple.Create("atc-coding-rules-updater", "perkops"),
-        Tuple.Create("atc-cosmos", "rickykaare"),
-        Tuple.Create("atc-cosmos-eventstore", "LarsSkovslund"),
-        Tuple.Create("atc-cosmos-sql-api-repository", "davidkallesen"),
-        Tuple.Create("atc-cosmos-sql-api-repository", "perkops"),
-        Tuple.Create("atc-docs", "davidkallesen"),
-        Tuple.Create("atc-docs", "perkops"),
-        Tuple.Create("atc-hosting", "davidkallesen"),
-        Tuple.Create("atc-hosting", "perkops"),
-        Tuple.Create("atc-installer", "davidkallesen"),
-        Tuple.Create("atc-installer", "perkops"),
-        Tuple.Create("atc-kepware", "davidkallesen"),
-        Tuple.Create("atc-kepware", "perkops"),
-        Tuple.Create("atc-kusto", "davidkallesen"),
-        Tuple.Create("atc-kusto", "perkops"),
-        Tuple.Create("atc-logviewer", "davidkallesen"),
-        Tuple.Create("atc-logviewer", "perkops"),
-        Tuple.Create("atc-microsoft-graph-client", "davidkallesen"),
-        Tuple.Create("atc-microsoft-graph-client", "perkops"),
-        Tuple.Create("atc-opc-ua", "davidkallesen"),
-        Tuple.Create("atc-opc-ua", "perkops"),
-        Tuple.Create("atc-net.github.io", "davidkallesen"),
-        Tuple.Create("atc-net.github.io", "perkops"),
-        Tuple.Create("atc-network", "davidkallesen"),
-        Tuple.Create("atc-network", "perkops"),
-        Tuple.Create("atc-rest-api-generator", "davidkallesen"),
-        Tuple.Create("atc-rest-api-generator", "perkops"),
-        Tuple.Create("atc-rest-client", "davidkallesen"),
-        Tuple.Create("atc-rest-client", "perkops"),
-        Tuple.Create("atc-rest-client", "LarsSkovslund"),
-        Tuple.Create("atc-rest-client", "egil"),
-        Tuple.Create("atc-rest-minimalapi", "davidkallesen"),
-        Tuple.Create("atc-rest-minimalapi", "perkops"),
-        Tuple.Create("atc-semantic-kernel", "perkops"),
-        Tuple.Create("atc-snippets", "perkops"),
-        Tuple.Create("atc-snippets", "lupusbytes"),
-        Tuple.Create("atc-test", "rickykaare"),
-        Tuple.Create("atc-winget-configurations", "davidkallesen"),
-        Tuple.Create("atc-winget-configurations", "perkops"),
-        Tuple.Create("atc-wpf", "davidkallesen"),
-    ];
+    private static readonly string[] DefaultResponsibleMembers = ["davidkallesen", "perkops"];
+
+    /// <summary>
+    /// Overrides for repositories that have different responsible members than the defaults.
+    /// Repositories not listed here will use <see cref="DefaultResponsibleMembers"/>.
+    /// </summary>
+    private static readonly Dictionary<string, string[]> ResponsibleMemberOverrides = new(StringComparer.Ordinal)
+    {
+        ["atc-autoformatter"] = ["rickykaare"],
+        ["atc-azure-digitaltwin"] = ["perkops"],
+        ["atc-azure-messaging"] = ["christianhelle"],
+        ["atc-azure-options"] = ["kimlundjohansen"],
+        ["atc-cosmos"] = ["rickykaare"],
+        ["atc-cosmos-eventstore"] = ["LarsSkovslund"],
+        ["atc-data-platform"] = ["davidkallesen", "perkops", "mrmasterplan"],
+        ["atc-data-platform-tools"] = ["davidkallesen", "perkops", "mrmasterplan"],
+        ["atc-react"] = ["perkops"],
+        ["atc-rest-client"] = ["davidkallesen", "perkops", "LarsSkovslund", "egil"],
+        ["atc-semantic-kernel"] = ["perkops"],
+        ["atc-snippets"] = ["perkops", "lupusbytes"],
+        ["atc-test"] = ["rickykaare"],
+        ["atc-wpf"] = ["davidkallesen"],
+    };
 
     public static string[] GetResponsibleMembersByName(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
-            return ResponsibleMembers
-                .Select(x => x.Item2)
+            return ResponsibleMemberOverrides
+                .SelectMany(x => x.Value)
+                .Concat(DefaultResponsibleMembers)
+                .Distinct(StringComparer.Ordinal)
                 .OrderBy(x => x, StringComparer.Ordinal)
                 .ToArray();
         }
 
-        return ResponsibleMembers
-            .Where(x => x.Item1.Equals(name, StringComparison.Ordinal))
-            .Select(x => x.Item2)
+        var members = ResponsibleMemberOverrides.TryGetValue(name, out var overrides)
+            ? overrides
+            : DefaultResponsibleMembers;
+
+        return members
             .OrderBy(x => x, StringComparer.Ordinal)
             .ToArray();
     }

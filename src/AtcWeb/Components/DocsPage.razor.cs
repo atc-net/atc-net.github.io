@@ -2,9 +2,10 @@ namespace AtcWeb.Components;
 
 public partial class DocsPage : ComponentBase
 {
-    private readonly Queue<DocsSectionLink> bufferedSections = new();
-    private readonly Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new();
+    private Queue<DocsSectionLink> bufferedSections = new();
+    private Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new();
     private MudPageContentNavigation? contentNavigation;
+    private int navigationKey;
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -36,6 +37,14 @@ public partial class DocsPage : ComponentBase
         }
 
         return value.Title;
+    }
+
+    internal void ClearSections()
+    {
+        bufferedSections = new Queue<DocsSectionLink>();
+        sectionMapper = new Dictionary<DocsPageSection, MudPageContentSection>();
+        navigationKey++;
+        StateHasChanged();
     }
 
     internal void AddSection(

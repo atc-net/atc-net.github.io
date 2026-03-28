@@ -9,7 +9,9 @@ public class AtcRepository
 
         BaseData = repository;
         Badges = new List<(string Group, string Key, Uri Url)>();
+        ResponsibleMembers = new List<GitHubRepositoryContributor>();
         FolderAndFilePaths = new List<GitHubPath>();
+        OpenIssues = new List<GitHubIssue>();
         Root = new RootMetadata();
         Workflow = new WorkflowMetadata();
         CodingRules = new CodingRulesMetadata();
