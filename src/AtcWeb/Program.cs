@@ -20,6 +20,7 @@ public static class Program
         {
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedAttributes.Add("class");
+            sanitizer.AllowedAttributes.Add("id");
             return sanitizer;
         });
 

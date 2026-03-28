@@ -26,38 +26,13 @@ public static class GitHubRepositoryMetadataFileHelper
         return string.Empty;
     }
 
-    public static async Task<string> GetFileByPathAndEnsureFullLinks(
+    public static Task<string> GetFileByPathAndEnsureFullLinks(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
         string repositoryName,
         string defaultBranchName,
         string path)
-    {
-        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
-        ArgumentNullException.ThrowIfNull(foldersAndFiles);
-
-        var gitHubFile = foldersAndFiles.Find(x => x.IsFile && path.Equals(x.Path, StringComparison.OrdinalIgnoreCase));
-        if (gitHubFile is not null)
-        {
-            var (isSuccessful, rawFileContent) = await gitHubRepositoryClient.GetFileByRepositoryNameAndFilePath(repositoryName, gitHubFile.Path);
-            if (isSuccessful)
-            {
-                rawFileContent = rawFileContent
-                    .Replace(
-                        "](src/",
-                        $"](https://github.com/atc-net/{repositoryName}/tree/{defaultBranchName}/src/",
-                        StringComparison.Ordinal)
-                    .Replace(
-                        "](docs/",
-                        $"](https://github.com/atc-net/{repositoryName}/blob/{defaultBranchName}/docs/",
-                        StringComparison.Ordinal);
-
-                return rawFileContent;
-            }
-        }
-
-        return string.Empty;
-    }
+        => GetFileByPath(gitHubRepositoryClient, foldersAndFiles, repositoryName, path);
 
     public static async Task<string> GetReadMeFile(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
