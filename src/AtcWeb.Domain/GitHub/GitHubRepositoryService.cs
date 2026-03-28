@@ -6,16 +6,20 @@ public class GitHubRepositoryService
 {
     private readonly AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient;
     private readonly AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient;
+    private readonly IMemoryCache memoryCache;
 
     public GitHubRepositoryService(
         AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient,
-        AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient)
+        AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient,
+        IMemoryCache memoryCache)
     {
         ArgumentNullException.ThrowIfNull(atcApiGitHubApiInformationClient);
         ArgumentNullException.ThrowIfNull(atcApiGitHubRepositoryClient);
+        ArgumentNullException.ThrowIfNull(memoryCache);
 
         this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient;
         this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient;
+        this.memoryCache = memoryCache;
     }
 
     public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()
@@ -239,6 +243,13 @@ public class GitHubRepositoryService
         ArgumentNullException.ThrowIfNull(repository);
 
         repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
+    }
+
+    public async Task PopulateWikiAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        repository.Wiki = await GitHubWikiHelper.LoadWiki(memoryCache, repository.Name);
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]

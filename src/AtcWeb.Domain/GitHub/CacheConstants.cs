@@ -16,6 +16,8 @@ public static class CacheConstants
 
     public const string CacheKeyNugetPackagesUsedByAtcRepositories = "NugetPackagesUsedByAtcRepositories";
 
+    public const string CacheKeyWiki = "Wiki";
+
     public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
     public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);

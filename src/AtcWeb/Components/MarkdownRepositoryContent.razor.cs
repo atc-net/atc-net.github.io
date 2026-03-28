@@ -35,6 +35,7 @@ public class MarkdownRepositoryContentBase : ComponentBase
 
     protected MarkupString HtmlContent { get; private set; }
 
+    [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "Capture groups are used in wiki link replacements.")]
     private MarkupString ConvertMarkdownToHtml(string markdownContent)
     {
         if (string.IsNullOrWhiteSpace(markdownContent) ||
@@ -52,6 +53,20 @@ public class MarkdownRepositoryContentBase : ComponentBase
                 markdownContent = markdownContent.Substring(mdHeader.Length);
             }
         }
+
+        // Convert wiki-style links [[Display|slug]] and [[Page Name]] to standard markdown links
+        markdownContent = Regex.Replace(
+            markdownContent,
+            @"\[\[([^|\]]+)\|([^\]]+)\]\]",
+            $"[$1](https://github.com/atc-net/{RepositoryName}/wiki/$2)",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+        markdownContent = Regex.Replace(
+            markdownContent,
+            @"\[\[([^\]]+)\]\]",
+            m => $"[{m.Groups[1].Value}](https://github.com/atc-net/{RepositoryName}/wiki/{m.Groups[1].Value.Replace(' ', '-')})",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
 
         var html = Markdown.ToHtml(markdownContent, markdownPipeline);
 
