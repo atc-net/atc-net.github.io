@@ -72,11 +72,11 @@ public class GitHubRepositoryService
 
                 if (populateMetaDataBase)
                 {
-                    await PopulateMetaDataBase(atcRepository, repository);
+                    await PopulateMetaDataBaseAsync(atcRepository, repository);
 
                     if (populateMetaDataAdvanced)
                     {
-                        await PopulateMetaDataAdvanced(atcRepository);
+                        await PopulateMetaDataAdvancedAsync(atcRepository);
                     }
                 }
 
@@ -104,11 +104,11 @@ public class GitHubRepositoryService
 
         if (populateMetaDataBase)
         {
-            await PopulateMetaDataBase(atcRepository, repository);
+            await PopulateMetaDataBaseAsync(atcRepository, repository);
 
             if (populateMetaDataAdvanced)
             {
-                await PopulateMetaDataAdvanced(atcRepository);
+                await PopulateMetaDataAdvancedAsync(atcRepository);
             }
         }
 
@@ -174,10 +174,13 @@ public class GitHubRepositoryService
             : new List<GitHubPath>();
     }
 
-    private async Task PopulateMetaDataBase(
+    public async Task PopulateMetaDataBaseAsync(
         AtcRepository repository,
         GitHubRepository gitHubRepository)
     {
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(gitHubRepository);
+
         repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
 
         repository.FolderAndFilePaths = await GetDirectoryMetadata(gitHubRepository.Name);
@@ -206,9 +209,43 @@ public class GitHubRepositoryService
         repository.SetBadges();
     }
 
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    private async Task PopulateMetaDataAdvanced(AtcRepository repository)
+    public async Task PopulatePathsAndReadmeAsync(AtcRepository repository)
     {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        repository.FolderAndFilePaths = await GetDirectoryMetadata(repository.Name);
+
+        repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
+            atcApiGitHubRepositoryClient,
+            repository.FolderAndFilePaths,
+            repository.Name,
+            repository.BaseData.DefaultBranch);
+    }
+
+    public async Task PopulateWorkflowAndBadgesAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        repository.Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(
+            atcApiGitHubRepositoryClient,
+            repository.FolderAndFilePaths,
+            repository.Name);
+
+        repository.SetBadges();
+    }
+
+    public async Task PopulateResponsibleMembersAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
+    }
+
+    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
+    public async Task PopulateMetaDataAdvancedAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
         var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
             atcApiGitHubRepositoryClient,
             repository.FolderAndFilePaths,

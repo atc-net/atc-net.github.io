@@ -22,7 +22,16 @@
                 <SectionHeader Title="Status" />
                 <SectionContent AutoMarginContent="false"
                                 FullWidth="true">
-                    <RepositoryBadges Repository="@Repository" />
+                    @if (Repository.Badges.Count > 0)
+                    {
+                        <RepositoryBadges Repository="@Repository" />
+                    }
+                    else
+                    {
+                        <MudProgressCircular Color="Color.Primary"
+                                             Size="Size.Small"
+                                             Indeterminate="true" />
+                    }
                 </SectionContent>
             </DocsPageSection>
             <DocsPageSection>
@@ -35,18 +44,21 @@
                             <MudCardContent>
                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
-                                                           Content="@Repository.Root.RawReadme"/>
+                                                           Content="@Repository.Root.RawReadme" />
                             </MudCardContent>
                         }
                         else
                         {
-                            <MudCardContent>No content for readme!</MudCardContent>
+                            <MudCardContent>
+                                <MudProgressCircular Color="Color.Primary"
+                                                     Size="Size.Small"
+                                                     Indeterminate="true" />
+                            </MudCardContent>
                         }
                     </MudCard>
                 </SectionContent>
             </DocsPageSection>
-            @if ("C#".Equals(Repository.BaseData.Language, StringComparison.Ordinal) &&
-                 Repository.Dotnet is not null)
+            @if (Repository.IsDotnetSolution && Repository.Dotnet is not null)
             {
                 foreach (var dotnetProject in Repository.Dotnet.Projects
                     .OrderBy(x => x.Name))
@@ -74,10 +86,19 @@
                 <SectionHeader Title="Responsible members"/>
                 <SectionContent FullWidth="true"
                                 AutoMarginContent="false">
-                    <GitHubContributorGrid Contributors="@Repository.ResponsibleMembers"
-                                           RepositoryName="@Repository.Name"
-                                           ItemTitle="Responsible member"
-                                           Justify="Justify.FlexStart"/>
+                    @if (Repository.ResponsibleMembers.Count > 0)
+                    {
+                        <GitHubContributorGrid Contributors="@Repository.ResponsibleMembers"
+                                               RepositoryName="@Repository.Name"
+                                               ItemTitle="Responsible member"
+                                               Justify="Justify.FlexStart"/>
+                    }
+                    else
+                    {
+                        <MudProgressCircular Color="Color.Primary"
+                                             Size="Size.Small"
+                                             Indeterminate="true" />
+                    }
                 </SectionContent>
             </DocsPageSection>
         </DocsPageContent>

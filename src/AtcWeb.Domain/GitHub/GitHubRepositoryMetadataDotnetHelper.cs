@@ -14,27 +14,38 @@ public static class GitHubRepositoryMetadataDotnetHelper
         string rawDirectoryBuildPropsSrc,
         string rawDirectoryBuildPropsTest)
     {
-        var data = new List<DotnetProject>();
+        ArgumentNullException.ThrowIfNull(foldersAndFiles);
+
         var gitHubCsprojPaths = foldersAndFiles
             .Where(x => x.IsFile && x.Path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
             .OrderBy(x => x.Path, StringComparer.Ordinal)
             .ToList();
 
-        foreach (var gitHubCsprojPath in gitHubCsprojPaths)
-        {
-            var project = new DotnetProject
-            {
-                RawCsproj = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                    gitHubRepositoryClient,
-                    foldersAndFiles,
-                    repositoryName,
-                    gitHubCsprojPath.Path),
-            };
+        // Fetch all .csproj file contents in parallel instead of sequentially
+        var csprojContentTasks = gitHubCsprojPaths.Select(path =>
+            GitHubRepositoryMetadataFileHelper.GetFileByPath(
+                gitHubRepositoryClient,
+                foldersAndFiles,
+                repositoryName,
+                path.Path));
 
-            if (string.IsNullOrEmpty(project.RawCsproj))
+        var csprojContents = await Task.WhenAll(csprojContentTasks);
+
+        var data = new List<DotnetProject>();
+        for (var i = 0; i < gitHubCsprojPaths.Count; i++)
+        {
+            var gitHubCsprojPath = gitHubCsprojPaths[i];
+            var rawCsproj = csprojContents[i];
+
+            if (string.IsNullOrEmpty(rawCsproj))
             {
                 continue;
             }
+
+            var project = new DotnetProject
+            {
+                RawCsproj = rawCsproj,
+            };
 
             project.Name = gitHubCsprojPath
                 .GetFileName()
@@ -98,14 +109,6 @@ public static class GitHubRepositoryMetadataDotnetHelper
                 rawDirectoryBuildPropsSrc,
                 rawDirectoryBuildPropsTest,
                 "AnalysisMode");
-
-            project.AnalyzerSettings.AnalysisLevel = GetSimpleXmlValueForCsproj(
-                gitHubCsprojPath.Path,
-                project.RawCsproj,
-                rawDirectoryBuildPropsRoot,
-                rawDirectoryBuildPropsSrc,
-                rawDirectoryBuildPropsTest,
-                "AnalysisLevel");
 
             project.AnalyzerSettings.AnalysisLevel = GetSimpleXmlValueForCsproj(
                 gitHubCsprojPath.Path,

@@ -34,28 +34,32 @@ public static class GitHubRepositoryMetadataHelper
         ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
         ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
-        var data = new WorkflowMetadata
+        var taskPre = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient,
+            foldersAndFiles,
+            repositoryName,
+            ".github/workflows/pre-integration.yml");
+
+        var taskPost = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient,
+            foldersAndFiles,
+            repositoryName,
+            ".github/workflows/post-integration.yml");
+
+        var taskRelease = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient,
+            foldersAndFiles,
+            repositoryName,
+            ".github/workflows/release.yml");
+
+        await Task.WhenAll(taskPre, taskPost, taskRelease);
+
+        return new WorkflowMetadata
         {
-            RawPreIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                ".github/workflows/pre-integration.yml"),
-
-            RawPostIntegration = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                ".github/workflows/post-integration.yml"),
-
-            RawRelease = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                ".github/workflows/release.yml"),
+            RawPreIntegration = await taskPre,
+            RawPostIntegration = await taskPost,
+            RawRelease = await taskRelease,
         };
-
-        return data;
     }
 
     public static async Task<CodingRulesMetadata> LoadCodingRules(
@@ -66,28 +70,23 @@ public static class GitHubRepositoryMetadataHelper
         ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
         ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
-        var data = new CodingRulesMetadata
+        var taskRoot = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, ".editorconfig");
+
+        var taskSrc = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, "src/.editorconfig");
+
+        var taskTest = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, "test/.editorconfig");
+
+        await Task.WhenAll(taskRoot, taskSrc, taskTest);
+
+        return new CodingRulesMetadata
         {
-            RawEditorConfigRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                ".editorconfig"),
-
-            RawEditorConfigSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                "src/.editorconfig"),
-
-            RawEditorConfigTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-                gitHubRepositoryClient,
-                foldersAndFiles,
-                repositoryName,
-                "test/.editorconfig"),
+            RawEditorConfigRoot = await taskRoot,
+            RawEditorConfigSrc = await taskSrc,
+            RawEditorConfigTest = await taskTest,
         };
-
-        return data;
     }
 
     public static async Task<List<GitHubIssue>> LoadOpenIssues(
@@ -128,23 +127,20 @@ public static class GitHubRepositoryMetadataHelper
             }
         }
 
-        data.RawDirectoryBuildPropsRoot = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            "Directory.Build.props");
+        var taskBuildPropsRoot = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, "Directory.Build.props");
 
-        data.RawDirectoryBuildPropsSrc = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            "src/Directory.Build.props");
+        var taskBuildPropsSrc = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, "src/Directory.Build.props");
 
-        data.RawDirectoryBuildPropsTest = await GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            "test/Directory.Build.props");
+        var taskBuildPropsTest = GitHubRepositoryMetadataFileHelper.GetFileByPath(
+            gitHubRepositoryClient, foldersAndFiles, repositoryName, "test/Directory.Build.props");
+
+        await Task.WhenAll(taskBuildPropsRoot, taskBuildPropsSrc, taskBuildPropsTest);
+
+        data.RawDirectoryBuildPropsRoot = await taskBuildPropsRoot;
+        data.RawDirectoryBuildPropsSrc = await taskBuildPropsSrc;
+        data.RawDirectoryBuildPropsTest = await taskBuildPropsTest;
 
         data.Projects = await GitHubRepositoryMetadataDotnetHelper.GetProjects(
             gitHubRepositoryClient,
@@ -158,7 +154,7 @@ public static class GitHubRepositoryMetadataHelper
         return data;
     }
 
-    public static async Task<PythonMetadata> LoadPython(
+    public static Task<PythonMetadata> LoadPython(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
         string repositoryName)
@@ -166,11 +162,7 @@ public static class GitHubRepositoryMetadataHelper
         ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
         ArgumentNullException.ThrowIfNull(foldersAndFiles);
 
-        var data = new PythonMetadata();
-
-        // TODO:
-        await Task.Delay(1);
-
-        return data;
+        // TODO: Implement Python metadata loading
+        return Task.FromResult(new PythonMetadata());
     }
 }
