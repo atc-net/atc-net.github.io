@@ -7,7 +7,8 @@
   font-family: cera pro;
   font-size: 24px;
   text-align: center;
-  color: #3498db;
+  color: #776be7;
+  background-color: #0f0f1a;
 }
 
 .app-loading-text {
@@ -540,6 +541,7 @@ atc-appbar-band {
 
 .mud-drawer {
   border-right: 1px solid rgba(119, 107, 231, 0.08) !important;
+  overflow-x: hidden !important;
 }
 
 .mud-paper {
