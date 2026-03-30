@@ -4,68 +4,81 @@
 
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="ATC News"
-                    SubTitle="The timeline for all good initiatives">
+                    SubTitle="The timeline for all good initiatives.">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (Repositories is null || News is null)
+        @if (News is null)
         {
-            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            @for (var i = 0; i < 5; i++)
+            {
+                <div class="accent-card pa-4 mb-4">
+                    <MudSkeleton Width="120px" Height="14px" Class="mb-2" />
+                    <MudSkeleton Width="60%" Height="20px" Class="mb-2" />
+                    <MudSkeleton Width="40%" Height="16px" />
+                </div>
+            }
         }
         else
         {
-            <MudTable Items="@News"
-                      Dense="false"
-                      Hover="true"
-                      Bordered="false"
-                      Striped="false"
-                      RowsPerPage="10"
-                      Filter="new Func<NewsItem, bool>(FilterFunc)">
-                <ToolBarContent>
-                    <MudSelect T="int?"
-                               Label="Year"
-                               Clearable="true"
-                               @bind-Value="@SelectedYear">
-                        @foreach (var year in Years.OrderByDescending(x => x))
-                        {
-                            <MudSelectItem T="int?" Value="@year"/>
-                        }
-                    </MudSelect>
-                    <MudSpacer/>
-                    <MudSelect T="string"
-                               Label="Repository"
-                               Clearable="true"
-                               @bind-Value="@SelectedRepositoryName">
-                        @foreach (var repository in Repositories.OrderBy(x => x.Name))
-                        {
-                            <MudSelectItem T="string" Value="@repository.Name"/>
-                        }
-                    </MudSelect>
-                    <MudSpacer/>
-                    <MudTextField Placeholder="Filter"
-                                  Adornment="Adornment.Start"
-                                  AdornmentIcon="@Icons.Material.Filled.Search"
-                                  IconSize="Size.Medium"
-                                  Class="mt-0"
-                                  Immediate="true"
-                                  @bind-Value="FilterString">
-                    </MudTextField>
-                </ToolBarContent>
-                <HeaderContent>
-                    <MudTh Style="width: 110px">Time</MudTh>
-                    <MudTh Style="width: 150px">Area</MudTh>
-                    <MudTh Style="width: 250px">Repository</MudTh>
-                    <MudTh>What</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Time">@context.Time.ToString("dd-MM-yyy")</MudTd>
-                    <MudTd DataLabel="Area">@context.Action.GetDescription()</MudTd>
-                    <MudTd DataLabel="Repository">@context.RepositoryName</MudTd>
-                    <MudTd DataLabel="What">@context.Title</MudTd>
-                </RowTemplate>
-                <PagerContent>
-                    <MudTablePager />
-                </PagerContent>
-            </MudTable>
+            <div class="d-flex flex-wrap gap-3 mb-6">
+                <MudTextField Placeholder="Search news..."
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              Immediate="true"
+                              Style="max-width: 300px;"
+                              @bind-Value="FilterString" />
+                <MudSelect T="int?"
+                           Label="Year"
+                           Clearable="true"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Style="max-width: 140px;"
+                           @bind-Value="@SelectedYear">
+                    @foreach (var year in Years.OrderByDescending(x => x))
+                    {
+                        <MudSelectItem T="int?" Value="@year" />
+                    }
+                </MudSelect>
+            </div>
+
+            <MudTimeline TimelinePosition="TimelinePosition.Start">
+                @foreach (var item in GetFilteredNews().Take(50))
+                {
+                    <MudTimelineItem Color="@GetTimelineColor(item.Action)"
+                                     Size="Size.Small"
+                                     Variant="Variant.Filled">
+                        <ItemContent>
+                            <div class="accent-card pa-4 mb-2" style="cursor: default;">
+                                <div class="d-flex align-center gap-2 mb-1">
+                                    <MudChip T="string"
+                                             Size="Size.Small"
+                                             Variant="Variant.Outlined"
+                                             Color="@GetTimelineColor(item.Action)">
+                                        @item.Action.GetDescription()
+                                    </MudChip>
+                                    <MudText Typo="Typo.caption" Style="opacity: 0.6;">
+                                        @item.Time.ToString("MMM d, yyyy")
+                                    </MudText>
+                                </div>
+                                @if (!string.IsNullOrEmpty(item.RepositoryName))
+                                {
+                                    <MudLink Href="@($"/repository/{item.RepositoryName}")"
+                                             Typo="Typo.subtitle1"
+                                             Style="font-weight: 600;">
+                                        @item.RepositoryName
+                                    </MudLink>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Title))
+                                {
+                                    <MudText Typo="Typo.body2">@item.Title</MudText>
+                                }
+                            </div>
+                        </ItemContent>
+                    </MudTimelineItem>
+                }
+            </MudTimeline>
         }
     </DocsPageContent>
 </DocsPage>
