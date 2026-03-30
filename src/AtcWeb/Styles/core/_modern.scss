@@ -160,6 +160,7 @@
 // --- Smooth drawer ---
 .mud-drawer {
   border-right: 1px solid rgba(119, 107, 231, 0.08) !important;
+  overflow-x: hidden !important;
 }
 
 // --- Rounded MudPaper globally ---
