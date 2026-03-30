@@ -19,22 +19,6 @@
         </DocsPageHeader>
         <DocsPageContent>
             <DocsPageSection>
-                <SectionHeader Title="Status" />
-                <SectionContent AutoMarginContent="false"
-                                FullWidth="true">
-                    @if (Repository.Badges.Count > 0)
-                    {
-                        <RepositoryBadges Repository="@Repository" />
-                    }
-                    else
-                    {
-                        <MudProgressCircular Color="Color.Primary"
-                                             Size="Size.Small"
-                                             Indeterminate="true" />
-                    }
-                </SectionContent>
-            </DocsPageSection>
-            <DocsPageSection>
                 <SectionHeader Title="Readme" />
                 <SectionContent AutoMarginContent="false"
                                 FullWidth="true">
@@ -116,25 +100,6 @@
                     }
                 }
             }
-            <DocsPageSection>
-                <SectionHeader Title="Responsible members"/>
-                <SectionContent FullWidth="true"
-                                AutoMarginContent="false">
-                    @if (Repository.ResponsibleMembers.Count > 0)
-                    {
-                        <GitHubContributorGrid Contributors="@Repository.ResponsibleMembers"
-                                               RepositoryName="@Repository.Name"
-                                               ItemTitle="Responsible member"
-                                               Justify="Justify.FlexStart"/>
-                    }
-                    else
-                    {
-                        <MudProgressCircular Color="Color.Primary"
-                                             Size="Size.Small"
-                                             Indeterminate="true" />
-                    }
-                </SectionContent>
-            </DocsPageSection>
         </DocsPageContent>
     }
 </DocsPage>

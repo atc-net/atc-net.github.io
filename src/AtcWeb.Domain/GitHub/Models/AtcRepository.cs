@@ -8,12 +8,9 @@ public class AtcRepository
         ArgumentNullException.ThrowIfNull(repository);
 
         BaseData = repository;
-        Badges = new List<(string Group, string Key, Uri Url)>();
-        ResponsibleMembers = new List<GitHubRepositoryContributor>();
-        FolderAndFilePaths = new List<GitHubPath>();
-        OpenIssues = new List<GitHubIssue>();
+        FolderAndFilePaths = [];
+        OpenIssues = [];
         Root = new RootMetadata();
-        Workflow = new WorkflowMetadata();
         CodingRules = new CodingRulesMetadata();
         Dotnet = new DotnetMetadata();
         Python = new PythonMetadata();
@@ -33,15 +30,9 @@ public class AtcRepository
 
     public string Url => $"https://github.com/atc-net/{Name}";
 
-    public List<(string Group, string Key, Uri Url)> Badges { get; private set; }
-
-    public List<GitHubRepositoryContributor> ResponsibleMembers { get; set; }
-
     public List<GitHubPath> FolderAndFilePaths { get; set; }
 
     public RootMetadata Root { get; set; }
-
-    public WorkflowMetadata Workflow { get; set; }
 
     public CodingRulesMetadata CodingRules { get; set; }
 
@@ -54,14 +45,6 @@ public class AtcRepository
     public List<GitHubIssue> OpenIssues { get; set; }
 
     public bool HasRootReadme => Root?.HasReadme ?? false;
-
-    public bool HasWorkflowPreIntegration
-        => Workflow?.HasPreIntegration ?? false;
-
-    public bool HasWorkflowPostIntegration
-        => Workflow?.HasPostIntegration ?? false;
-
-    public bool HasWorkflowRelease => Workflow?.HasRelease ?? false;
 
     public bool HasCodingRulesEditorConfigRoot
         => CodingRules?.HasRoot ?? false;
@@ -88,98 +71,6 @@ public class AtcRepository
 
     public bool IsPythonSolution
         => "Python".Equals(BaseData.Language, StringComparison.Ordinal);
-
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    public void SetBadges()
-    {
-        Badges = new List<(string Group, string Key, Uri Url)>
-        {
-            ("General Project Info", "Github top language", new Uri($"https://img.shields.io/github/languages/top/atc-net/{Name}?logo=github")),
-            ("General Project Info", "Github stars", new Uri($"https://img.shields.io/github/stars/atc-net/{Name}?logo=github&label=Stars")),
-            ("General Project Info", "Github watchers", new Uri($"https://img.shields.io/github/watchers/atc-net/{Name}?logo=github&label=Watch")),
-            ("General Project Info", "Github forks", new Uri($"https://img.shields.io/github/forks/atc-net/{Name}?logo=github&label=Forks")),
-            ("General Project Info", "Github size", new Uri($"https://img.shields.io/github/repo-size/atc-net/{Name}?logo=github&label=Repo-size")),
-            ("General Project Info", "Issues Open", new Uri($"https://img.shields.io/github/issues/atc-net/{Name}.svg?logo=github&label=Issues")),
-        };
-
-        if (HasWorkflowPreIntegration)
-        {
-            Badges.Add((
-                "Build Status",
-                "Pre-Integration",
-                new Uri($"{Url}/workflows/Pre-Integration/badge.svg")));
-        }
-
-        if (HasWorkflowPostIntegration)
-        {
-            Badges.Add((
-                "Build Status",
-                "Post-Integration",
-                new Uri($"{Url}/workflows/Post-Integration/badge.svg")));
-        }
-
-        if (HasWorkflowRelease)
-        {
-            Badges.Add((
-                "Build Status",
-                "Release",
-                new Uri($"{Url}/workflows/Release/badge.svg")));
-        }
-
-        if (HasWorkflowPostIntegration && IsDotnetSolution)
-        {
-            Badges.Add((
-                "Packages",
-                "Github Version",
-                new Uri("https://img.shields.io/static/v1?logo=github&color=blue&label=GitHub&message=latest")));
-        }
-
-        if (HasWorkflowRelease && IsDotnetSolution)
-        {
-            Badges.Add((
-                "Packages",
-                "NuGet Version",
-                new Uri($"https://img.shields.io/nuget/v/{DotName}.svg?logo=nuget&label=Nuget")));
-
-            Badges.Add((
-                "Packages",
-                "Downloads",
-                new Uri($"https://img.shields.io/nuget/dt/{DotName}?logo=nuget&label=Downloads")));
-
-            Badges.Add((
-                "Code Quality",
-                "Maintainability Rating",
-                new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=sqale_rating")));
-
-            Badges.Add((
-                "Code Quality",
-                "Reliability Rating",
-                new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=reliability_rating")));
-
-            Badges.Add((
-                "Code Quality",
-                "Security Rating",
-                new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=security_rating")));
-
-            Badges.Add((
-                "Code Quality",
-                "Bugs",
-                new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=bugs")));
-
-            Badges.Add((
-                "Code Quality",
-                "Vulnerabilities",
-                new Uri($"https://sonarcloud.io/api/project_badges/measure?project={Name}&metric=vulnerabilities")));
-        }
-
-        if (HasWorkflowRelease && IsPythonSolution)
-        {
-            Badges.Add((
-                "Packages",
-                "PyPi Version",
-                new Uri($"https://badge.fury.io/py/{Name}.svg")));
-        }
-    }
 
     public DateTimeOffset? GetOpenIssuesNewest()
     {

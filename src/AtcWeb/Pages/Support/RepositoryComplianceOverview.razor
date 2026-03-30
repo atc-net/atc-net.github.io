@@ -27,8 +27,6 @@
                     </SectionHeader>
                     <SectionContent AutoMarginContent="false"
                                     FullWidth="true">
-
-                        <RepositoryBadges Repository="@repository" />
                         <RepositorySummery Repository="@repository"/>
 
                         @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
@@ -58,12 +56,6 @@
                                 <RepositoryCodingRules Repository="@repository" />
                             </div>
                         }
-
-                        <MudText Class="my-4" Typo="Typo.h5">Responsible members</MudText>
-                        <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
-                                               RepositoryName="@repository.Name"
-                                               ItemTitle="Responsible member"
-                                               Justify="Justify.FlexStart" />
 
                     </SectionContent>
                 </DocsPageSection>
