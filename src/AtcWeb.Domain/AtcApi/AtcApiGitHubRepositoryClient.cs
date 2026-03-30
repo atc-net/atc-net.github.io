@@ -2,7 +2,7 @@ namespace AtcWeb.Domain.AtcApi;
 
 public class AtcApiGitHubRepositoryClient
 {
-    private const string BaseAddress = "https://atc-api.azurewebsites.net/github/repository";
+    private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/repository";
     private readonly IMemoryCache memoryCache;
     private static readonly SemaphoreSlim SemaphoreRepositories = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreContributors = new(1, 1);
