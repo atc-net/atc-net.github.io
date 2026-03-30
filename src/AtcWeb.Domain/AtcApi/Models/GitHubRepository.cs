@@ -12,6 +12,8 @@ public class GitHubRepository
 
     public bool Private { get; set; }
 
+    public bool Archived { get; set; }
+
     public string DefaultBranch { get; set; }
 
     public string Description { get; set; }

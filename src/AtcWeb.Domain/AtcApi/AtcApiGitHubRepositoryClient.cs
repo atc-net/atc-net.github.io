@@ -35,18 +35,19 @@ public class AtcApiGitHubRepositoryClient
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return (IsSuccessful: false, new List<GitHubRepository>());
+                return (IsSuccessful: false, []);
             }
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<IReadOnlyList<GitHubRepository>>(content, JsonSerializerOptionsFactory.Create());
             if (result is null)
             {
-                return (IsSuccessful: false, new List<GitHubRepository>());
+                return (IsSuccessful: false, []);
             }
 
             var gitHubRepositories = result
-                .Where(x => !x.Name.Equals("atc-dummy", StringComparison.Ordinal) &&
+                .Where(x => x is { Archived: false, Private: false } &&
+                            !x.Name.Equals("atc-dummy", StringComparison.Ordinal) &&
                             !x.Name.Equals("atc-template-dotnet-package", StringComparison.Ordinal))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .ToList();
@@ -56,7 +57,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<GitHubRepository>());
+            return (IsSuccessful: false, []);
         }
         finally
         {
@@ -121,7 +122,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
+            return (IsSuccessful: false, []);
         }
     }
 
@@ -144,14 +145,14 @@ public class AtcApiGitHubRepositoryClient
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
+                return (IsSuccessful: false, []);
             }
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<List<GitHubRepositoryContributor>>(content, JsonSerializerOptionsFactory.Create());
             if (result is null)
             {
-                return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
+                return (IsSuccessful: false, []);
             }
 
             memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -159,7 +160,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<GitHubRepositoryContributor>());
+            return (IsSuccessful: false, []);
         }
         finally
         {
@@ -183,14 +184,14 @@ public class AtcApiGitHubRepositoryClient
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return (IsSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
+                return (IsSuccessful: false, []);
             }
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<List<DotnetNugetPackageMetadataBase>>(content, JsonSerializerOptionsFactory.Create());
             if (result is null)
             {
-                return (IsSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
+                return (IsSuccessful: false, []);
             }
 
             memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -198,7 +199,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<DotnetNugetPackageMetadataBase>());
+            return (IsSuccessful: false, []);
         }
     }
 
@@ -221,14 +222,14 @@ public class AtcApiGitHubRepositoryClient
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return (IsSuccessful: false, new List<GitHubPath>());
+                return (IsSuccessful: false, []);
             }
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<List<GitHubPath>>(content, JsonSerializerOptionsFactory.Create());
             if (result is null)
             {
-                return (IsSuccessful: false, new List<GitHubPath>());
+                return (IsSuccessful: false, []);
             }
 
             memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -236,7 +237,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<GitHubPath>());
+            return (IsSuccessful: false, []);
         }
         finally
         {
@@ -321,14 +322,14 @@ public class AtcApiGitHubRepositoryClient
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return (IsSuccessful: false, new List<GitHubIssue>());
+                return (IsSuccessful: false, []);
             }
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<List<GitHubIssue>>(content, JsonSerializerOptionsFactory.Create());
             if (result is null)
             {
-                return (IsSuccessful: false, new List<GitHubIssue>());
+                return (IsSuccessful: false, []);
             }
 
             memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
@@ -336,7 +337,7 @@ public class AtcApiGitHubRepositoryClient
         }
         catch
         {
-            return (IsSuccessful: false, new List<GitHubIssue>());
+            return (IsSuccessful: false, []);
         }
         finally
         {
