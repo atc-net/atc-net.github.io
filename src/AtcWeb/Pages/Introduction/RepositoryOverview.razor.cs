@@ -9,7 +9,7 @@ public class RepositoryOverviewBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        Repositories = await RepositoryService.GetRepositoriesAsync(populateMetaDataBase: true, populateMetaDataAdvanced: false);
+        Repositories = await RepositoryService.GetRepositoriesAsync(populateMetaDataBase: false);
 
         await base.OnInitializedAsync();
     }

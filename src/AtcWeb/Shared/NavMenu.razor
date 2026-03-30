@@ -40,7 +40,7 @@
         @foreach (var group in GetGroupedRepositories())
         {
             <MudNavGroup Title="@group.Key"
-                         Icon="@GetGroupIcon(group.Key)"
+                         Icon="@RepositoryCategoryHelper.GetIcon(group.Key)"
                          Expanded="@IsGroupExpanded(group.Key)"
                          ExpandIcon="@Icons.Material.Filled.ExpandMore">
                 @foreach (var repository in group.Value)
