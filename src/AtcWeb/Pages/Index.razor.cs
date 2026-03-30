@@ -53,32 +53,4 @@ public partial class Index
 
         await base.OnInitializedAsync();
     }
-
-    private static string GetRepoCategoryClass(string repoName)
-    {
-        if (repoName.Contains("azure", StringComparison.OrdinalIgnoreCase))
-        {
-            return "repo-card-azure";
-        }
-
-        if (repoName.Contains("rest", StringComparison.OrdinalIgnoreCase))
-        {
-            return "repo-card-rest";
-        }
-
-        if (repoName.Contains("semantic-kernel", StringComparison.OrdinalIgnoreCase) ||
-            repoName.Contains("agentic", StringComparison.OrdinalIgnoreCase))
-        {
-            return "repo-card-ai";
-        }
-
-        if (repoName.Contains("coding-rules", StringComparison.OrdinalIgnoreCase) ||
-            repoName.Contains("analyzer", StringComparison.OrdinalIgnoreCase) ||
-            repoName.Contains("source-gen", StringComparison.OrdinalIgnoreCase))
-        {
-            return "repo-card-tools";
-        }
-
-        return "repo-card-core";
-    }
 }

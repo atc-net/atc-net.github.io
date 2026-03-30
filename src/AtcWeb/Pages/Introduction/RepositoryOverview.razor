@@ -4,7 +4,7 @@
 
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="Repository overview"
-                    SubTitle="This is the introduction overview of all atc repositories.">
+                    SubTitle="All public repositories in the ATC-NET organization.">
     </DocsPageHeader>
     <DocsPageContent>
         @if (Repositories is null)
@@ -15,37 +15,35 @@
         }
         else
         {
-            foreach (var repository in Repositories
-                .Where(x => !x.BaseData.Private)
-                .OrderBy(x => x.Name))
-            {
-                <DocsPageSection>
-                    <SectionHeader Title="@repository.Name"
-                                   TitleColor="Color.Primary"
-                                   TitleLink="@($"/repository/{repository.Name}")">
-                        <SubTitle>
-                            <RepositoryDescription Repository="@repository" />
-                        </SubTitle>
-                    </SectionHeader>
-                    <SectionContent AutoMarginContent="false"
-                                    FullWidth="true">
-                        <MudCard Elevation="0">
-                            @if (repository.Root.HasReadme)
+            <div class="featured-repos-grid">
+                @foreach (var repository in Repositories
+                    .Where(x => !x.BaseData.Private)
+                    .OrderBy(x => x.Name))
+                {
+                    <a href="/repository/@repository.Name"
+                       class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repository.Name)"
+                       style="text-decoration: none;">
+                        <div class="d-flex align-center gap-2 mb-2">
+                            <img src="@ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language)"
+                                 width="20" height="20" alt="" />
+                            <div class="repo-card-name">@repository.Name</div>
+                        </div>
+                        <div class="repo-card-description">
+                            @(string.IsNullOrEmpty(repository.Description) ? "No description available." : repository.Description)
+                        </div>
+                        <div class="repo-card-meta">
+                            @if (!string.IsNullOrEmpty(repository.BaseData.Language))
                             {
-                                <MudCardContent>
-                                    <MarkdownRepositoryContent RepositoryName="@repository.Name"
-                                                               RepositoryBranch="@repository.BaseData.DefaultBranch"
-                                                               Content="@repository.Root.RawReadme" />
-                                </MudCardContent>
+                                <span>@repository.BaseData.Language</span>
                             }
-                            else
+                            @if (!string.IsNullOrEmpty(repository.BaseData.License?.Key))
                             {
-                                <MudCardContent>There is no readme.md in this repository yes, sorry.</MudCardContent>
+                                <span>@repository.BaseData.License.Key</span>
                             }
-                        </MudCard>
-                    </SectionContent>
-                </DocsPageSection>
-            }
+                        </div>
+                    </a>
+                }
+            </div>
         }
     </DocsPageContent>
 </DocsPage>

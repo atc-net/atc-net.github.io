@@ -50,7 +50,7 @@ public partial class NavMenu
 
         foreach (var repo in filtered)
         {
-            var category = CategorizeRepository(repo.Name);
+            var category = RepositoryCategoryHelper.GetCategory(repo.Name);
             if (!groups.TryGetValue(category, out var list))
             {
                 list = [];
@@ -61,7 +61,7 @@ public partial class NavMenu
         }
 
         return groups
-            .OrderBy(g => GetGroupSortOrder(g.Key))
+            .OrderBy(g => RepositoryCategoryHelper.GetSortOrder(g.Key))
             .ThenBy(g => g.Key, StringComparer.Ordinal)
             .ToDictionary(g => g.Key, g => g.Value, StringComparer.Ordinal);
     }
@@ -80,73 +80,6 @@ public partial class NavMenu
         }
 
         var repoName = currentUri.Split("/repository/", StringSplitOptions.None).LastOrDefault() ?? string.Empty;
-        return string.Equals(CategorizeRepository(repoName), groupName, StringComparison.Ordinal);
+        return string.Equals(RepositoryCategoryHelper.GetCategory(repoName), groupName, StringComparison.Ordinal);
     }
-
-    private static string CategorizeRepository(string name)
-    {
-        if (name.Contains("azure", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("cosmos", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Azure";
-        }
-
-        if (name.Contains("rest", StringComparison.OrdinalIgnoreCase))
-        {
-            return "REST & API";
-        }
-
-        if (name.Contains("semantic-kernel", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("agentic", StringComparison.OrdinalIgnoreCase))
-        {
-            return "AI & Agents";
-        }
-
-        if (name.Contains("coding-rules", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("analyzer", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("source-gen", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Code Quality";
-        }
-
-        if (name.Contains("wpf", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("xaml", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("blazor", StringComparison.OrdinalIgnoreCase))
-        {
-            return "UI & Desktop";
-        }
-
-        if (name.Contains("test", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Testing";
-        }
-
-        return "Core & Libraries";
-    }
-
-    private static string GetGroupIcon(string groupName)
-        => groupName switch
-        {
-            "Azure" => Icons.Material.Filled.Cloud,
-            "REST & API" => Icons.Material.Filled.Api,
-            "AI & Agents" => Icons.Material.Filled.Psychology,
-            "Code Quality" => Icons.Material.Filled.Rule,
-            "UI & Desktop" => Icons.Material.Filled.DesktopWindows,
-            "Testing" => Icons.Material.Filled.Science,
-            "Core & Libraries" => Icons.Material.Filled.Hub,
-            _ => Icons.Material.Filled.Folder,
-        };
-
-    private static int GetGroupSortOrder(string groupName)
-        => groupName switch
-        {
-            "Core & Libraries" => 0,
-            "Azure" => 1,
-            "REST & API" => 2,
-            "AI & Agents" => 3,
-            "Code Quality" => 4,
-            "UI & Desktop" => 5,
-            "Testing" => 6,
-            _ => 99,
-        };
 }

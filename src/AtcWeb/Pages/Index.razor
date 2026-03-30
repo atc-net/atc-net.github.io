@@ -67,7 +67,7 @@
             <div class="featured-repos-grid">
                 @foreach (var repo in featuredRepos)
                 {
-                    <a href="/repository/@repo.Name" class="repo-card @GetRepoCategoryClass(repo.Name)" style="text-decoration: none;">
+                    <a href="/repository/@repo.Name" class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repo.Name)" style="text-decoration: none;">
                         <div class="repo-card-name">@repo.Name</div>
                         <div class="repo-card-description">@(string.IsNullOrEmpty(repo.BaseData.Description) ? "A .NET library" : repo.BaseData.Description)</div>
                         <div class="repo-card-meta">
