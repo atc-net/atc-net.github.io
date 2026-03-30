@@ -104,7 +104,7 @@ public class GitHubRepositoryService
     public async Task<DocumentMetadata> GetDevOpsPlaybook()
     {
         const string repositoryName = "atc-docs";
-        var folderAndFilePaths = await GetDirectoryMetadata(repositoryName);
+        var folderAndFilePaths = await GetDirectoryMetadataAsync(repositoryName);
 
         var documentMetadata = new DocumentMetadata();
         foreach (var folderAndFilePath in folderAndFilePaths
@@ -149,7 +149,7 @@ public class GitHubRepositoryService
             .ToList();
     }
 
-    private async Task<List<GitHubPath>> GetDirectoryMetadata(
+    public async Task<List<GitHubPath>> GetDirectoryMetadataAsync(
         string repositoryName)
     {
         var (isSuccessful, gitHubPath) = await atcApiGitHubRepositoryClient.GetAllPathsByRepositoryByName(repositoryName);
@@ -166,7 +166,7 @@ public class GitHubRepositoryService
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(gitHubRepository);
 
-        repository.FolderAndFilePaths = await GetDirectoryMetadata(gitHubRepository.Name);
+        repository.FolderAndFilePaths = await GetDirectoryMetadataAsync(gitHubRepository.Name);
 
         repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
             atcApiGitHubRepositoryClient,
@@ -175,11 +175,9 @@ public class GitHubRepositoryService
             repository.BaseData.DefaultBranch);
     }
 
-    public async Task PopulatePathsAndReadmeAsync(AtcRepository repository)
+    public async Task PopulateReadmeAsync(AtcRepository repository)
     {
         ArgumentNullException.ThrowIfNull(repository);
-
-        repository.FolderAndFilePaths = await GetDirectoryMetadata(repository.Name);
 
         repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
             atcApiGitHubRepositoryClient,
