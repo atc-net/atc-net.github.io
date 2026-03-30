@@ -278,6 +278,22 @@
   line-height: 1.6;
 }
 
+.hero-cta-primary {
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  padding: 10px 28px !important;
+}
+
+.hero-cta-secondary {
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  padding: 10px 28px !important;
+}
+
 // --- Stats bar ---
 .stats-bar {
   display: flex;
