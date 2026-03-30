@@ -51,6 +51,10 @@ atc-appbar-band {
   margin-left: 12px;
   font-size: 24px;
   user-select: none;
+  background: linear-gradient(82deg, #776be7 0%, #EA80FC 50%, #ff4081 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 @media (max-width:400px) {
