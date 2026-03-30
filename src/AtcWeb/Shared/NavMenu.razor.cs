@@ -37,7 +37,7 @@ public partial class NavMenu
     {
         if (repositories is null)
         {
-            return new Dictionary<string, List<AtcRepository>>();
+            return new Dictionary<string, List<AtcRepository>>(StringComparer.Ordinal);
         }
 
         var filtered = repositories
@@ -51,18 +51,19 @@ public partial class NavMenu
         foreach (var repo in filtered)
         {
             var category = CategorizeRepository(repo.Name);
-            if (!groups.ContainsKey(category))
+            if (!groups.TryGetValue(category, out var list))
             {
-                groups[category] = [];
+                list = [];
+                groups[category] = list;
             }
 
-            groups[category].Add(repo);
+            list.Add(repo);
         }
 
         return groups
             .OrderBy(g => GetGroupSortOrder(g.Key))
             .ThenBy(g => g.Key, StringComparer.Ordinal)
-            .ToDictionary(g => g.Key, g => g.Value);
+            .ToDictionary(g => g.Key, g => g.Value, StringComparer.Ordinal);
     }
 
     private bool IsGroupExpanded(string groupName)

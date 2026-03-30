@@ -22,12 +22,32 @@ public partial class Index
         repositoryCount = allRepos.Count(r => !r.BaseData.Private);
         contributorCount = contributors.Count;
 
-        featuredRepos = allRepos
+        // Curate featured repos: pick well-known packages across categories
+        var featuredNames = new[]
+        {
+            "atc", "atc-rest-api-generator", "atc-cosmos", "atc-azure-messaging",
+            "atc-coding-rules", "atc-semantic-kernel", "atc-blazor", "atc-hosting",
+        };
+
+        var publicRepos = allRepos
             .Where(r => !r.BaseData.Private)
-            .OrderByDescending(r => r.BaseData.StargazersCount)
-            .ThenBy(r => r.Name, StringComparer.Ordinal)
-            .Take(8)
             .ToList();
+
+        featuredRepos = featuredNames
+            .Select(name => publicRepos.Find(r => r.Name.Equals(name, StringComparison.Ordinal)))
+            .Where(r => r is not null)
+            .Cast<AtcRepository>()
+            .ToList();
+
+        // Fill remaining slots if some names weren't found
+        if (featuredRepos.Count < 8)
+        {
+            var existing = featuredRepos.Select(r => r.Name).ToHashSet(StringComparer.Ordinal);
+            featuredRepos.AddRange(publicRepos
+                .Where(r => !existing.Contains(r.Name))
+                .OrderBy(r => r.Name, StringComparer.Ordinal)
+                .Take(8 - featuredRepos.Count));
+        }
 
         await base.OnInitializedAsync();
     }
