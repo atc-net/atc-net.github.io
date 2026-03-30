@@ -21,29 +21,45 @@
 
     @if (repositories is null)
     {
-        <MudGrid Justify="Justify.Center">
+        <MudGrid Justify="Justify.Center" Class="mt-4">
             <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
         </MudGrid>
     }
     else
     {
-        foreach (var repository in repositories
-            .Where(x => !x.BaseData.Private)
-            .OrderBy(x => x.Name))
-        {
-            var href = $"/repository/{repository.Name}";
-            var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
+        <MudTextField @bind-Value="searchText"
+                      Placeholder="Filter repositories..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense"
+                      Class="mx-3 mt-3 mb-2"
+                      Immediate="true"
+                      Style="font-size: 13px;" />
 
-            <MudElement HtmlTag="div"
-                        Class="mud-nav-item mud-ripple d-flex items-center">
-                <a href="@href" class="mud-nav-link">
-                    <img src="@iconSrc" width="22" height="22" alt="" />
-                    <MudText Class="mud-nav-link-text"
-                             Inline="true">
-                        @repository.Name
-                    </MudText>
-                </a>
-            </MudElement>
+        @foreach (var group in GetGroupedRepositories())
+        {
+            <MudNavGroup Title="@group.Key"
+                         Icon="@GetGroupIcon(group.Key)"
+                         Expanded="@IsGroupExpanded(group.Key)"
+                         ExpandIcon="@Icons.Material.Filled.ExpandMore">
+                @foreach (var repository in group.Value)
+                {
+                    var href = $"/repository/{repository.Name}";
+                    var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
+
+                    <MudElement HtmlTag="div"
+                                Class="mud-nav-item mud-ripple d-flex items-center">
+                        <a href="@href" class="mud-nav-link">
+                            <img src="@iconSrc" width="20" height="20" alt="" />
+                            <MudText Class="mud-nav-link-text"
+                                     Inline="true">
+                                @repository.Name
+                            </MudText>
+                        </a>
+                    </MudElement>
+                }
+            </MudNavGroup>
         }
     }
 
