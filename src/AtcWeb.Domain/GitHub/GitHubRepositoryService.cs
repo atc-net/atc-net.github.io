@@ -38,25 +38,6 @@ public class GitHubRepositoryService
             : new List<GitHubRepositoryContributor>();
     }
 
-    public async Task<List<GitHubRepositoryContributor>> GetResponsibleMembersAsGitHubContributor(
-        string repositoryName)
-    {
-        var memberNames = RepositoryMetadata.GetResponsibleMembersByName(repositoryName);
-        var gitHubContributors = await GetContributorsAsync();
-        var data = new List<GitHubRepositoryContributor>();
-        foreach (var memberName in memberNames.OrderBy(x => x, StringComparer.Ordinal))
-        {
-            var gitHubContributor =
-                gitHubContributors.Find(x => x.Login.Equals(memberName, StringComparison.OrdinalIgnoreCase));
-            if (gitHubContributor is not null)
-            {
-                data.Add(gitHubContributor);
-            }
-        }
-
-        return data;
-    }
-
     public async Task<List<AtcRepository>> GetRepositoriesAsync(
         bool populateMetaDataBase = false,
         bool populateMetaDataAdvanced = false)
@@ -185,32 +166,13 @@ public class GitHubRepositoryService
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(gitHubRepository);
 
-        repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
-
         repository.FolderAndFilePaths = await GetDirectoryMetadata(gitHubRepository.Name);
 
-        var taskRoot = GitHubRepositoryMetadataHelper.LoadRoot(
+        repository.Root = await GitHubRepositoryMetadataHelper.LoadRoot(
             atcApiGitHubRepositoryClient,
             repository.FolderAndFilePaths,
             repository.Name,
             repository.BaseData.DefaultBranch);
-
-        var taskWorkflow = GitHubRepositoryMetadataHelper.LoadWorkflow(
-            atcApiGitHubRepositoryClient,
-            repository.FolderAndFilePaths,
-            repository.Name);
-
-        var tasks = new List<Task>
-        {
-            taskRoot, taskWorkflow,
-        };
-
-        await TaskHelper.WhenAll(tasks);
-
-        repository.Root = await taskRoot;
-        repository.Workflow = await taskWorkflow;
-
-        repository.SetBadges();
     }
 
     public async Task PopulatePathsAndReadmeAsync(AtcRepository repository)
@@ -224,25 +186,6 @@ public class GitHubRepositoryService
             repository.FolderAndFilePaths,
             repository.Name,
             repository.BaseData.DefaultBranch);
-    }
-
-    public async Task PopulateWorkflowAndBadgesAsync(AtcRepository repository)
-    {
-        ArgumentNullException.ThrowIfNull(repository);
-
-        repository.Workflow = await GitHubRepositoryMetadataHelper.LoadWorkflow(
-            atcApiGitHubRepositoryClient,
-            repository.FolderAndFilePaths,
-            repository.Name);
-
-        repository.SetBadges();
-    }
-
-    public async Task PopulateResponsibleMembersAsync(AtcRepository repository)
-    {
-        ArgumentNullException.ThrowIfNull(repository);
-
-        repository.ResponsibleMembers = await GetResponsibleMembersAsGitHubContributor(repository.Name);
     }
 
     public async Task PopulateWikiAsync(AtcRepository repository)
@@ -320,8 +263,6 @@ public class GitHubRepositoryService
         {
             repository.Python = await taskPython!;
         }
-
-        repository.SetBadges();
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]

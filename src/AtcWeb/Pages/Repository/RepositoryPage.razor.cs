@@ -29,26 +29,16 @@ public partial class RepositoryPage : ComponentBase
         StateHasChanged();
 
         // Phase 2: Paths + README — renders README as fast as possible
-        // Start responsible members fetch in parallel (slow — fetches all contributors)
-        var taskMembers = RepositoryService.PopulateResponsibleMembersAsync(repository);
         await RepositoryService.PopulatePathsAndReadmeAsync(repository);
         StateHasChanged();
 
-        // Phase 3: Workflows + badges — renders badge table
-        await RepositoryService.PopulateWorkflowAndBadgesAsync(repository);
-        StateHasChanged();
-
-        // Phase 4: Responsible members — renders member cards (may already be done)
-        await taskMembers;
-        StateHasChanged();
-
-        // Phase 5: Advanced metadata (coding rules, issues, .NET projects)
+        // Phase 3: Advanced metadata (coding rules, issues, .NET projects)
         // Start wiki fetch in parallel (independent of advanced metadata)
         var taskWiki = RepositoryService.PopulateWikiAsync(repository);
         await RepositoryService.PopulateMetaDataAdvancedAsync(repository);
         StateHasChanged();
 
-        // Phase 6: Wiki content
+        // Phase 4: Wiki content
         await taskWiki;
         StateHasChanged();
 

@@ -26,42 +26,6 @@ public static class GitHubRepositoryMetadataHelper
         return data;
     }
 
-    public static async Task<WorkflowMetadata> LoadWorkflow(
-        AtcApiGitHubRepositoryClient gitHubRepositoryClient,
-        List<GitHubPath> foldersAndFiles,
-        string repositoryName)
-    {
-        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
-        ArgumentNullException.ThrowIfNull(foldersAndFiles);
-
-        var taskPre = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            ".github/workflows/pre-integration.yml");
-
-        var taskPost = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            ".github/workflows/post-integration.yml");
-
-        var taskRelease = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient,
-            foldersAndFiles,
-            repositoryName,
-            ".github/workflows/release.yml");
-
-        await Task.WhenAll(taskPre, taskPost, taskRelease);
-
-        return new WorkflowMetadata
-        {
-            RawPreIntegration = await taskPre,
-            RawPostIntegration = await taskPost,
-            RawRelease = await taskRelease,
-        };
-    }
-
     public static async Task<CodingRulesMetadata> LoadCodingRules(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         List<GitHubPath> foldersAndFiles,
