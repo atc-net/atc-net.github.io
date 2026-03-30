@@ -8,8 +8,8 @@
 }
 
 .docs-section-content {
-    padding: 20px;
-    border-radius: 4px;
+    padding: 24px;
+    border-radius: 12px;
     margin-bottom: 40px;
     background-color: var(--mud-palette-surface);
     margin: auto;
@@ -17,6 +17,12 @@
     outline: 0;
     position: relative;
     justify-content: center;
+    border-left: 3px solid transparent;
+    border-image: linear-gradient(180deg, #776be7 0%, #ff4081 100%) 1;
+    border-image-slice: 1;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 
     & .docs-section-content-inner {
         margin-left: auto;

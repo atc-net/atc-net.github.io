@@ -22,7 +22,7 @@
 
   & pre {
     background-color: var(--mud-palette-dark);
-    border-radius: 6px;
+    border-radius: 12px;
 
     pre {
       border-radius: 0px;
@@ -71,9 +71,10 @@
 .atc-codeblock {
   height: 100%;
   background-color: var(--mud-palette-black);
-  border-radius: var(--mud-default-borderradius);
+  border-radius: 12px;
   padding: 16px;
   overflow: auto;
+  border-left: 3px solid #776be7;
 
   & pre {
     height: 100%;
