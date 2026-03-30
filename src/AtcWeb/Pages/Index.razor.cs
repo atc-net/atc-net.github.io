@@ -25,8 +25,10 @@ public partial class Index
         // Curate featured repos: pick well-known packages across categories
         var featuredNames = new[]
         {
-            "atc", "atc-rest-api-generator", "atc-cosmos", "atc-azure-messaging",
-            "atc-coding-rules", "atc-semantic-kernel", "atc-blazor", "atc-hosting",
+            "atc-kusto", "atc-claude-kanban", "atc-rest-api-source-generator",
+            "atc-agentic-toolkit", "atc-dsc-configurations", "atc-opc-ua",
+            "atc-hosting", "atc-test", "atc-azure-iot", "atc-rest-minimalapi",
+            "atc-kepware",
         };
 
         var publicRepos = allRepos
