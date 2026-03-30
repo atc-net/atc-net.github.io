@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/AtcWeb.Domain/AtcWeb.Domain.csproj" />
+  <Project Path="src/AtcWeb/AtcWeb.csproj" />
+  <Project Path="test/AtcWeb.Domain.Tests/AtcWeb.Domain.Tests.csproj" />
+</Solution>
