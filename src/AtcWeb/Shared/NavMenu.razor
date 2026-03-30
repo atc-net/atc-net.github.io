@@ -19,24 +19,30 @@
         <MudNavLink Href="/manuals/devops-playbook">DevOps Playbook</MudNavLink>
     </MudNavGroup>
 
+    <MudTextField @bind-Value="searchText"
+                  Placeholder="Filter repositories..."
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  Variant="Variant.Outlined"
+                  Margin="Margin.Dense"
+                  Class="mx-3 mt-3 mb-2"
+                  Immediate="true"
+                  Disabled="@(repositories is null)"
+                  Style="font-size: 13px;" />
+
     @if (repositories is null)
     {
-        <MudGrid Justify="Justify.Center" Class="mt-4">
-            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
-        </MudGrid>
+        @* Show placeholder group headers to prevent layout jump *@
+        <MudNavGroup Title="Core & Libraries" Icon="@Icons.Material.Filled.Hub" Disabled="true" />
+        <MudNavGroup Title="Azure" Icon="@Icons.Material.Filled.Cloud" Disabled="true" />
+        <MudNavGroup Title="REST & API" Icon="@Icons.Material.Filled.Api" Disabled="true" />
+        <MudNavGroup Title="AI & Agents" Icon="@Icons.Material.Filled.Psychology" Disabled="true" />
+        <MudNavGroup Title="Code Quality" Icon="@Icons.Material.Filled.Rule" Disabled="true" />
+        <MudNavGroup Title="UI & Desktop" Icon="@Icons.Material.Filled.DesktopWindows" Disabled="true" />
+        <MudNavGroup Title="Testing" Icon="@Icons.Material.Filled.Science" Disabled="true" />
     }
     else
     {
-        <MudTextField @bind-Value="searchText"
-                      Placeholder="Filter repositories..."
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      Variant="Variant.Outlined"
-                      Margin="Margin.Dense"
-                      Class="mx-3 mt-3 mb-2"
-                      Immediate="true"
-                      Style="font-size: 13px;" />
-
         @foreach (var group in GetGroupedRepositories())
         {
             <MudNavGroup Title="@group.Key"
