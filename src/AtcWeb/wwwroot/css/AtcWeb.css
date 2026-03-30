@@ -578,6 +578,49 @@ atc-appbar-band {
   background: rgba(119, 107, 231, 0.5);
 }
 
+.mermaid, pre.mermaid {
+  background: transparent !important;
+  text-align: center;
+  padding: 16px 0;
+}
+.mermaid svg, pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+.mermaid .nodeLabel, pre.mermaid .nodeLabel {
+  color: #1a1a2e !important;
+}
+.mermaid .edgeLabel, pre.mermaid .edgeLabel {
+  color: #c8c6d8 !important;
+  background-color: transparent !important;
+}
+.mermaid .edgeLabel rect, pre.mermaid .edgeLabel rect {
+  fill: #16162a !important;
+  opacity: 0.9;
+}
+.mermaid text, pre.mermaid text {
+  fill: #c8c6d8 !important;
+}
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, pre.mermaid .node rect, pre.mermaid .node circle, pre.mermaid .node polygon {
+  stroke: #776be7 !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid .cluster rect, pre.mermaid .cluster rect {
+  fill: #16162a !important;
+  stroke: #2a2a4a !important;
+}
+.mermaid .edgePath .path, pre.mermaid .edgePath .path {
+  stroke: #776be7 !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid .arrowheadPath, pre.mermaid .arrowheadPath {
+  fill: #776be7 !important;
+}
+.mermaid .edgeLabel rect, pre.mermaid .edgeLabel rect {
+  fill: #16162a !important;
+  opacity: 0.9;
+}
+
 .atc-navmenu::-webkit-scrollbar {
   width: 6px;
 }

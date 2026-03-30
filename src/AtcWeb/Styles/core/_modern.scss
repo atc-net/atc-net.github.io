@@ -202,6 +202,67 @@
   }
 }
 
+// --- Mermaid diagram overrides ---
+.mermaid, pre.mermaid {
+  background: transparent !important;
+  text-align: center;
+  padding: 16px 0;
+
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  // Node labels always dark -- all nodes will have light backgrounds
+  .nodeLabel {
+    color: #1a1a2e !important;
+  }
+
+  // Edge labels light for dark background
+  .edgeLabel {
+    color: #c8c6d8 !important;
+    background-color: transparent !important;
+  }
+
+  .edgeLabel rect {
+    fill: #16162a !important;
+    opacity: 0.9;
+  }
+
+  // General SVG text
+  text {
+    fill: #c8c6d8 !important;
+  }
+
+  // Node borders
+  .node rect, .node circle, .node polygon {
+    stroke: #776be7 !important;
+    stroke-width: 1.5px !important;
+  }
+
+  // Cluster/group backgrounds
+  .cluster rect {
+    fill: #16162a !important;
+    stroke: #2a2a4a !important;
+  }
+
+  // Edge/line colors
+  .edgePath .path {
+    stroke: #776be7 !important;
+    stroke-width: 1.5px !important;
+  }
+
+  .arrowheadPath {
+    fill: #776be7 !important;
+  }
+
+  // Edge label backgrounds
+  .edgeLabel rect {
+    fill: #16162a !important;
+    opacity: 0.9;
+  }
+}
+
 // Sidebar scrollbar: thin and subtle
 .atc-navmenu {
   &::-webkit-scrollbar {
