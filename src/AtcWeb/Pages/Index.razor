@@ -72,9 +72,9 @@
                         <div class="repo-card-description">@(string.IsNullOrEmpty(repo.BaseData.Description) ? "A .NET library" : repo.BaseData.Description)</div>
                         <div class="repo-card-meta">
                             <span>@repo.BaseData.Language</span>
-                            @if (repo.BaseData.StargazersCount > 0)
+                            @if (!string.IsNullOrEmpty(repo.BaseData.License?.Key))
                             {
-                                <span>@repo.BaseData.StargazersCount stars</span>
+                                <span>@repo.BaseData.License.Key</span>
                             }
                         </div>
                     </a>
