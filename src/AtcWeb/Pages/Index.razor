@@ -1,16 +1,177 @@
 @page "/"
 
-<DocsPage MaxWidth="MaxWidth.Large">
-    <DocsPageHeader Title="ATC"
-                    SubTitle="A Touch of Class">
-    </DocsPageHeader>
-    <DocsPageContent>
+<MudMainContent>
+    @* ===== HERO SECTION ===== *@
+    <section class="hero-section">
+        <div class="hero-title">ATC-NET</div>
+        <div class="hero-subtitle">A Touch of Class</div>
+        <div class="hero-description">
+            Open-source .NET libraries and tools built from years of real-world developer experience.
+            Battle-tested, MIT licensed, and ready for your next project.
+        </div>
+        <div class="d-flex justify-center gap-3 flex-wrap">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       Href="/introduction/repository-overview"
+                       Class="hero-cta-primary">
+                Explore Repositories
+            </MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       Href="/introduction/about-atc"
+                       Class="hero-cta-secondary">
+                Get Started
+            </MudButton>
+        </div>
+    </section>
 
-        <WhatIsAtc />
+    @* ===== STATS BAR ===== *@
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">@repositoryCount</div>
+            <div class="stat-label">Repositories</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">@contributorCount</div>
+            <div class="stat-label">Contributors</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">MIT</div>
+            <div class="stat-label">Licensed</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">.NET 10</div>
+            <div class="stat-label">Latest Framework</div>
+        </div>
+    </div>
 
-        <HowItStarted />
+    <hr class="gradient-divider mx-auto mb-12" style="max-width: 200px;" />
 
-        <WhatIsThePurpose />
+    @* ===== FEATURED REPOS ===== *@
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mb-16">
+        <div class="text-center mb-8">
+            <div class="section-title">Featured Repositories</div>
+            <div class="section-subtitle">The most popular packages in the ATC-NET ecosystem</div>
+        </div>
 
-    </DocsPageContent>
-</DocsPage>
+        @if (featuredRepos is null)
+        {
+            <div class="d-flex justify-center pa-8">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+        else
+        {
+            <div class="featured-repos-grid">
+                @foreach (var repo in featuredRepos)
+                {
+                    <a href="/repository/@repo.Name" class="repo-card @GetRepoCategoryClass(repo.Name)" style="text-decoration: none;">
+                        <div class="repo-card-name">@repo.Name</div>
+                        <div class="repo-card-description">@(string.IsNullOrEmpty(repo.BaseData.Description) ? "A .NET library" : repo.BaseData.Description)</div>
+                        <div class="repo-card-meta">
+                            <span>@repo.BaseData.Language</span>
+                            @if (repo.BaseData.StargazersCount > 0)
+                            {
+                                <span>@repo.BaseData.StargazersCount stars</span>
+                            }
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="text-center mt-6">
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Primary"
+                           Href="/introduction/repository-overview"
+                           EndIcon="@Icons.Material.Filled.ArrowForward">
+                    View all @repositoryCount repositories
+                </MudButton>
+            </div>
+        }
+    </MudContainer>
+
+    @* ===== WHY ATC-NET ===== *@
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mb-16">
+        <div class="text-center mb-8">
+            <div class="section-title">Why ATC-NET?</div>
+            <div class="section-subtitle">Built by developers, for developers</div>
+        </div>
+
+        <MudGrid Spacing="4">
+            <MudItem xs="12" sm="6" md="3">
+                <div class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Verified"
+                             Class="feature-icon"
+                             Style="color: #776be7;" />
+                    <div class="feature-title">Battle-Tested</div>
+                    <div class="feature-description">
+                        Built from years of real-world project experience across different customers and domains.
+                    </div>
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <div class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Code"
+                             Class="feature-icon"
+                             Style="color: #1ec8a5;" />
+                    <div class="feature-title">Open Source</div>
+                    <div class="feature-description">
+                        MIT licensed. Fork it, use it, contribute to it. The code stays in GitHub forever.
+                    </div>
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <div class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Devices"
+                             Class="feature-icon"
+                             Style="color: #ff4081;" />
+                    <div class="feature-title">Cross-Platform</div>
+                    <div class="feature-description">
+                        Support for Linux, macOS, and Windows. Built on .NET LTS with modern C# features.
+                    </div>
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <div class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Groups"
+                             Class="feature-icon"
+                             Style="color: #ffa800;" />
+                    <div class="feature-title">Community Driven</div>
+                    <div class="feature-description">
+                        Started by two colleagues, now growing with contributors who share common code.
+                    </div>
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+
+    @* ===== OUR STORY (collapsible) ===== *@
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mb-16">
+        <MudExpansionPanels Elevation="0" Class="accent-card" Style="background: transparent;">
+            <MudExpansionPanel Style="background: transparent;">
+                <TitleContent>
+                    <div class="d-flex align-center">
+                        <MudIcon Icon="@Icons.Material.Filled.AutoStories" Class="mr-3" Style="color: #776be7;" />
+                        <MudText Typo="Typo.h6">Our Story</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <MudText Class="mb-3">
+                        It all started with two colleagues who worked together for a long time,
+                        where code was being copied between projects over and over again. One day they decided
+                        to put their common code into an open-source repository and make NuGet packages.
+                    </MudText>
+                    <MudText Class="mb-3">
+                        GitHub was selected as the platform, MIT for all licenses, and a simple setup
+                        with workflows for commits and package distribution was defined.
+                    </MudText>
+                    <MudText>
+                        After the first two colleagues started, many more joined.
+                        Other developers and hopefully many new will follow.
+                    </MudText>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudContainer>
+</MudMainContent>
