@@ -2,7 +2,7 @@ namespace AtcWeb.Components;
 
 public partial class DocsPage : ComponentBase
 {
-    private Queue<DocsSectionLink> bufferedSections = new();
+    private Queue<(DocsSectionLink Link, DocsPageSection Section)> bufferedSections = new();
     private Dictionary<DocsPageSection, MudPageContentSection> sectionMapper = new();
     private MudPageContentNavigation? contentNavigation;
     private int navigationKey;
@@ -20,6 +20,11 @@ public partial class DocsPage : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (contentNavigation is not null)
+        {
+            DrainBufferedSections();
+        }
+
         if (firstRender && contentNavigation is not null)
         {
             await contentNavigation.ScrollToSection(new Uri(NavigationManager.Uri));
@@ -41,7 +46,7 @@ public partial class DocsPage : ComponentBase
 
     internal void ClearSections()
     {
-        bufferedSections = new Queue<DocsSectionLink>();
+        bufferedSections = new Queue<(DocsSectionLink, DocsPageSection)>();
         sectionMapper = new Dictionary<DocsPageSection, MudPageContentSection>();
         navigationKey++;
         StateHasChanged();
@@ -51,18 +56,21 @@ public partial class DocsPage : ComponentBase
         DocsSectionLink sectionLinkInfo,
         DocsPageSection section)
     {
-        bufferedSections.Enqueue(sectionLinkInfo);
+        bufferedSections.Enqueue((sectionLinkInfo, section));
 
-        if (contentNavigation is null)
+        if (contentNavigation is not null)
         {
-            return;
+            DrainBufferedSections();
         }
+    }
 
+    private void DrainBufferedSections()
+    {
         while (bufferedSections.Count > 0)
         {
-            bufferedSections.Dequeue();
+            var (link, section) = bufferedSections.Dequeue();
 
-            if (contentNavigation.Sections.FirstOrDefault(x => x.Id == sectionLinkInfo.Id) != default)
+            if (contentNavigation!.Sections.FirstOrDefault(x => x.Id == link.Id) != default)
             {
                 continue;
             }
@@ -75,8 +83,8 @@ public partial class DocsPage : ComponentBase
             }
 
             var info = new MudPageContentSection(
-                sectionLinkInfo.Title,
-                sectionLinkInfo.Id,
+                link.Title,
+                link.Id,
                 section.Level,
                 parentInfo);
 
