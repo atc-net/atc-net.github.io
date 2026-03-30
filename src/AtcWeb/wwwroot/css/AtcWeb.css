@@ -75,7 +75,7 @@ atc-appbar-band {
 }
 .atc-navmenu {
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   margin-bottom: 12px;
 }
 
@@ -576,6 +576,17 @@ atc-appbar-band {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(119, 107, 231, 0.5);
+}
+
+.atc-navmenu::-webkit-scrollbar {
+  width: 6px;
+}
+.atc-navmenu::-webkit-scrollbar-thumb {
+  background: rgba(119, 107, 231, 0.15);
+  border-radius: 3px;
+}
+.atc-navmenu::-webkit-scrollbar-thumb:hover {
+  background: rgba(119, 107, 231, 0.4);
 }
 
 @keyframes fadeInUp {
