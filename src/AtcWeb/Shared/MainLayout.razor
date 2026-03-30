@@ -10,36 +10,59 @@
 
 <MudSwipeArea Class="full-page-height">
     <MudLayout>
-        <MudAppBar Elevation="25">
+        <MudAppBar Elevation="0" Class="atc-appbar-frosted">
             <MudIconButton Icon="@Icons.Material.Filled.Menu"
                            Color="Color.Inherit"
                            Edge="Edge.Start"
                            OnClick="@((_) => DrawerToggle())" />
-            <MudText Typo="Typo.h5"
-                     Class="atc-appbar-brand-text">
-                ATC
-            </MudText>
+            <a href="/" class="d-flex align-center" style="text-decoration: none;">
+                <img src="/images/atc-logo.svg" alt="ATC" width="28" height="28" class="mr-2" />
+                <MudText Typo="Typo.h5"
+                         Class="atc-appbar-brand-text">
+                    ATC
+                </MudText>
+            </a>
             <MudSpacer />
             <div class="d-none d-md-flex align-center">
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Inherit"
+                           Href="/"
+                           Class="atc-nav-button">
+                    Home
+                </MudButton>
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Inherit"
+                           Href="/introduction/repository-overview"
+                           Class="atc-nav-button">
+                    Repositories
+                </MudButton>
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Inherit"
+                           Href="/introduction/about-atc"
+                           Class="atc-nav-button">
+                    Docs
+                </MudButton>
                 <MudMenu EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
-                         Label="Support"
+                         Label="More"
                          Color="Color.Inherit"
                          Dense="true">
+                    <MudMenuItem Href="/news">News</MudMenuItem>
+                    <MudMenuItem Href="/manuals/devops-playbook">DevOps Playbook</MudMenuItem>
                     <MudText Typo="Typo.body2"
                              Class="px-4 py-2"><b>Maintenance</b></MudText>
-                    <MudMenuItem Href="/support/repository-compliance-overview">Repository compliance overview</MudMenuItem>
-                    <MudMenuItem Href="/support/api-rate-limits">GitHub API rate limits</MudMenuItem>
+                    <MudMenuItem Href="/support/repository-compliance-overview">Compliance overview</MudMenuItem>
+                    <MudMenuItem Href="/support/api-rate-limits">API rate limits</MudMenuItem>
                 </MudMenu>
                 <MudDivider Vertical="true"
                             FlexItem="true"
                             DividerType="DividerType.Middle"
-                            Class="mx-4 my-3"/>
+                            Class="mx-3 my-3"/>
                 <MudTooltip Text="Toggle light/dark theme">
                     <MudIconButton Icon="@Icons.Material.Filled.Brightness4"
                                    Color="Color.Inherit"
                                    OnClick="@((_) => StateContainer.DarkModeToggle())" />
                 </MudTooltip>
-                <MudTooltip Text="GitHub repository">
+                <MudTooltip Text="GitHub organization">
                     <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
                                    Color="Color.Inherit"
                                    Href="https://github.com/atc-net/"
@@ -59,19 +82,20 @@
                                    Href="https://github.com/atc-net/"
                                    Target="_blank" />
                 </div>
-                <MudText Typo="Typo.body2"
-                         Class="px-4 py-2"><b>Community Support</b></MudText>
+                <MudMenuItem Href="/">Home</MudMenuItem>
+                <MudMenuItem Href="/introduction/repository-overview">Repositories</MudMenuItem>
+                <MudMenuItem Href="/introduction/about-atc">Docs</MudMenuItem>
+                <MudMenuItem Href="/news">News</MudMenuItem>
             </MudMenu>
         </MudAppBar>
 
         <MudDrawer @bind-Open=drawerOpen
-                   Elevation="25"
+                   Elevation="0"
                    Breakpoint="Breakpoint.Lg"
                    Class="atc-appbar-band">
             <MudDrawerHeader Class="atc-brand"
                              Style="margin: 20px auto 0"
                              LinkToIndex="true">
-                @*<MudIcon></MudIcon>*@
                 <img src="/images/atc-logo.svg" alt="ATC" />
             </MudDrawerHeader>
             <NavMenu @ref="@navMenuRef" />
