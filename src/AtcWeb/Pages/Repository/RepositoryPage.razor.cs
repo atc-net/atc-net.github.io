@@ -16,9 +16,14 @@ public partial class RepositoryPage : ComponentBase
     {
         isLoaded = false;
         repository = null;
+        StateHasChanged();
 
-        // Phase 1: Basic repo info — renders header + description immediately
-        repository = await RepositoryService.GetRepositoryByNameAsync(RepositoryName);
+        // Phase 1: Basic repo info + paths in parallel — renders header immediately
+        var taskRepo = RepositoryService.GetRepositoryByNameAsync(RepositoryName);
+        var taskPaths = RepositoryService.GetDirectoryMetadataAsync(RepositoryName);
+        await Task.WhenAll(taskRepo, taskPaths);
+
+        repository = await taskRepo;
         isLoaded = true;
 
         if (repository is null)
@@ -26,10 +31,11 @@ public partial class RepositoryPage : ComponentBase
             return;
         }
 
+        repository.FolderAndFilePaths = await taskPaths;
         StateHasChanged();
 
-        // Phase 2: Paths + README — renders README as fast as possible
-        await RepositoryService.PopulatePathsAndReadmeAsync(repository);
+        // Phase 2: README — renders README as fast as possible
+        await RepositoryService.PopulateReadmeAsync(repository);
         StateHasChanged();
 
         // Phase 3: Advanced metadata (coding rules, issues, .NET projects)
