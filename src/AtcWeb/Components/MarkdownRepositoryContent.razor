@@ -1,5 +1,13 @@
 @inherits MarkdownRepositoryContentBase
+@inject IJSRuntime JS
 
 <div class="markdown">
     @HtmlContent
 </div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("renderMermaidDiagrams");
+    }
+}
