@@ -16,7 +16,6 @@
 
                 <ul style="list-style-type: square">
                     <li>All repositories are free to use and contribute to - ATC-Net uses the <b>MIT license</b>.</li>
-                    <li>Each repository is managed by one or more people from the ATC-team, referred to as Repo-Responsible.</li>
                     <li>Everyone can contribute to a repository by making a pull-request (PR).</li>
                 </ul>
 
@@ -28,75 +27,12 @@
                     <ul style="list-style-type: square">
                         <li>Giving the repository a meaningful name</li>
                         <li>Defining the purpose of the repository through a good description</li>
-                        <li>Assign Repo-Responsible members</li>
                         <li>Follow the general ATC repository template</li>
                     </ul>
                     <br />
                     When creating a repository on the atc-net organization, the above mentioned rules must be followed.
                     If in need to create a "startup" repository, the <MudLink Href="https://github.com/sandbox-atc-net">Sandbox ATC-NET Organization</MudLink> can be used.
                 </p>
-            </SectionContent>
-        </DocsPageSection>
-
-        <DocsPageSection>
-            <SectionHeader Title="What does it mean to be a Repo-Responsible"/>
-            <SectionContent>
-                <p>
-                    A Repo-Responsible member, is taking responsibility for driving the repository and ensuring that the common ATC-Rules,
-                    settings and workflows are in a acceptable state.
-                </p>
-                <p>
-                    Some of these tasks are as follows.
-                </p>
-                <p>
-                    <h3>For C#/.NET projects</h3>
-
-                    <ul style="list-style-type: square">
-                        <li>Ensure a process is enabled, like <b>PR</b>.</li>
-                        <li>Ensure <b>beta</b> Nuget-packages is stored in <MudLink Href="https://github.com/orgs/atc-net/packages">GitHub Package Repository</MudLink>.</li>
-                        <li>Ensure <b>release</b> Nuget-packages is stored in <MudLink Href="https://www.nuget.org/packages?q=atc-net">Nuget.org Package Repository</MudLink>.</li>
-                    </ul>
-                </p>
-                <p>
-                    <h3>For Python projects</h3>
-
-                    <ul style="list-style-type: square">
-                        <li>Ensure a process is enabled, like <b>PR</b>.</li>
-                        <li>Ensure <b>beta</b> Python-packages is stored in <MudLink Href="https://test.pypi.org/">Test PyPi Package Repository</MudLink>.</li>
-                        <li>Ensure <b>release</b> Python-packages is stored in <MudLink Href="https://pypi.org/">PyPi Package Repository</MudLink>.</li>
-                    </ul>
-                </p>
-            </SectionContent>
-        </DocsPageSection>
-
-        <DocsPageSection>
-            <SectionHeader Title="Repo-Responsible(s)"/>
-            <SectionContent FullWidth="true"
-                            AutoMarginContent="false">
-                @if (Repositories is null)
-                {
-                    <MudGrid Justify="Justify.Center">
-                        <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true"/>
-                    </MudGrid>
-                }
-                else
-                {
-                    foreach (var repository in Repositories.OrderBy(x => x.Name))
-                    {
-                        <MudElement HtmlTag="div"
-                                    Class="mb-12">
-                            <MudLink Typo="Typo.h5"
-                                     Href="@repository.Url"
-                                     Target="_blank">
-                                @repository.Name
-                            </MudLink>
-                            <GitHubContributorGrid Contributors="repository.ResponsibleMembers"
-                                                   RepositoryName="@repository.Name"
-                                                   ItemTitle="Responsible member"
-                                                   Justify="Justify.FlexStart" />
-                        </MudElement>
-                    }
-                }
             </SectionContent>
         </DocsPageSection>
 
