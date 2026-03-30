@@ -65,7 +65,8 @@ atc-appbar-band {
 
 
 .atc-navmenu {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   margin-bottom: 12px;
 }
 
