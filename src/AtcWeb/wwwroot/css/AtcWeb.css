@@ -405,10 +405,23 @@ atc-appbar-band {
   --atc-glow-pink: 0 0 20px rgba(255, 64, 129, 0.15);
 }
 
-.mud-appbar {
+.atc-appbar-frosted {
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid rgba(119, 107, 231, 0.15);
+}
+
+.atc-nav-button {
+  text-transform: none !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.02em !important;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.atc-nav-button:hover {
+  opacity: 1;
+  background-color: rgba(119, 107, 231, 0.08) !important;
 }
 
 .accent-card, .accent-card-blue, .accent-card-orange, .accent-card-pink, .accent-card-teal, .accent-card-purple {
