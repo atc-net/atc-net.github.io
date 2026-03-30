@@ -30,11 +30,11 @@
     @* ===== STATS BAR ===== *@
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-value">@repositoryCount</div>
+            <div class="stat-value">@(repositoryCount > 0 ? repositoryCount.ToString() : "--")</div>
             <div class="stat-label">Repositories</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">@contributorCount</div>
+            <div class="stat-value">@(contributorCount > 0 ? contributorCount.ToString() : "--")</div>
             <div class="stat-label">Contributors</div>
         </div>
         <div class="stat-item">
@@ -58,8 +58,16 @@
 
         @if (featuredRepos is null)
         {
-            <div class="d-flex justify-center pa-8">
-                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            <div class="featured-repos-grid">
+                @for (var i = 0; i < 6; i++)
+                {
+                    <div class="repo-card repo-card-core" style="min-height: 140px;">
+                        <MudSkeleton Width="60%" Height="24px" Class="mb-3" />
+                        <MudSkeleton Width="90%" Height="16px" Class="mb-2" />
+                        <MudSkeleton Width="75%" Height="16px" Class="mb-4" />
+                        <MudSkeleton Width="30%" Height="14px" />
+                    </div>
+                }
             </div>
         }
         else
