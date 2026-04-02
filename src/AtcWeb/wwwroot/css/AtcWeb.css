@@ -1,14 +1,18 @@
 .atc-loader {
-  display: block;
-  margin-top: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   font-family: cera pro;
   font-size: 24px;
   text-align: center;
   color: #776be7;
   background-color: #0f0f1a;
+}
+.atc-loader img {
+  max-width: 60vw;
+  height: auto;
 }
 
 .app-loading-text {
@@ -35,6 +39,9 @@
 
 .full-page-height {
   height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .atc-brand {
@@ -99,7 +106,9 @@ atc-appbar-band {
 
 .atc-main-content {
   padding-top: 86px;
-  padding-bottom: 86px;
+  padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 @media (min-width: 960px) {
@@ -1080,6 +1089,7 @@ atc-appbar-band {
 
 .docs-section-wireframe {
   height: calc(80vh - 124px);
+  height: calc(80dvh - 124px);
 }
 
 .docs-section-black {
