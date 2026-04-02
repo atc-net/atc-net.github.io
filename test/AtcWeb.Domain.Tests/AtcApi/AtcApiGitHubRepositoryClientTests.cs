@@ -1,6 +1,6 @@
 namespace AtcWeb.Domain.Tests.AtcApi;
 
-public class AtcApiGitHubRepositoryClientTests
+public sealed class AtcApiGitHubRepositoryClientTests
 {
     [Theory, AutoNSubstituteData]
     public async Task GetRepositories(
