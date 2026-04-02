@@ -29,13 +29,13 @@ public sealed class BrowserCacheService
             }
 
             var wrapper = JsonSerializer.Deserialize<CacheWrapper<T>>(json, JsonSerializerOptionsFactory.Create());
-            if (wrapper is null || wrapper.ExpiresAt < DateTimeOffset.UtcNow)
+            if (wrapper is not null && wrapper.ExpiresAt >= DateTimeOffset.UtcNow)
             {
-                await RemoveAsync(key);
-                return null;
+                return wrapper.Data;
             }
 
-            return wrapper.Data;
+            await RemoveAsync(key);
+            return null;
         }
         catch
         {
@@ -76,12 +76,5 @@ public sealed class BrowserCacheService
         {
             // Ignore removal failures
         }
-    }
-
-    private sealed class CacheWrapper<T>
-    {
-        public T Data { get; set; } = default!;
-
-        public DateTimeOffset ExpiresAt { get; set; }
     }
 }

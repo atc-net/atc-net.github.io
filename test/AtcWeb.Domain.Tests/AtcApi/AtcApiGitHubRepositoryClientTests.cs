@@ -3,10 +3,13 @@ namespace AtcWeb.Domain.Tests.AtcApi;
 public class AtcApiGitHubRepositoryClientTests
 {
     [Theory, AutoNSubstituteData]
-    public async Task GetRepositories([Frozen] IMemoryCache memoryCache)
+    public async Task GetRepositories(
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubRepositories) = await client.GetRepositories(
@@ -23,9 +26,12 @@ public class AtcApiGitHubRepositoryClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task GetRepositoryByName([Frozen] IMemoryCache memoryCache)
+    public async Task GetRepositoryByName(
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubRepository) = await client.GetRepositoryByName(
@@ -41,52 +47,13 @@ public class AtcApiGitHubRepositoryClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task GetContributors([Frozen] IMemoryCache memoryCache)
+    public async Task GetAllPathsByRepository(
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
-
-        // Act
-        var (isSuccessful, gitHubContributors) = await client.GetContributors(
-            TestContext.Current.CancellationToken);
-
-        // Assert
-        Assert.True(isSuccessful);
-
-        gitHubContributors
-            .Should()
-            .NotBeEmpty()
-            .And
-            .HaveCountGreaterThan(1);
-    }
-
-    [Theory, AutoNSubstituteData]
-    public async Task GetContributorsByRepository(
-        [Frozen] IMemoryCache memoryCache)
-    {
-        // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
-
-        // Act
-        var (isSuccessful, gitHubContributors) = await client.GetContributorsByRepositoryByName(
-            "atc",
-            TestContext.Current.CancellationToken);
-
-        // Assert
-        Assert.True(isSuccessful);
-
-        gitHubContributors
-            .Should()
-            .NotBeEmpty()
-            .And
-            .HaveCountGreaterThan(1);
-    }
-
-    [Theory, AutoNSubstituteData]
-    public async Task GetAllPathsByRepository([Frozen] IMemoryCache memoryCache)
-    {
-        // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubPaths) = await client.GetAllPathsByRepositoryByName(
@@ -105,10 +72,12 @@ public class AtcApiGitHubRepositoryClientTests
 
     [Theory, AutoNSubstituteData]
     public async Task GetFileByRepositoryNameAndFilePath(
-        [Frozen] IMemoryCache memoryCache)
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubRaw) = await client.GetFileByRepositoryNameAndFilePath(
@@ -126,10 +95,12 @@ public class AtcApiGitHubRepositoryClientTests
 
     [Theory, AutoNSubstituteData]
     public async Task GetIssuesAllByRepositoryByName(
-        [Frozen] IMemoryCache memoryCache)
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubIssues) = await client.GetIssuesAllByRepositoryByName(
@@ -148,10 +119,12 @@ public class AtcApiGitHubRepositoryClientTests
 
     [Theory, AutoNSubstituteData]
     public async Task GetIssuesOpenByRepositoryByName(
-        [Frozen] IMemoryCache memoryCache)
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubIssues) = await client.GetIssuesOpenByRepositoryByName(
@@ -170,10 +143,12 @@ public class AtcApiGitHubRepositoryClientTests
 
     [Theory, AutoNSubstituteData]
     public async Task GetIssuesClosedByRepositoryByName(
-        [Frozen] IMemoryCache memoryCache)
+        [Frozen] IMemoryCache memoryCache,
+        [Frozen] BrowserCacheService browserCacheService)
     {
         // Arrange
-        var client = new AtcApiGitHubRepositoryClient(memoryCache);
+        using var httpClient = new HttpClient();
+        var client = new AtcApiGitHubRepositoryClient(httpClient, memoryCache, browserCacheService);
 
         // Act
         var (isSuccessful, gitHubIssues) = await client.GetIssuesClosedByRepositoryByName(

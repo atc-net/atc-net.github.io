@@ -55,6 +55,7 @@ public class AtcApiGitHubRepositoryClient
 
             var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<IReadOnlyList<GitHubRepository>>(content, JsonSerializerOptionsFactory.Create());
+
             if (result is null)
             {
                 return (IsSuccessful: false, []);
