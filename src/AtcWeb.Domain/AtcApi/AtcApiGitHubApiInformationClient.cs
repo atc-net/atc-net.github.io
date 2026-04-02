@@ -3,9 +3,15 @@ namespace AtcWeb.Domain.AtcApi;
 public class AtcApiGitHubApiInformationClient
 {
     private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/api-information";
+    private readonly HttpClient httpClient;
 
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OK.")]
-    [SuppressMessage("Minor Code Smell", "S2325:Methods and properties that don't access instance data should be static", Justification = "OK.")]
+    public AtcApiGitHubApiInformationClient(HttpClient httpClient)
+    {
+        ArgumentNullException.ThrowIfNull(httpClient);
+
+        this.httpClient = httpClient;
+    }
+
     public async Task<(bool IsSuccessful, GitHubApiRateLimits GitHubApiRateLimits)> GetApiRateLimits(
         CancellationToken cancellationToken = default)
     {
@@ -13,7 +19,6 @@ public class AtcApiGitHubApiInformationClient
 
         try
         {
-            using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {

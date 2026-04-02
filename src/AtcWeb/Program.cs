@@ -2,11 +2,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
 
-builder.Services.AddScoped(_ => new DefaultBrowserOptionsMessageHandler
-{
-    DefaultBrowserRequestCache = BrowserRequestCache.NoStore,
-    DefaultBrowserRequestMode = BrowserRequestMode.NoCors,
-});
+builder.Services.AddScoped(_ => new HttpClient());
+builder.Services.AddScoped<BrowserCacheService>();
 
 builder.Services.AddScoped<AtcApiGitHubApiInformationClient>();
 builder.Services.AddScoped<AtcApiGitHubRepositoryClient>();
