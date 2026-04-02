@@ -3,18 +3,27 @@ namespace AtcWeb.Domain.AtcApi;
 public class AtcApiGitHubRepositoryClient
 {
     private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/repository";
+    private readonly HttpClient httpClient;
     private readonly IMemoryCache memoryCache;
+    private readonly BrowserCacheService browserCache;
     private static readonly SemaphoreSlim SemaphoreRepositories = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreContributors = new(1, 1);
     private static readonly SemaphoreSlim SemaphorePaths = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
 
-    public AtcApiGitHubRepositoryClient(IMemoryCache memoryCache)
+    public AtcApiGitHubRepositoryClient(
+        HttpClient httpClient,
+        IMemoryCache memoryCache,
+        BrowserCacheService browserCache)
     {
+        ArgumentNullException.ThrowIfNull(httpClient);
         ArgumentNullException.ThrowIfNull(memoryCache);
+        ArgumentNullException.ThrowIfNull(browserCache);
 
+        this.httpClient = httpClient;
         this.memoryCache = memoryCache;
+        this.browserCache = browserCache;
     }
 
     public async Task<(bool IsSuccessful, List<GitHubRepository> GitHubRepositories)> GetRepositories(
@@ -26,12 +35,19 @@ public class AtcApiGitHubRepositoryClient
             return (IsSuccessful: true, data!);
         }
 
+        var browserCached = await browserCache.GetAsync<List<GitHubRepository>>(cacheKey);
+        if (browserCached is not null)
+        {
+            memoryCache.Set(cacheKey, browserCached, CacheConstants.AbsoluteExpirationRelativeToNow);
+            return (IsSuccessful: true, browserCached);
+        }
+
         await SemaphoreRepositories.WaitAsync(cancellationToken);
 
         try
         {
             const string url = $"{BaseAddress}/";
-            using var httpClient = new HttpClient();
+
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -53,6 +69,7 @@ public class AtcApiGitHubRepositoryClient
                 .ToList();
 
             memoryCache.Set(cacheKey, gitHubRepositories, CacheConstants.AbsoluteExpirationRelativeToNow);
+            await browserCache.SetAsync(cacheKey, gitHubRepositories);
             return (IsSuccessful: true, gitHubRepositories);
         }
         catch
@@ -141,7 +158,6 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -180,7 +196,7 @@ public class AtcApiGitHubRepositoryClient
         try
         {
             const string url = $"{BaseAddress}/nuget-packages-used";
-            using var httpClient = new HttpClient();
+
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -218,7 +234,6 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -261,7 +276,6 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {
@@ -318,7 +332,6 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
             {

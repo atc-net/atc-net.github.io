@@ -5,6 +5,7 @@ global using Atc;
 global using AtcWeb;
 global using AtcWeb.Domain.AtcApi;
 global using AtcWeb.Domain.AtcApi.Models;
+global using AtcWeb.Domain.Caching;
 global using AtcWeb.Domain.Data.Models;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
@@ -17,6 +18,6 @@ global using Ganss.Xss;
 global using Markdig;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-global using Microsoft.AspNetCore.Components.WebAssembly.Http;
+
 global using MudBlazor;
 global using MudBlazor.Services;
