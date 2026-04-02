@@ -7,7 +7,6 @@ public class AtcApiGitHubRepositoryClient
     private readonly IMemoryCache memoryCache;
     private readonly BrowserCacheService browserCache;
     private static readonly SemaphoreSlim SemaphoreRepositories = new(1, 1);
-    private static readonly SemaphoreSlim SemaphoreContributors = new(1, 1);
     private static readonly SemaphoreSlim SemaphorePaths = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
@@ -97,91 +96,6 @@ public class AtcApiGitHubRepositoryClient
         return repository is null
             ? (IsSuccessful: false, gitHubRepository: null)
             : (IsSuccessful: true, gitHubRepository: repository);
-    }
-
-    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributors(
-        CancellationToken cancellationToken = default)
-    {
-        const string cacheKey = CacheConstants.CacheKeyContributors;
-        if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepositoryContributor> data))
-        {
-            return (IsSuccessful: true, data!);
-        }
-
-        try
-        {
-            var bag = new ConcurrentBag<GitHubRepositoryContributor>();
-
-            var (isSuccessful, gitHubRepositories) = await GetRepositories(cancellationToken);
-            if (isSuccessful)
-            {
-                var tasks = gitHubRepositories
-                    .Select(async gitHubRepository =>
-                    {
-                        var (isSuccessfulContributors, contributors) = await GetContributorsByRepositoryByName(gitHubRepository.Name, cancellationToken);
-                        if (isSuccessfulContributors)
-                        {
-                            foreach (var contributor in contributors
-                                         .Where(gitHubContributor =>
-                                             bag.FirstOrDefault(x => x.Id.Equals(gitHubContributor.Id)) is null &&
-                                             !gitHubContributor.Login.Equals("ATCBot", StringComparison.Ordinal)))
-                            {
-                                bag.Add(contributor);
-                            }
-                        }
-                    });
-
-                await TaskHelper.WhenAll(tasks);
-            }
-
-            memoryCache.Set(cacheKey, bag.ToList(), CacheConstants.AbsoluteExpirationRelativeToNow);
-            return (IsSuccessful: true, bag.ToList());
-        }
-        catch
-        {
-            return (IsSuccessful: false, []);
-        }
-    }
-
-    public async Task<(bool IsSuccessful, List<GitHubRepositoryContributor> GitHubRepositoryContributors)> GetContributorsByRepositoryByName(
-        string repositoryName,
-        CancellationToken cancellationToken = default)
-    {
-        var url = $"{BaseAddress}/contributors/{repositoryName}";
-        var cacheKey = $"{CacheConstants.CacheKeyRepositories}_{url}";
-        if (memoryCache.TryGetValue(cacheKey, out List<GitHubRepositoryContributor> data))
-        {
-            return (IsSuccessful: true, data!);
-        }
-
-        await SemaphoreContributors.WaitAsync(cancellationToken);
-
-        try
-        {
-            var responseMessage = await httpClient.GetAsync(url, cancellationToken);
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                return (IsSuccessful: false, []);
-            }
-
-            var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
-            var result = JsonSerializer.Deserialize<List<GitHubRepositoryContributor>>(content, JsonSerializerOptionsFactory.Create());
-            if (result is null)
-            {
-                return (IsSuccessful: false, []);
-            }
-
-            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
-            return (IsSuccessful: true, result.ToList());
-        }
-        catch
-        {
-            return (IsSuccessful: false, []);
-        }
-        finally
-        {
-            SemaphoreContributors.Release();
-        }
     }
 
     public async Task<(bool IsSuccessful, List<DotnetNugetPackageMetadataBase> DotnetNugetPackagesMetadata)> GetLatestNugetPackageVersionsUsed(
