@@ -4,23 +4,15 @@ public partial class Index
 {
     private List<AtcRepository>? featuredRepos;
     private int repositoryCount;
-    private int contributorCount;
 
     [Inject]
     private GitHubRepositoryService RepositoryService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var reposTask = RepositoryService.GetRepositoriesAsync();
-        var contributorsTask = RepositoryService.GetContributorsAsync();
-
-        await Task.WhenAll(reposTask, contributorsTask);
-
-        var allRepos = await reposTask;
-        var contributors = await contributorsTask;
+        var allRepos = await RepositoryService.GetRepositoriesAsync();
 
         repositoryCount = allRepos.Count(r => !r.BaseData.Private);
-        contributorCount = contributors.Count;
 
         // Curate featured repos: pick well-known packages across categories
         var featuredNames = new[]
