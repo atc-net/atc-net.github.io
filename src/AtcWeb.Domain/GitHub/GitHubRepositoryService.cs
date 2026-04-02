@@ -30,14 +30,6 @@ public class GitHubRepositoryService
             : null;
     }
 
-    public async Task<List<GitHubRepositoryContributor>> GetContributorsAsync()
-    {
-        var (isSuccessful, gitHubContributors) = await atcApiGitHubRepositoryClient.GetContributors();
-        return isSuccessful
-            ? gitHubContributors
-            : new List<GitHubRepositoryContributor>();
-    }
-
     public async Task<List<AtcRepository>> GetRepositoriesAsync(
         bool populateMetaDataBase = false,
         bool populateMetaDataAdvanced = false)

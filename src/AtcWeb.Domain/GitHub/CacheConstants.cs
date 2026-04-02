@@ -4,8 +4,6 @@ public static class CacheConstants
 {
     public const string CacheKeyRepositories = "Repositories";
 
-    public const string CacheKeyContributors = "Contributors";
-
     public const string CacheKeyIssues = "Issues";
 
     public const string CacheKeyRepositoryFile = "RepositoryFile";
