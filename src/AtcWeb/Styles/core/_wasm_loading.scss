@@ -1,12 +1,17 @@
 .atc-loader {
-  display: block;
-  margin-top: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   font-family: cera pro;
   font-size: 24px;
   text-align: center;
   color: #776be7;
   background-color: #0f0f1a;
+
+  img {
+    max-width: 60vw;
+    height: auto;
+  }
 }
