@@ -21,6 +21,20 @@
 .docs-page-content {
 }
 
+.docs-page-content-navigation-drawer {
+  pointer-events: none;
+
+  .mud-drawer-content,
+  .mud-nav-link,
+  .title {
+    pointer-events: auto;
+  }
+
+  .mud-drawer-content {
+    overflow: visible;
+  }
+}
+
 .docs-page-content-navigation-drawer .title {
   font-weight: 500;
 }

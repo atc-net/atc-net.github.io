@@ -887,6 +887,18 @@ atc-appbar-band {
   margin-bottom: 50px;
 }
 
+.docs-page-content-navigation-drawer {
+  pointer-events: none;
+}
+.docs-page-content-navigation-drawer .mud-drawer-content,
+.docs-page-content-navigation-drawer .mud-nav-link,
+.docs-page-content-navigation-drawer .title {
+  pointer-events: auto;
+}
+.docs-page-content-navigation-drawer .mud-drawer-content {
+  overflow: visible;
+}
+
 .docs-page-content-navigation-drawer .title {
   font-weight: 500;
 }
