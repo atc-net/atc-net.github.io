@@ -20,6 +20,12 @@
     border-left: 3px solid transparent;
     border-image: linear-gradient(180deg, #776be7 0%, #ff4081 100%) 1;
     border-image-slice: 1;
+
+    // Remove accent from nested section content (e.g. wiki sub-pages)
+    .docs-section-content {
+      border-left: none;
+      border-image: none;
+    }
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: box-shadow 0.3s ease, transform 0.2s ease;
@@ -130,7 +136,7 @@
 }
 
 .docs-section-black {
-    background-color: var(--mud-palette-black);
+    background-color: var(--mud-palette-background);
 }
 
 .docs-iframe {
