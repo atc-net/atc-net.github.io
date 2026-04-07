@@ -12,8 +12,10 @@
     margin-bottom: 16px;
   }
 
-  & ul {
+  & ul, & ol {
     padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
   }
 
   & ul li {

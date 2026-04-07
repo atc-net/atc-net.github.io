@@ -1,4 +1,6 @@
 global using System.Diagnostics.CodeAnalysis;
+global using System.Globalization;
+global using System.Text;
 global using System.Text.RegularExpressions;
 global using System.Web;
 global using Atc;
@@ -10,12 +12,15 @@ global using AtcWeb.Domain.Data.Models;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
 global using AtcWeb.Extensions;
+global using AtcWeb.Helpers;
 global using AtcWeb.Models;
 global using AtcWeb.State;
 global using AtcWeb.Styles;
 global using ColorCode.Styling;
 global using Ganss.Xss;
 global using Markdig;
+global using Markdig.Syntax;
+global using Markdig.Syntax.Inlines;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
