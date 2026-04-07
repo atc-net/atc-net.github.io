@@ -12,15 +12,3 @@
         </MudText>
     </MudElement>
 }
-
-@code {
-
-    [Parameter]
-    public AtcRepository? Repository { get; set; }
-
-    private string IconSrc
-        => Repository is null
-            ? string.Empty
-            : ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language);
-
-}

@@ -15,12 +15,3 @@
         <p style="color:red; padding:1rem;">@ex.ToString()</p>
     </ErrorContent>
 </ErrorBoundary>
-
-@code {
-    private ErrorBoundary? errorBoundary;
-
-    protected override void OnParametersSet()
-    {
-        errorBoundary?.Recover();
-    }
-}

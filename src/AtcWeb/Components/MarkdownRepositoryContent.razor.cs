@@ -1,6 +1,6 @@
 namespace AtcWeb.Components;
 
-public class MarkdownRepositoryContentBase : ComponentBase
+public partial class MarkdownRepositoryContent : ComponentBase
 {
     private readonly MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
@@ -11,7 +11,10 @@ public class MarkdownRepositoryContentBase : ComponentBase
     private List<MarkdownHeadingInfo>? pendingHeadings;
 
     [Inject]
-    protected IHtmlSanitizer HtmlSanitizer { get; set; }
+    private IHtmlSanitizer HtmlSanitizer { get; set; }
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
 
     [Parameter]
     public string RepositoryName { get; set; }
@@ -44,8 +47,6 @@ public class MarkdownRepositoryContentBase : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-
         if (pendingHeadings is not null)
         {
             var headings = pendingHeadings;
@@ -56,6 +57,8 @@ public class MarkdownRepositoryContentBase : ComponentBase
                 await OnHeadingsExtracted.InvokeAsync(headings);
             }
         }
+
+        await JS.InvokeVoidAsync("renderMermaidDiagrams");
     }
 
     [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "Capture groups are used in wiki link replacements.")]
