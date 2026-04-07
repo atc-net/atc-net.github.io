@@ -1,5 +1,3 @@
-@inherits DocsPageRepositoryBase
-
 <DocsPage @ref="docsPage" MaxWidth="MaxWidth.Large">
     @if (Repository is null)
     {
@@ -108,7 +106,7 @@
                         @foreach (var wikiPage in Repository.Wiki.Pages)
                         {
                             var wikiH1 = wikiPage.IsLoaded
-                                ? MarkdownHeadingHelper.ExtractFirstH1Title(wikiPage.RawContent, markdownPipeline)
+                                ? MarkdownHeadingHelper.ExtractFirstH1Title(wikiPage.RawContent, MarkdownPipelineInstance)
                                 : null;
                             var wikiSectionTitle = wikiH1 ?? wikiPage.Title;
                             <DocsPageSection>
@@ -166,17 +164,3 @@
         </DocsPageContent>
     }
 </DocsPage>
-
-@code {
-    private static readonly MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions()
-        .UseEmojiAndSmiley()
-        .Build();
-
-    private DocsPage? docsPage;
-
-    private void HandleReadmeHeadings(List<MarkdownHeadingInfo> headings)
-    {
-        docsPage?.AddMarkdownHeadingSections("readme", headings);
-    }
-}
