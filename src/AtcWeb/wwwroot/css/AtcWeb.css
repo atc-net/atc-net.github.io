@@ -121,8 +121,8 @@ atc-appbar-band {
 }
 
 .docs-expand-wrapper {
-  color: var(--mud-palette-white);
-  background-color: var(--mud-palette-black);
+  color: var(--mud-palette-text-primary);
+  background-color: var(--mud-palette-surface);
 }
 .docs-expand-wrapper .docs-default-theme .mud-expand-panel {
   color: inherit;
@@ -130,7 +130,7 @@ atc-appbar-band {
   border: none !important;
 }
 .docs-expand-wrapper .docs-default-theme .mud-expand-panel .mud-expand-panel-text {
-  color: #988ef1;
+  color: var(--mud-palette-primary);
   font-weight: 500;
   font-size: 1rem;
 }
@@ -267,8 +267,10 @@ atc-appbar-band {
   margin-top: 0;
   margin-bottom: 16px;
 }
-.markdown ul {
+.markdown ul, .markdown ol {
   padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 .markdown ul li {
   list-style-type: disc;
@@ -506,11 +508,19 @@ atc-appbar-band {
 }
 
 .glass-panel {
-  background: rgba(22, 22, 42, 0.6);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(119, 107, 231, 0.1);
   border-radius: 16px;
+}
+
+.mud-theme-dark .glass-panel {
+  background: rgba(22, 22, 42, 0.6);
+  border: 1px solid rgba(119, 107, 231, 0.1);
+}
+
+:not(.mud-theme-dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(108, 92, 231, 0.1);
 }
 
 .glass-panel-light {
@@ -571,6 +581,13 @@ atc-appbar-band {
   color: #776be7 !important;
 }
 
+:not(.mud-theme-dark) .mud-nav-link:hover {
+  background-color: rgba(119, 107, 231, 0.1) !important;
+}
+:not(.mud-theme-dark) .mud-nav-link.active {
+  background-color: rgba(119, 107, 231, 0.15) !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -580,12 +597,24 @@ atc-appbar-band {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.mud-theme-dark ::-webkit-scrollbar-thumb,
+.mud-theme-dark::-webkit-scrollbar-thumb {
   background: rgba(119, 107, 231, 0.3);
   border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
+.mud-theme-dark ::-webkit-scrollbar-thumb:hover,
+.mud-theme-dark::-webkit-scrollbar-thumb:hover {
   background: rgba(119, 107, 231, 0.5);
+}
+
+:not(.mud-theme-dark) ::-webkit-scrollbar-thumb,
+:not(.mud-theme-dark)::-webkit-scrollbar-thumb {
+  background: rgba(119, 107, 231, 0.2);
+  border-radius: 4px;
+}
+:not(.mud-theme-dark) ::-webkit-scrollbar-thumb:hover,
+:not(.mud-theme-dark)::-webkit-scrollbar-thumb:hover {
+  background: rgba(119, 107, 231, 0.4);
 }
 
 .mermaid, pre.mermaid {
@@ -597,27 +626,9 @@ atc-appbar-band {
   max-width: 100%;
   height: auto;
 }
-.mermaid .nodeLabel, pre.mermaid .nodeLabel {
-  color: #1a1a2e !important;
-}
-.mermaid .edgeLabel, pre.mermaid .edgeLabel {
-  color: #c8c6d8 !important;
-  background-color: transparent !important;
-}
-.mermaid .edgeLabel rect, pre.mermaid .edgeLabel rect {
-  fill: #16162a !important;
-  opacity: 0.9;
-}
-.mermaid text, pre.mermaid text {
-  fill: #c8c6d8 !important;
-}
 .mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, pre.mermaid .node rect, pre.mermaid .node circle, pre.mermaid .node polygon {
   stroke: #776be7 !important;
   stroke-width: 1.5px !important;
-}
-.mermaid .cluster rect, pre.mermaid .cluster rect {
-  fill: #16162a !important;
-  stroke: #2a2a4a !important;
 }
 .mermaid .edgePath .path, pre.mermaid .edgePath .path {
   stroke: #776be7 !important;
@@ -626,9 +637,43 @@ atc-appbar-band {
 .mermaid .arrowheadPath, pre.mermaid .arrowheadPath {
   fill: #776be7 !important;
 }
-.mermaid .edgeLabel rect, pre.mermaid .edgeLabel rect {
+
+.mud-theme-dark .mermaid .nodeLabel, .mud-theme-dark pre.mermaid .nodeLabel {
+  color: #1a1a2e !important;
+}
+.mud-theme-dark .mermaid .edgeLabel, .mud-theme-dark pre.mermaid .edgeLabel {
+  color: #c8c6d8 !important;
+  background-color: transparent !important;
+}
+.mud-theme-dark .mermaid .edgeLabel rect, .mud-theme-dark pre.mermaid .edgeLabel rect {
   fill: #16162a !important;
   opacity: 0.9;
+}
+.mud-theme-dark .mermaid text, .mud-theme-dark pre.mermaid text {
+  fill: #c8c6d8 !important;
+}
+.mud-theme-dark .mermaid .cluster rect, .mud-theme-dark pre.mermaid .cluster rect {
+  fill: #16162a !important;
+  stroke: #2a2a4a !important;
+}
+
+:not(.mud-theme-dark) .mermaid .nodeLabel, :not(.mud-theme-dark) pre.mermaid .nodeLabel {
+  color: #2D2B42 !important;
+}
+:not(.mud-theme-dark) .mermaid .edgeLabel, :not(.mud-theme-dark) pre.mermaid .edgeLabel {
+  color: #4A4568 !important;
+  background-color: transparent !important;
+}
+:not(.mud-theme-dark) .mermaid .edgeLabel rect, :not(.mud-theme-dark) pre.mermaid .edgeLabel rect {
+  fill: #F8F7FC !important;
+  opacity: 0.9;
+}
+:not(.mud-theme-dark) .mermaid text, :not(.mud-theme-dark) pre.mermaid text {
+  fill: #4A4568 !important;
+}
+:not(.mud-theme-dark) .mermaid .cluster rect, :not(.mud-theme-dark) pre.mermaid .cluster rect {
+  fill: #F0EFF5 !important;
+  stroke: #DDD9E9 !important;
 }
 
 .atc-navmenu::-webkit-scrollbar {
@@ -1030,6 +1075,12 @@ atc-appbar-band {
   border-left: 3px solid transparent;
   border-image: linear-gradient(180deg, #776be7 0%, #ff4081 100%) 1;
   border-image-slice: 1;
+}
+.docs-section-content .docs-section-content {
+  border-left: none;
+  border-image: none;
+}
+.docs-section-content {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: box-shadow 0.3s ease, transform 0.2s ease;
@@ -1118,7 +1169,7 @@ atc-appbar-band {
 }
 
 .docs-section-black {
-  background-color: var(--mud-palette-black);
+  background-color: var(--mud-palette-background);
 }
 
 .docs-iframe {

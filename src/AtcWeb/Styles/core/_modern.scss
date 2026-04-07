@@ -110,11 +110,19 @@
 
 // --- Glass panel ---
 .glass-panel {
-  background: rgba(22, 22, 42, 0.6);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(119, 107, 231, 0.1);
   border-radius: 16px;
+}
+
+.mud-theme-dark .glass-panel {
+  background: rgba(22, 22, 42, 0.6);
+  border: 1px solid rgba(119, 107, 231, 0.1);
+}
+
+:not(.mud-theme-dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(108, 92, 231, 0.1);
 }
 
 .glass-panel-light {
@@ -186,7 +194,17 @@
   }
 }
 
-// --- Smooth scrollbar (dark mode) ---
+:not(.mud-theme-dark) .mud-nav-link {
+  &:hover {
+    background-color: rgba(119, 107, 231, 0.1) !important;
+  }
+
+  &.active {
+    background-color: rgba(119, 107, 231, 0.15) !important;
+  }
+}
+
+// --- Smooth scrollbar ---
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -196,12 +214,23 @@
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.mud-theme-dark ::-webkit-scrollbar-thumb,
+.mud-theme-dark::-webkit-scrollbar-thumb {
   background: rgba(119, 107, 231, 0.3);
   border-radius: 4px;
 
   &:hover {
     background: rgba(119, 107, 231, 0.5);
+  }
+}
+
+:not(.mud-theme-dark) ::-webkit-scrollbar-thumb,
+:not(.mud-theme-dark)::-webkit-scrollbar-thumb {
+  background: rgba(119, 107, 231, 0.2);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(119, 107, 231, 0.4);
   }
 }
 
@@ -216,40 +245,13 @@
     height: auto;
   }
 
-  // Node labels always dark -- all nodes will have light backgrounds
-  .nodeLabel {
-    color: #1a1a2e !important;
-  }
-
-  // Edge labels light for dark background
-  .edgeLabel {
-    color: #c8c6d8 !important;
-    background-color: transparent !important;
-  }
-
-  .edgeLabel rect {
-    fill: #16162a !important;
-    opacity: 0.9;
-  }
-
-  // General SVG text
-  text {
-    fill: #c8c6d8 !important;
-  }
-
-  // Node borders
+  // Node borders (brand color, same in both themes)
   .node rect, .node circle, .node polygon {
     stroke: #776be7 !important;
     stroke-width: 1.5px !important;
   }
 
-  // Cluster/group backgrounds
-  .cluster rect {
-    fill: #16162a !important;
-    stroke: #2a2a4a !important;
-  }
-
-  // Edge/line colors
+  // Edge/line colors (brand color, same in both themes)
   .edgePath .path {
     stroke: #776be7 !important;
     stroke-width: 1.5px !important;
@@ -258,11 +260,61 @@
   .arrowheadPath {
     fill: #776be7 !important;
   }
+}
 
-  // Edge label backgrounds
-  .edgeLabel rect {
-    fill: #16162a !important;
-    opacity: 0.9;
+// Dark-mode mermaid colors
+.mud-theme-dark {
+  .mermaid, pre.mermaid {
+    .nodeLabel {
+      color: #1a1a2e !important;
+    }
+
+    .edgeLabel {
+      color: #c8c6d8 !important;
+      background-color: transparent !important;
+    }
+
+    .edgeLabel rect {
+      fill: #16162a !important;
+      opacity: 0.9;
+    }
+
+    text {
+      fill: #c8c6d8 !important;
+    }
+
+    .cluster rect {
+      fill: #16162a !important;
+      stroke: #2a2a4a !important;
+    }
+  }
+}
+
+// Light-mode mermaid colors
+:not(.mud-theme-dark) {
+  .mermaid, pre.mermaid {
+    .nodeLabel {
+      color: #2D2B42 !important;
+    }
+
+    .edgeLabel {
+      color: #4A4568 !important;
+      background-color: transparent !important;
+    }
+
+    .edgeLabel rect {
+      fill: #F8F7FC !important;
+      opacity: 0.9;
+    }
+
+    text {
+      fill: #4A4568 !important;
+    }
+
+    .cluster rect {
+      fill: #F0EFF5 !important;
+      stroke: #DDD9E9 !important;
+    }
   }
 }
 
