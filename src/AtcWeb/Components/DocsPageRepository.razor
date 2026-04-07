@@ -1,6 +1,6 @@
 @inherits DocsPageRepositoryBase
 
-<DocsPage MaxWidth="MaxWidth.Large">
+<DocsPage @ref="docsPage" MaxWidth="MaxWidth.Large">
     @if (Repository is null)
     {
         <MudGrid Justify="Justify.Center">
@@ -84,7 +84,9 @@
                             <MudCardContent>
                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
-                                                           Content="@Repository.Root.RawReadme" />
+                                                           IdPrefix="readme"
+                                                           Content="@Repository.Root.RawReadme"
+                                                           OnHeadingsExtracted="HandleReadmeHeadings" />
                             </MudCardContent>
                         }
                         else
@@ -105,8 +107,12 @@
                     <SectionContent AutoMarginContent="false" FullWidth="true">
                         @foreach (var wikiPage in Repository.Wiki.Pages)
                         {
+                            var wikiH1 = wikiPage.IsLoaded
+                                ? MarkdownHeadingHelper.ExtractFirstH1Title(wikiPage.RawContent, markdownPipeline)
+                                : null;
+                            var wikiSectionTitle = wikiH1 ?? wikiPage.Title;
                             <DocsPageSection>
-                                <SectionHeader Title="@wikiPage.Title" />
+                                <SectionHeader Title="@wikiSectionTitle" />
                                 <SectionContent AutoMarginContent="false" FullWidth="true">
                                     <MudCard Elevation="0">
                                         @if (wikiPage.IsLoaded)
@@ -114,6 +120,7 @@
                                             <MudCardContent>
                                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                                           HeaderName="@wikiH1"
                                                                            Content="@wikiPage.RawContent" />
                                             </MudCardContent>
                                         }
@@ -159,3 +166,17 @@
         </DocsPageContent>
     }
 </DocsPage>
+
+@code {
+    private static readonly MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .UseEmojiAndSmiley()
+        .Build();
+
+    private DocsPage? docsPage;
+
+    private void HandleReadmeHeadings(List<MarkdownHeadingInfo> headings)
+    {
+        docsPage?.AddMarkdownHeadingSections("readme", headings);
+    }
+}

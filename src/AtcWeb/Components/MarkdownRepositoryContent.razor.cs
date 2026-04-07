@@ -8,6 +8,7 @@ public class MarkdownRepositoryContentBase : ComponentBase
         .Build();
 
     private string content;
+    private List<MarkdownHeadingInfo>? pendingHeadings;
 
     [Inject]
     protected IHtmlSanitizer HtmlSanitizer { get; set; }
@@ -22,6 +23,12 @@ public class MarkdownRepositoryContentBase : ComponentBase
     public string HeaderName { get; set; }
 
     [Parameter]
+    public string IdPrefix { get; set; }
+
+    [Parameter]
+    public EventCallback<List<MarkdownHeadingInfo>> OnHeadingsExtracted { get; set; }
+
+    [Parameter]
     [SuppressMessage("Usage", "BL0007:Component parameters should be auto properties", Justification = "OK.")]
     public string Content
     {
@@ -34,6 +41,22 @@ public class MarkdownRepositoryContentBase : ComponentBase
     }
 
     protected MarkupString HtmlContent { get; private set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (pendingHeadings is not null)
+        {
+            var headings = pendingHeadings;
+            pendingHeadings = null;
+
+            if (OnHeadingsExtracted.HasDelegate)
+            {
+                await OnHeadingsExtracted.InvokeAsync(headings);
+            }
+        }
+    }
 
     [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "Capture groups are used in wiki link replacements.")]
     private MarkupString ConvertMarkdownToHtml(string markdownContent)
@@ -54,6 +77,14 @@ public class MarkdownRepositoryContentBase : ComponentBase
             }
         }
 
+        // Strip inline TOC and extract headings when IdPrefix is set
+        List<MarkdownHeadingInfo>? headings = null;
+        if (!string.IsNullOrEmpty(IdPrefix))
+        {
+            markdownContent = MarkdownHeadingHelper.StripInlineToc(markdownContent);
+            headings = MarkdownHeadingHelper.ExtractHeadings(markdownContent, markdownPipeline, IdPrefix);
+        }
+
         // Convert wiki-style links [[Display|slug]] and [[Page Name]] to standard markdown links
         markdownContent = Regex.Replace(
             markdownContent,
@@ -69,6 +100,13 @@ public class MarkdownRepositoryContentBase : ComponentBase
             TimeSpan.FromSeconds(5));
 
         var html = Markdown.ToHtml(markdownContent, markdownPipeline);
+
+        // Inject prefixed heading IDs after converting to HTML
+        if (headings is not null && headings.Count > 0)
+        {
+            html = MarkdownHeadingHelper.InjectHeadingIds(html, headings);
+            pendingHeadings = headings;
+        }
 
         if (html.Contains("language-csharp", StringComparison.Ordinal))
         {
