@@ -31,19 +31,6 @@ public partial class DocsPage : ComponentBase
         }
     }
 
-    public string GetParentTitle(DocsPageSection section)
-    {
-        ArgumentNullException.ThrowIfNull(section);
-
-        if (section.ParentSection is null ||
-            !sectionMapper.TryGetValue(section.ParentSection, out var value))
-        {
-            return string.Empty;
-        }
-
-        return value.Title;
-    }
-
     internal void ClearSections()
     {
         bufferedSections = new Queue<(DocsSectionLink, DocsPageSection)>();

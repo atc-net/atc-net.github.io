@@ -75,7 +75,9 @@
             return;
         }
 
-        var parentTitle = DocsPage.GetParentTitle(Section);
+        Section.HeaderTitle = Title;
+
+        var parentTitle = Section.ParentSection?.HeaderTitle ?? string.Empty;
         if (!string.IsNullOrEmpty(parentTitle))
         {
             parentTitle += '-';
