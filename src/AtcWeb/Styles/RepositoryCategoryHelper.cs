@@ -9,6 +9,12 @@ public static class RepositoryCategoryHelper
             return "Core & Libraries";
         }
 
+        if (name.Contains("kepware", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("opc", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Industrial";
+        }
+
         if (name.Contains("iot", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("digitaltwin", StringComparison.OrdinalIgnoreCase))
         {
@@ -19,6 +25,12 @@ public static class RepositoryCategoryHelper
             name.Contains("cosmos", StringComparison.OrdinalIgnoreCase))
         {
             return "Azure";
+        }
+
+        if (name.Contains("dsc-config", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("templates", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Developer Tools";
         }
 
         if (name.Contains("rest", StringComparison.OrdinalIgnoreCase))
@@ -58,22 +70,26 @@ public static class RepositoryCategoryHelper
     public static string GetCardCssClass(string? name)
         => GetCategory(name) switch
         {
+            "Industrial" => "repo-card-industrial",
             "IoT" => "repo-card-iot",
             "Azure" => "repo-card-azure",
             "REST & API" => "repo-card-rest",
             "AI & Agents" => "repo-card-ai",
             "Code Quality" => "repo-card-tools",
+            "Developer Tools" => "repo-card-devtools",
             _ => "repo-card-core",
         };
 
     public static string GetIcon(string category)
         => category switch
         {
+            "Industrial" => Icons.Material.Filled.Factory,
             "IoT" => Icons.Material.Filled.Sensors,
             "Azure" => Icons.Material.Filled.Cloud,
             "REST & API" => Icons.Material.Filled.Api,
             "AI & Agents" => Icons.Material.Filled.Psychology,
             "Code Quality" => Icons.Material.Filled.Rule,
+            "Developer Tools" => Icons.Material.Filled.Construction,
             "UI & Desktop" => Icons.Material.Filled.DesktopWindows,
             "Testing" => Icons.Material.Filled.Science,
             "Core & Libraries" => Icons.Material.Filled.Hub,
@@ -86,11 +102,13 @@ public static class RepositoryCategoryHelper
             "Core & Libraries" => 0,
             "Azure" => 1,
             "IoT" => 2,
-            "REST & API" => 3,
-            "AI & Agents" => 4,
-            "Code Quality" => 5,
-            "UI & Desktop" => 6,
-            "Testing" => 7,
+            "Industrial" => 3,
+            "REST & API" => 4,
+            "AI & Agents" => 5,
+            "Code Quality" => 6,
+            "Developer Tools" => 7,
+            "UI & Desktop" => 8,
+            "Testing" => 9,
             _ => 99,
         };
 }
