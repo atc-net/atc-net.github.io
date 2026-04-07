@@ -99,16 +99,16 @@ public static class RepositoryCategoryHelper
     public static int GetSortOrder(string category)
         => category switch
         {
-            "Core & Libraries" => 0,
+            "AI & Agents" => 0,
             "Azure" => 1,
-            "IoT" => 2,
-            "Industrial" => 3,
-            "REST & API" => 4,
-            "AI & Agents" => 5,
-            "Code Quality" => 6,
-            "Developer Tools" => 7,
-            "UI & Desktop" => 8,
-            "Testing" => 9,
+            "Code Quality" => 2,
+            "Core & Libraries" => 3,
+            "Developer Tools" => 4,
+            "Industrial" => 5,
+            "IoT" => 6,
+            "REST & API" => 7,
+            "Testing" => 8,
+            "UI & Desktop" => 9,
             _ => 99,
         };
 }
