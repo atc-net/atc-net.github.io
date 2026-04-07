@@ -12,7 +12,7 @@
   <link href="css/AtcWeb.min.css" rel="stylesheet" />
 </head>
 
-<body style="background-color: #0f0f1a; margin: 0;">
+<body style="background-color: var(--mud-palette-background, #0f0f1a); margin: 0;">
   <div id="app" class="full-page-height">
     <div class="atc-loader" style="background-color: #0f0f1a;">
       <img src="/images/atc-logo.svg" alt="ATC" width="300" height="300" />
@@ -25,35 +25,69 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: 'dark',
-      themeVariables: {
-        background: '#0f0f1a',
-        primaryColor: '#2a2a4a',
-        primaryTextColor: '#c8c6d8',
-        primaryBorderColor: '#776be7',
-        secondaryColor: '#1e1e36',
-        secondaryTextColor: '#c8c6d8',
-        secondaryBorderColor: '#ff4081',
-        tertiaryColor: '#16162a',
-        tertiaryTextColor: '#c8c6d8',
-        tertiaryBorderColor: '#1ec8a5',
-        lineColor: '#776be7',
-        textColor: '#c8c6d8',
-        mainBkg: '#d4d2e8',
-        nodeBorder: '#776be7',
-        nodeTextColor: '#1a1a2e',
-        clusterBkg: '#16162a',
-        clusterBorder: '#1e1e36',
-        titleColor: '#c8c6d8',
-        edgeLabelBackground: '#16162a',
-        nodeTextColor: '#c8c6d8',
+    function getMermaidThemeConfig() {
+      var isDark = document.body.classList.contains('mud-theme-dark') ||
+                   document.querySelector('.mud-theme-dark') !== null;
+      if (isDark) {
+        return {
+          theme: 'dark',
+          themeVariables: {
+            background: '#0f0f1a',
+            primaryColor: '#2a2a4a',
+            primaryTextColor: '#c8c6d8',
+            primaryBorderColor: '#776be7',
+            secondaryColor: '#1e1e36',
+            secondaryTextColor: '#c8c6d8',
+            secondaryBorderColor: '#ff4081',
+            tertiaryColor: '#16162a',
+            tertiaryTextColor: '#c8c6d8',
+            tertiaryBorderColor: '#1ec8a5',
+            lineColor: '#776be7',
+            textColor: '#c8c6d8',
+            mainBkg: '#d4d2e8',
+            nodeBorder: '#776be7',
+            nodeTextColor: '#1a1a2e',
+            clusterBkg: '#16162a',
+            clusterBorder: '#1e1e36',
+            titleColor: '#c8c6d8',
+            edgeLabelBackground: '#16162a',
+          }
+        };
+      } else {
+        return {
+          theme: 'default',
+          themeVariables: {
+            background: '#F8F7FC',
+            primaryColor: '#E8E6F0',
+            primaryTextColor: '#2D2B42',
+            primaryBorderColor: '#776be7',
+            secondaryColor: '#F0EFF5',
+            secondaryTextColor: '#4A4568',
+            secondaryBorderColor: '#ff4081',
+            tertiaryColor: '#FFFFFF',
+            tertiaryTextColor: '#4A4568',
+            tertiaryBorderColor: '#1ec8a5',
+            lineColor: '#776be7',
+            textColor: '#4A4568',
+            mainBkg: '#E8E6F0',
+            nodeBorder: '#776be7',
+            nodeTextColor: '#2D2B42',
+            clusterBkg: '#F0EFF5',
+            clusterBorder: '#DDD9E9',
+            titleColor: '#2D2B42',
+            edgeLabelBackground: '#F8F7FC',
+          }
+        };
       }
-    });
+    }
+
+    mermaid.initialize(Object.assign({ startOnLoad: false }, getMermaidThemeConfig()));
+
     window.renderMermaidDiagrams = () => {
-      const elements = document.querySelectorAll('pre.mermaid:not([data-processed])');
+      var elements = document.querySelectorAll('pre.mermaid:not([data-processed])');
       if (elements.length > 0) {
+        var config = getMermaidThemeConfig();
+        mermaid.initialize(Object.assign({ startOnLoad: false }, config));
         mermaid.run({ nodes: elements });
       }
     };
