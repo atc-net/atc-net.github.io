@@ -5,14 +5,10 @@ namespace AtcWeb.Shared;
 public partial class MainLayout : LayoutComponentBase
 {
     private bool drawerOpen;
-    private NavMenu navMenuRef;
     private MudThemeProvider mudThemeProviderRef;
 
     [Inject]
     private StateContainer StateContainer { get; set; }
-
-    [Inject]
-    protected GitHubRepositoryService RepositoryService { get; set; }
 
     private void DrawerToggle()
     {
@@ -31,9 +27,6 @@ public partial class MainLayout : LayoutComponentBase
         if (firstRender)
         {
             StateContainer.UseDarkMode(await mudThemeProviderRef.GetSystemDarkModeAsync());
-
-            navMenuRef.Refresh();
-
             StateHasChanged();
         }
 
