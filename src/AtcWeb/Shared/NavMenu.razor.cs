@@ -14,19 +14,26 @@ public partial class NavMenu
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        repositories = await RepositoryService.GetRepositoriesAsync();
+        base.OnInitialized();
 
-        Refresh();
-        await base.OnInitializedAsync();
-    }
-
-    public void Refresh()
-    {
         section = NavigationManager.GetSection();
         componentLink = NavigationManager.GetComponentLink();
-        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            repositories = await RepositoryService.GetRepositoriesAsync();
+
+            // Yield to let the browser process any queued user interactions
+            // before the heavy DOM update from rendering all repository groups.
+            await Task.Yield();
+
+            StateHasChanged();
+        }
     }
 
     public bool IsSubGroupExpanded(AtcComponent? item)
