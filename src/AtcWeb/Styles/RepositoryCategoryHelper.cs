@@ -28,7 +28,8 @@ public static class RepositoryCategoryHelper
         }
 
         if (name.Contains("dsc-config", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("templates", StringComparison.OrdinalIgnoreCase))
+            name.Contains("templates", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("aspire", StringComparison.OrdinalIgnoreCase))
         {
             return "Developer Tools";
         }
