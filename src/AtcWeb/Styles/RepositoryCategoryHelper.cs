@@ -54,7 +54,9 @@ public static class RepositoryCategoryHelper
 
         if (name.Contains("wpf", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("xaml", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("blazor", StringComparison.OrdinalIgnoreCase))
+            name.Contains("blazor", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("logviewer", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("installer", StringComparison.OrdinalIgnoreCase))
         {
             return "UI & Desktop";
         }
