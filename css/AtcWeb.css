@@ -410,6 +410,9 @@ atc-appbar-band {
   --atc-gradient-pink: linear-gradient(135deg, #ff4081 0%, #e84393 100%);
   --atc-gradient-orange: linear-gradient(135deg, #ffa800 0%, #f64e62 100%);
   --atc-gradient-blue: linear-gradient(135deg, #3299ff 0%, #776be7 100%);
+  --atc-gradient-green: linear-gradient(135deg, #00b894 0%, #1ec8a5 100%);
+  --atc-gradient-amber: linear-gradient(135deg, #f0932b 0%, #e17055 100%);
+  --atc-gradient-cyan: linear-gradient(135deg, #00cec9 0%, #0984e3 100%);
   --atc-glow-purple: 0 0 20px rgba(119, 107, 231, 0.15);
   --atc-glow-pink: 0 0 20px rgba(255, 64, 129, 0.15);
 }
@@ -826,6 +829,18 @@ atc-appbar-band {
 
 .repo-card-ai::before {
   background: var(--atc-gradient-blue);
+}
+
+.repo-card-iot::before {
+  background: var(--atc-gradient-green);
+}
+
+.repo-card-industrial::before {
+  background: var(--atc-gradient-amber);
+}
+
+.repo-card-devtools::before {
+  background: var(--atc-gradient-cyan);
 }
 
 .section-title {
