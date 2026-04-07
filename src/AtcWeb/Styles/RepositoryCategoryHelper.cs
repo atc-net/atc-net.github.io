@@ -21,7 +21,8 @@ public static class RepositoryCategoryHelper
         }
 
         if (name.Contains("semantic-kernel", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("agentic", StringComparison.OrdinalIgnoreCase))
+            name.Contains("agentic", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("claude", StringComparison.OrdinalIgnoreCase))
         {
             return "AI & Agents";
         }
