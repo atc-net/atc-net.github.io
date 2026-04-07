@@ -2,7 +2,7 @@ namespace AtcWeb.State;
 
 public class StateContainer
 {
-    private bool isDarkMode;
+    private bool isDarkMode = true;
 
     public event Action<object, EventArgs>? OnThemeChange;
 
