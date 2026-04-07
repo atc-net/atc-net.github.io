@@ -9,6 +9,12 @@ public static class RepositoryCategoryHelper
             return "Core & Libraries";
         }
 
+        if (name.Contains("iot", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("digitaltwin", StringComparison.OrdinalIgnoreCase))
+        {
+            return "IoT";
+        }
+
         if (name.Contains("azure", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("cosmos", StringComparison.OrdinalIgnoreCase))
         {
@@ -52,6 +58,7 @@ public static class RepositoryCategoryHelper
     public static string GetCardCssClass(string? name)
         => GetCategory(name) switch
         {
+            "IoT" => "repo-card-iot",
             "Azure" => "repo-card-azure",
             "REST & API" => "repo-card-rest",
             "AI & Agents" => "repo-card-ai",
@@ -62,6 +69,7 @@ public static class RepositoryCategoryHelper
     public static string GetIcon(string category)
         => category switch
         {
+            "IoT" => Icons.Material.Filled.Sensors,
             "Azure" => Icons.Material.Filled.Cloud,
             "REST & API" => Icons.Material.Filled.Api,
             "AI & Agents" => Icons.Material.Filled.Psychology,
@@ -77,11 +85,12 @@ public static class RepositoryCategoryHelper
         {
             "Core & Libraries" => 0,
             "Azure" => 1,
-            "REST & API" => 2,
-            "AI & Agents" => 3,
-            "Code Quality" => 4,
-            "UI & Desktop" => 5,
-            "Testing" => 6,
+            "IoT" => 2,
+            "REST & API" => 3,
+            "AI & Agents" => 4,
+            "Code Quality" => 5,
+            "UI & Desktop" => 6,
+            "Testing" => 7,
             _ => 99,
         };
 }
