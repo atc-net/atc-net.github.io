@@ -7,6 +7,8 @@ builder.Services.AddScoped<BrowserCacheService>();
 
 builder.Services.AddScoped<AtcApiGitHubApiInformationClient>();
 builder.Services.AddScoped<AtcApiGitHubRepositoryClient>();
+builder.Services.AddScoped<AtcApiGitHubWikiClient>();
+builder.Services.AddScoped<AtcApiNugetClient>();
 builder.Services.AddScoped<GitHubRepositoryService>();
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(_ =>
 {

@@ -6,20 +6,20 @@ public class GitHubRepositoryService
 {
     private readonly AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient;
     private readonly AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient;
-    private readonly IMemoryCache memoryCache;
+    private readonly AtcApiGitHubWikiClient atcApiGitHubWikiClient;
 
     public GitHubRepositoryService(
         AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient,
         AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient,
-        IMemoryCache memoryCache)
+        AtcApiGitHubWikiClient atcApiGitHubWikiClient)
     {
         ArgumentNullException.ThrowIfNull(atcApiGitHubApiInformationClient);
         ArgumentNullException.ThrowIfNull(atcApiGitHubRepositoryClient);
-        ArgumentNullException.ThrowIfNull(memoryCache);
+        ArgumentNullException.ThrowIfNull(atcApiGitHubWikiClient);
 
         this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient;
         this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient;
-        this.memoryCache = memoryCache;
+        this.atcApiGitHubWikiClient = atcApiGitHubWikiClient;
     }
 
     public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()
@@ -182,7 +182,11 @@ public class GitHubRepositoryService
     {
         ArgumentNullException.ThrowIfNull(repository);
 
-        repository.Wiki = await GitHubWikiHelper.LoadWiki(memoryCache, repository.Name);
+        var (isSuccessful, wiki) = await atcApiGitHubWikiClient.GetWiki(repository.Name);
+        if (isSuccessful)
+        {
+            repository.Wiki = wiki;
+        }
     }
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
