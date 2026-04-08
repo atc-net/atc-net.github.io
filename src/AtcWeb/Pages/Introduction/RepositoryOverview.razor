@@ -15,10 +15,32 @@
         }
         else
         {
+            @if (!string.IsNullOrEmpty(CategoryFilter))
+            {
+                <div class="d-flex align-center flex-wrap gap-2 mb-4">
+                    @foreach (var cat in CategoryFilter.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    {
+                        <MudChip T="string"
+                                 Size="Size.Medium"
+                                 Variant="Variant.Filled"
+                                 Color="Color.Primary">
+                            @cat
+                        </MudChip>
+                    }
+                    <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">
+                        @GetFilteredRepositories().Count() repositories
+                    </MudText>
+                    <MudButton Size="Size.Small"
+                               Variant="Variant.Text"
+                               Color="Color.Default"
+                               OnClick="ClearFilter">
+                        Clear filter
+                    </MudButton>
+                </div>
+            }
+
             <div class="featured-repos-grid">
-                @foreach (var repository in Repositories
-                    .Where(x => !x.BaseData.Private)
-                    .OrderBy(x => x.Name))
+                @foreach (var repository in GetFilteredRepositories())
                 {
                     <a href="/repository/@repository.Name"
                        class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repository.Name)"
