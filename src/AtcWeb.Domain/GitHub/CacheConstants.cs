@@ -16,6 +16,10 @@ public static class CacheConstants
 
     public const string CacheKeyWiki = "Wiki";
 
+    public const string CacheKeyNugetTotalDownloads = "NugetTotalDownloads";
+
+    public const string CacheKeyNugetCliTools = "NugetCliTools";
+
     public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
     public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
