@@ -4,13 +4,27 @@ public partial class Index
 {
     private List<AtcRepository>? featuredRepos;
     private int repositoryCount;
+    private NugetTotalDownloadsResult? nugetStats;
 
     [Inject]
     private GitHubRepositoryService RepositoryService { get; set; }
 
+    [Inject]
+    private AtcApiNugetClient NugetClient { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        var allRepos = await RepositoryService.GetRepositoriesAsync();
+        var taskRepos = RepositoryService.GetRepositoriesAsync();
+        var taskNuget = NugetClient.GetTotalDownloads();
+
+        await Task.WhenAll(taskRepos, taskNuget);
+
+        var allRepos = await taskRepos;
+        var (isSuccessful, result) = await taskNuget;
+        if (isSuccessful)
+        {
+            nugetStats = result;
+        }
 
         repositoryCount = allRepos.Count(r => !r.BaseData.Private);
 

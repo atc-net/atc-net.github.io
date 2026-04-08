@@ -30,16 +30,20 @@
     @* ===== STATS BAR ===== *@
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-value">@(repositoryCount > 0 ? repositoryCount.ToString() : "--")</div>
+            <div class="stat-value">@(nugetStats is not null ? nugetStats.FormattedDownloads : "--")</div>
+            <div class="stat-label">NuGet Downloads</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">@(nugetStats is not null ? $"{nugetStats.PackageCount}+" : "--")</div>
+            <div class="stat-label">Libraries</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">@(repositoryCount > 0 ? $"{repositoryCount}+" : "--")</div>
             <div class="stat-label">Repositories</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">MIT</div>
-            <div class="stat-label">Licensed</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">.NET 10</div>
-            <div class="stat-label">Latest Framework</div>
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Open Source</div>
         </div>
     </div>
 
@@ -143,39 +147,12 @@
                              Style="color: #ffa800;" />
                     <div class="feature-title">Community Driven</div>
                     <div class="feature-description">
-                        Started by two colleagues, now growing with contributors who share common code.
+                        Started by two colleagues sharing common code, now a growing community
+                        of developers building and contributing together on GitHub.
                     </div>
                 </div>
             </MudItem>
         </MudGrid>
     </MudContainer>
 
-    @* ===== OUR STORY (collapsible) ===== *@
-    <MudContainer MaxWidth="MaxWidth.Large" Class="mb-16">
-        <MudExpansionPanels Elevation="0" Class="accent-card" Style="background: transparent;">
-            <MudExpansionPanel Style="background: transparent;">
-                <TitleContent>
-                    <div class="d-flex align-center">
-                        <MudIcon Icon="@Icons.Material.Filled.AutoStories" Class="mr-3" Style="color: #776be7;" />
-                        <MudText Typo="Typo.h6">Our Story</MudText>
-                    </div>
-                </TitleContent>
-                <ChildContent>
-                    <MudText Class="mb-3">
-                        It all started with two colleagues who worked together for a long time,
-                        where code was being copied between projects over and over again. One day they decided
-                        to put their common code into an open-source repository and make NuGet packages.
-                    </MudText>
-                    <MudText Class="mb-3">
-                        GitHub was selected as the platform, MIT for all licenses, and a simple setup
-                        with workflows for commits and package distribution was defined.
-                    </MudText>
-                    <MudText>
-                        After the first two colleagues started, many more joined.
-                        Other developers and hopefully many new will follow.
-                    </MudText>
-                </ChildContent>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
-    </MudContainer>
 </MudMainContent>
