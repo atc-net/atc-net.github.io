@@ -575,3 +575,221 @@
     line-height: 1.5;
   }
 }
+
+// --- Focus cards (Getting Started page) ---
+.focus-card {
+  display: block;
+  border-radius: 12px;
+  padding: 28px;
+  background-color: var(--mud-palette-surface);
+  border: 1px solid var(--mud-palette-lines-default);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  height: 100%;
+  color: inherit;
+
+  &:hover {
+    border-color: var(--mud-palette-primary);
+    box-shadow: 0 4px 20px rgba(119, 107, 231, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .feature-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .feature-description {
+    font-size: 14px;
+    color: var(--mud-palette-text-secondary);
+    line-height: 1.5;
+  }
+}
+
+// --- CLI Tools page ---
+.cli-hero-stats {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.cli-hero-count {
+  font-size: 56px;
+  font-weight: 800;
+  background: var(--atc-gradient-cyan);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.cli-hero-label {
+  font-size: 15px;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+}
+
+.cli-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cli-tool-card {
+  background-color: var(--mud-palette-surface);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--atc-gradient-cyan);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 188, 212, 0.12);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.cli-tool-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cli-tool-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--mud-palette-text-primary);
+  letter-spacing: -0.01em;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cli-version-chip {
+  flex-shrink: 0;
+  background: rgba(0, 188, 212, 0.12) !important;
+  color: #4dd0e1 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-family: 'Cascadia Code', 'Fira Code', monospace !important;
+}
+
+.cli-tool-description {
+  color: var(--mud-palette-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cli-install-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(0, 188, 212, 0.3);
+  }
+
+  .cli-prompt {
+    color: #4dd0e1;
+    font-weight: 700;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  code {
+    flex: 1;
+    color: var(--mud-palette-text-primary);
+    word-break: break-all;
+    line-height: 1.4;
+  }
+
+  .cli-copy-btn {
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.cli-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.cli-tag {
+  font-size: 11px !important;
+  height: 22px !important;
+}
+
+.cli-tool-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cli-downloads {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--mud-palette-text-secondary);
+}
+
+.cli-tool-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
