@@ -8,9 +8,14 @@
                  Icon="@Icons.Material.Filled.School"
                  Expanded="@(section == "introduction")"
                  ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/introduction/about-atc">Contribution</MudNavLink>
-        <MudNavLink Href="/introduction/general-rules-and-guidelines">General rules and guidelines</MudNavLink>
+        <MudNavLink Href="/introduction/about-atc">Getting Started</MudNavLink>
         <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Tools"
+                 Icon="@Icons.Material.Filled.Terminal"
+                 Expanded="@(section == "tools")"
+                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
+        <MudNavLink Href="/tools/cli-tools">CLI Tools</MudNavLink>
     </MudNavGroup>
     <MudNavGroup Title="Manuals"
                  Icon="@Icons.Material.Filled.School"
