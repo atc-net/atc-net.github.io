@@ -1,0 +1,112 @@
+@page "/tools/cli-tools"
+
+<DocsPage MaxWidth="MaxWidth.Large">
+    <DocsPageHeader Title="CLI Tools"
+                    SubTitle="Command-line tools for .NET developers">
+        <Description>
+            Install any tool globally with <code>dotnet tool install -g &lt;package-id&gt;</code> and start using it immediately.
+        </Description>
+    </DocsPageHeader>
+    <DocsPageContent>
+        @if (searchResult is null)
+        {
+            <div class="cli-hero-stats mb-8">
+                <MudSkeleton Width="120px" Height="48px" Class="mx-auto" />
+                <MudSkeleton Width="200px" Height="20px" Class="mt-2 mx-auto" />
+            </div>
+            <div class="cli-tools-grid">
+                @for (var i = 0; i < 4; i++)
+                {
+                    <div class="cli-tool-card">
+                        <MudSkeleton Width="60%" Height="24px" Class="mb-3" />
+                        <MudSkeleton Width="90%" Height="16px" Class="mb-2" />
+                        <MudSkeleton Width="75%" Height="16px" Class="mb-4" />
+                        <MudSkeleton Width="100%" Height="48px" Class="mb-3" />
+                        <MudSkeleton Width="30%" Height="14px" />
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="cli-hero-stats mb-8">
+                <div class="cli-hero-count">@searchResult.TotalHits</div>
+                <div class="cli-hero-label">CLI tools ready to install</div>
+            </div>
+
+            <div class="cli-tools-grid">
+                @foreach (var tool in searchResult.Data)
+                {
+                    <div class="cli-tool-card">
+                        <div class="cli-tool-header">
+                            <div class="cli-tool-name">@tool.Id</div>
+                            <MudChip T="string"
+                                     Size="Size.Small"
+                                     Variant="Variant.Filled"
+                                     Class="cli-version-chip">
+                                v@(tool.Version)
+                            </MudChip>
+                        </div>
+
+                        <MudText Typo="Typo.body2" Class="cli-tool-description">
+                            @tool.Description
+                        </MudText>
+
+                        <div class="cli-install-block">
+                            <span class="cli-prompt">$</span>
+                            <code>dotnet tool install -g @tool.Id</code>
+                            <MudTooltip Text="Copy to clipboard">
+                                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                                               Size="Size.Small"
+                                               Color="Color.Inherit"
+                                               Class="cli-copy-btn"
+                                               OnClick="@(() => CopyToClipboard($"dotnet tool install -g {tool.Id}"))" />
+                            </MudTooltip>
+                        </div>
+
+                        @if (tool.Tags.Count > 0)
+                        {
+                            <div class="cli-tags">
+                                @foreach (var tag in tool.Tags.Take(4))
+                                {
+                                    <MudChip T="string"
+                                             Size="Size.Small"
+                                             Variant="Variant.Text"
+                                             Color="Color.Default"
+                                             Class="cli-tag">
+                                        @tag
+                                    </MudChip>
+                                }
+                            </div>
+                        }
+
+                        <div class="cli-tool-footer">
+                            <div class="cli-downloads">
+                                <MudIcon Icon="@Icons.Material.Filled.Download"
+                                         Size="Size.Small" />
+                                <span>@FormatDownloads(tool.TotalDownloads)</span>
+                            </div>
+                            <div class="cli-tool-links">
+                                @if (!string.IsNullOrEmpty(tool.ProjectUrl))
+                                {
+                                    <MudTooltip Text="View on GitHub">
+                                        <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
+                                                       Size="Size.Small"
+                                                       Href="@tool.ProjectUrl"
+                                                       Target="_blank" />
+                                    </MudTooltip>
+                                }
+                                <MudTooltip Text="View on NuGet">
+                                    <MudIconButton Icon="@Icons.Material.Filled.OpenInNew"
+                                                   Size="Size.Small"
+                                                   Href="@($"https://www.nuget.org/packages/{tool.Id}")"
+                                                   Target="_blank" />
+                                </MudTooltip>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </DocsPageContent>
+</DocsPage>
