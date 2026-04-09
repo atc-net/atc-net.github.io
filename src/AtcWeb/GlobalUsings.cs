@@ -9,7 +9,6 @@ global using AtcWeb;
 global using AtcWeb.Domain.AtcApi;
 global using AtcWeb.Domain.AtcApi.Models;
 global using AtcWeb.Domain.Caching;
-global using AtcWeb.Domain.Data.Models;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
 global using AtcWeb.Extensions;
