@@ -15,6 +15,45 @@
   height: auto;
 }
 
+.atc-loader-logo {
+  animation: atc-pulse 2s ease-in-out infinite;
+}
+
+.atc-loader-bar {
+  width: 220px;
+  height: 3px;
+  background: rgba(119, 107, 231, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+.atc-loader-bar-fill {
+  height: 100%;
+  width: 40%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #673AB7, #EA80FC);
+  animation: atc-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes atc-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.97);
+  }
+}
+@keyframes atc-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(450%);
+  }
+}
 .app-loading-text {
   font-family: "Audiowide", "Roboto", "Helvetica", "Arial", "sans-serif" !important;
   font-size: 32px;
