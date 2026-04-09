@@ -4,7 +4,7 @@
 
 <DocsPage MaxWidth="MaxWidth.Large">
     <DocsPageHeader Title="Repository overview"
-                    SubTitle="All public repositories in the ATC-NET organization.">
+                    SubTitle="@(string.IsNullOrEmpty(CategoryFilter) ? "All public repositories in the ATC-NET organization." : null)">
     </DocsPageHeader>
     <DocsPageContent>
         @if (Repositories is null)
