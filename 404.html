@@ -15,9 +15,12 @@
 <body style="background-color: var(--mud-palette-background, #0f0f1a); margin: 0;">
   <div id="app" class="full-page-height">
     <div class="atc-loader" style="background-color: #0f0f1a;">
-      <img src="/images/atc-logo.svg" alt="ATC" width="300" height="300" />
-      <p class="py-2"><span class="fas fa-spin fa-spinner" style="color: #776be7;"></span></p>
-      <p class="app-loading-text">ATC loading...</p>
+      <img src="/images/atc-logo.svg" alt="ATC" width="96" height="96" class="atc-loader-logo" />
+      <div class="atc-loader-title">ATC-NET</div>
+      <div class="atc-loader-subtitle">A Touch of Class</div>
+      <div class="atc-loader-bar">
+        <div class="atc-loader-bar-fill"></div>
+      </div>
     </div>
   </div>
 
@@ -94,6 +97,23 @@
   </script>
   <script src="_framework/blazor.webassembly.js"></script>
   <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+  <script>
+    // Intercept MudBlazor clear-button clicks in the nav search field and handle
+    // them in pure JS for instant feedback, then let Blazor catch up via oninput.
+    document.addEventListener('mousedown', function (e) {
+      var btn = e.target.closest('.nav-search-field .mud-input-clear-button');
+      if (!btn) return;
+      e.stopPropagation();
+      e.preventDefault();
+      var input = btn.closest('.nav-search-field').querySelector('input');
+      if (input) {
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.focus();
+      }
+    }, true);
+  </script>
 </body>
 
 </html>
