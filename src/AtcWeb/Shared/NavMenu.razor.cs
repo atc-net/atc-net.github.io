@@ -74,10 +74,8 @@ public partial class NavMenu
     }
 
     private bool GroupMatchesSearch(List<AtcRepository> repos)
-    {
-        return string.IsNullOrWhiteSpace(searchText) ||
-               repos.Any(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-    }
+        => string.IsNullOrWhiteSpace(searchText) ||
+           repos.Exists(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
 
     private List<AtcRepository> GetFilteredRepos(List<AtcRepository> repos)
     {

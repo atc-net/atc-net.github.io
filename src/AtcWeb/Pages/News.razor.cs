@@ -16,7 +16,8 @@ public partial class News
         }
     }
 
-    private IEnumerable<AtcRepository> GetReposByRecency(Func<DateTimeOffset, bool> predicate)
+    private IEnumerable<AtcRepository> GetReposByRecency(
+        Func<DateTimeOffset, bool> predicate)
     {
         if (repositories is null)
         {
@@ -24,7 +25,7 @@ public partial class News
         }
 
         return repositories
-            .Where(x => !x.BaseData.Private && x.BaseData.PushedAt.HasValue)
+            .Where(x => x.BaseData is { Private: false, PushedAt: not null })
             .Where(x => predicate(x.BaseData.PushedAt!.Value))
             .OrderByDescending(x => x.BaseData.PushedAt)
             .ToList();
