@@ -1,71 +1,53 @@
 namespace AtcWeb.Pages;
 
-public class NewsBase : ComponentBase
+public partial class News
 {
-    protected IEnumerable<int> Years { get; set; } = [];
-
-    protected IEnumerable<NewsItem>? News { get; set; }
-
-    protected int? SelectedYear { get; set; }
-
-    protected string? FilterString { get; set; }
+    private List<AtcRepository>? repositories;
 
     [Inject]
-    protected GitHubRepositoryService RepositoryService { get; set; }
+    private GitHubRepositoryService RepositoryService { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        News = await RepositoryService.GetNews();
-        Years = GetYears(News);
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            repositories = await RepositoryService.GetRepositoriesAsync();
+            StateHasChanged();
+        }
     }
 
-    protected IEnumerable<NewsItem> GetFilteredNews()
+    private IEnumerable<AtcRepository> GetReposByRecency(Func<DateTimeOffset, bool> predicate)
     {
-        if (News is null)
+        if (repositories is null)
         {
             return [];
         }
 
-        return News.Where(Filter);
+        return repositories
+            .Where(x => !x.BaseData.Private && x.BaseData.PushedAt.HasValue)
+            .Where(x => predicate(x.BaseData.PushedAt!.Value))
+            .OrderByDescending(x => x.BaseData.PushedAt)
+            .ToList();
     }
 
-    protected static Color GetTimelineColor(NewsItemAction action)
-        => action switch
+    private static string FormatRelativeTime(DateTimeOffset? pushed)
+    {
+        if (pushed is null)
         {
-            NewsItemAction.RepositoryNew => Color.Primary,
-            NewsItemAction.FeatureNew => Color.Tertiary,
-            _ => Color.Default,
+            return string.Empty;
+        }
+
+        var diff = DateTimeOffset.UtcNow - pushed.Value;
+
+        return diff.TotalHours switch
+        {
+            < 1 => "just now",
+            < 24 => $"{(int)diff.TotalHours}h ago",
+            < 48 => "yesterday",
+            _ when diff.TotalDays < 7 => $"{(int)diff.TotalDays}d ago",
+            _ when diff.TotalDays < 30 => $"{(int)(diff.TotalDays / 7)}w ago",
+            _ when diff.TotalDays < 365 => $"{(int)(diff.TotalDays / 30)}mo ago",
+            _ => $"{(int)(diff.TotalDays / 365)}y ago",
         };
-
-    private bool Filter(NewsItem element)
-    {
-        if (SelectedYear is not null && element.Time.Year != SelectedYear)
-        {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(FilterString))
-        {
-            return true;
-        }
-
-        return element.Title.Contains(FilterString, StringComparison.OrdinalIgnoreCase) ||
-               element.Body.Contains(FilterString, StringComparison.OrdinalIgnoreCase) ||
-               element.RepositoryName.Contains(FilterString, StringComparison.OrdinalIgnoreCase) ||
-               element.Action.GetDescription().Contains(FilterString, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static List<int> GetYears(IEnumerable<NewsItem> items)
-    {
-        var firstYear = items.Min(x => x.Time).Year;
-        var years = new List<int>();
-        for (var i = firstYear; i <= DateTimeOffset.Now.Year; i++)
-        {
-            years.Add(i);
-        }
-
-        return years;
     }
 }

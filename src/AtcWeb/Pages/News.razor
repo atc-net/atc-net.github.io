@@ -1,84 +1,99 @@
 @page "/news"
 
-@inherits NewsBase
+@using AtcWeb.Styles
 
 <DocsPage MaxWidth="MaxWidth.Large">
-    <DocsPageHeader Title="ATC News"
-                    SubTitle="The timeline for all good initiatives.">
+    <DocsPageHeader Title="Recent Activity"
+                    SubTitle="What's happening across the ATC-NET ecosystem.">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (News is null)
+        @if (repositories is null)
         {
-            @for (var i = 0; i < 5; i++)
-            {
-                <div class="accent-card pa-4 mb-4">
-                    <MudSkeleton Width="120px" Height="14px" Class="mb-2" />
-                    <MudSkeleton Width="60%" Height="20px" Class="mb-2" />
-                    <MudSkeleton Width="40%" Height="16px" />
-                </div>
-            }
+            <MudGrid Justify="Justify.Center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            </MudGrid>
         }
         else
         {
-            <div class="d-flex flex-wrap gap-3 mb-6">
-                <MudTextField Placeholder="Search news..."
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Search"
-                              Variant="Variant.Outlined"
-                              Margin="Margin.Dense"
-                              Immediate="true"
-                              Style="max-width: 300px;"
-                              @bind-Value="FilterString" />
-                <MudSelect T="int?"
-                           Label="Year"
-                           Clearable="true"
-                           Variant="Variant.Outlined"
-                           Margin="Margin.Dense"
-                           Style="max-width: 140px;"
-                           @bind-Value="@SelectedYear">
-                    @foreach (var year in Years.OrderByDescending(x => x))
-                    {
-                        <MudSelectItem T="int?" Value="@year" />
-                    }
-                </MudSelect>
-            </div>
+            var thisWeek = GetReposByRecency(d => d > DateTimeOffset.UtcNow.AddDays(-7));
+            var thisMonth = GetReposByRecency(d => d <= DateTimeOffset.UtcNow.AddDays(-7) && d > DateTimeOffset.UtcNow.AddDays(-30));
+            var thisQuarter = GetReposByRecency(d => d <= DateTimeOffset.UtcNow.AddDays(-30) && d > DateTimeOffset.UtcNow.AddDays(-90));
+            var older = GetReposByRecency(d => d <= DateTimeOffset.UtcNow.AddDays(-90));
 
-            <MudTimeline TimelinePosition="TimelinePosition.Start">
-                @foreach (var item in GetFilteredNews().Take(50))
-                {
-                    <MudTimelineItem Color="@GetTimelineColor(item.Action)"
-                                     Size="Size.Small"
-                                     Variant="Variant.Filled">
-                        <ItemContent>
-                            <div class="accent-card pa-4 mb-2" style="cursor: default;">
-                                <div class="d-flex align-center gap-2 mb-1">
-                                    <MudChip T="string"
-                                             Size="Size.Small"
-                                             Variant="Variant.Outlined"
-                                             Color="@GetTimelineColor(item.Action)">
-                                        @item.Action.GetDescription()
-                                    </MudChip>
-                                    <MudText Typo="Typo.caption" Style="opacity: 0.6;">
-                                        @item.Time.ToString("MMM d, yyyy")
-                                    </MudText>
-                                </div>
-                                @if (!string.IsNullOrEmpty(item.RepositoryName))
-                                {
-                                    <MudLink Href="@($"/repository/{item.RepositoryName}")"
-                                             Typo="Typo.subtitle1"
-                                             Style="font-weight: 600;">
-                                        @item.RepositoryName
-                                    </MudLink>
-                                }
-                                @if (!string.IsNullOrEmpty(item.Title))
-                                {
-                                    <MudText Typo="Typo.body2">@item.Title</MudText>
-                                }
-                            </div>
-                        </ItemContent>
-                    </MudTimelineItem>
-                }
-            </MudTimeline>
+            @if (thisWeek.Any())
+            {
+                <div class="section-title mb-4" style="font-size: 20px;">This Week</div>
+                <div class="featured-repos-grid mb-8">
+                    @foreach (var repo in thisWeek)
+                    {
+                        @RenderRepoCard(repo)
+                    }
+                </div>
+            }
+
+            @if (thisMonth.Any())
+            {
+                <div class="section-title mb-4" style="font-size: 20px;">This Month</div>
+                <div class="featured-repos-grid mb-8">
+                    @foreach (var repo in thisMonth)
+                    {
+                        @RenderRepoCard(repo)
+                    }
+                </div>
+            }
+
+            @if (thisQuarter.Any())
+            {
+                <div class="section-title mb-4" style="font-size: 20px;">Past 3 Months</div>
+                <div class="featured-repos-grid mb-8">
+                    @foreach (var repo in thisQuarter)
+                    {
+                        @RenderRepoCard(repo)
+                    }
+                </div>
+            }
+
+            @if (older.Any())
+            {
+                <div class="section-title mb-4" style="font-size: 20px;">Earlier</div>
+                <div class="featured-repos-grid mb-8">
+                    @foreach (var repo in older)
+                    {
+                        @RenderRepoCard(repo)
+                    }
+                </div>
+            }
         }
     </DocsPageContent>
 </DocsPage>
+
+@{
+    RenderFragment RenderRepoCard(AtcRepository repo) =>
+        @<a href="/repository/@repo.Name"
+            class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repo.Name)"
+            style="text-decoration: none;">
+            <div class="d-flex align-center gap-2 mb-2">
+                <img src="@ImageHelper.GetProgramIconPathForLanguage(repo.BaseData.Language)"
+                     width="20" height="20" alt="" />
+                <div class="repo-card-name">@repo.Name</div>
+                <MudText Typo="Typo.caption"
+                         Style="margin-left: auto; opacity: 0.6; white-space: nowrap;">
+                    @FormatRelativeTime(repo.BaseData.PushedAt)
+                </MudText>
+            </div>
+            <div class="repo-card-description">
+                @(string.IsNullOrEmpty(repo.Description) ? "No description available." : repo.Description)
+            </div>
+            <div class="repo-card-meta">
+                @if (!string.IsNullOrEmpty(repo.BaseData.Language))
+                {
+                    <span>@repo.BaseData.Language</span>
+                }
+                @if (!string.IsNullOrEmpty(repo.BaseData.License?.Key))
+                {
+                    <span>@repo.BaseData.License.Key</span>
+                }
+                <span>@RepositoryCategoryHelper.GetCategory(repo.Name)</span>
+            </div>
+        </a>;
+}
