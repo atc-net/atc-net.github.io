@@ -909,15 +909,8 @@ atc-appbar-band {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--mud-palette-text-secondary);
-}
-.repo-card .repo-card-meta span {
-  padding: 2px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--mud-palette-lines-default);
-  white-space: nowrap;
+  gap: 4px;
+  margin-top: auto;
 }
 
 .repo-card-azure::before {

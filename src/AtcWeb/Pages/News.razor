@@ -87,13 +87,22 @@
             <div class="repo-card-meta">
                 @if (!string.IsNullOrEmpty(repo.BaseData.Language))
                 {
-                    <span>@repo.BaseData.Language</span>
+                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
+                             Size="Size.Small" Icon="@Icons.Material.Filled.Code">
+                        @repo.BaseData.Language
+                    </MudChip>
                 }
                 @if (!string.IsNullOrEmpty(repo.BaseData.License?.Key))
                 {
-                    <span>@repo.BaseData.License.Key</span>
+                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
+                             Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
+                        @repo.BaseData.License.Key
+                    </MudChip>
                 }
-                <span>@RepositoryCategoryHelper.GetCategory(repo.Name)</span>
+                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default"
+                         Size="Size.Small">
+                    @RepositoryCategoryHelper.GetCategory(repo.Name)
+                </MudChip>
             </div>
         </a>;
 }
