@@ -95,6 +95,23 @@
   </script>
   <script src="_framework/blazor.webassembly.js"></script>
   <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+  <script>
+    // Intercept MudBlazor clear-button clicks in the nav search field and handle
+    // them in pure JS for instant feedback, then let Blazor catch up via oninput.
+    document.addEventListener('mousedown', function (e) {
+      var btn = e.target.closest('.nav-search-field .mud-input-clear-button');
+      if (!btn) return;
+      e.stopPropagation();
+      e.preventDefault();
+      var input = btn.closest('.nav-search-field').querySelector('input');
+      if (input) {
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.focus();
+      }
+    }, true);
+  </script>
 </body>
 
 </html>
