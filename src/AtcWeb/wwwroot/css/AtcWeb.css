@@ -3,7 +3,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   font-family: cera pro;
   font-size: 24px;
   text-align: center;
@@ -11,12 +12,29 @@
   background-color: #0f0f1a;
 }
 .atc-loader img {
-  max-width: 60vw;
   height: auto;
 }
 
 .atc-loader-logo {
   animation: atc-pulse 2s ease-in-out infinite;
+}
+
+.atc-loader-title {
+  font-family: "Audiowide", "Roboto", sans-serif;
+  font-size: 28px;
+  background: linear-gradient(82deg, #673AB7 0%, #EA80FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 12px;
+  letter-spacing: 2px;
+}
+
+.atc-loader-subtitle {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: rgba(200, 198, 216, 0.6);
+  margin-top: 4px;
+  letter-spacing: 1px;
 }
 
 .atc-loader-bar {
@@ -890,9 +908,16 @@ atc-appbar-band {
 .repo-card .repo-card-meta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
   color: var(--mud-palette-text-secondary);
+}
+.repo-card .repo-card-meta span {
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--mud-palette-lines-default);
+  white-space: nowrap;
 }
 
 .repo-card-azure::before {
