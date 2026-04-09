@@ -28,14 +28,15 @@
                   Placeholder="Filter repositories..."
                   Adornment="Adornment.Start"
                   AdornmentIcon="@Icons.Material.Filled.Search"
+                  Clearable="true"
                   Variant="Variant.Outlined"
                   Margin="Margin.Dense"
-                  Class="mx-3 mt-3 mb-2"
+                  Class="mx-3 mt-3 mb-2 nav-search-field"
                   Immediate="true"
                   Disabled="@(repositories is null)"
                   Style="font-size: 13px;" />
 
-    @if (repositories is null)
+    @if (allGroups is null)
     {
         @* Show placeholder group headers to prevent layout jump *@
         <MudNavGroup Title="AI & Agents" Icon="@Icons.Material.Filled.Psychology" Disabled="true" />
@@ -51,29 +52,39 @@
     }
     else
     {
-        @foreach (var group in GetGroupedRepositories())
+        @foreach (var group in allGroups)
         {
-            <MudNavGroup Title="@group.Key"
-                         Icon="@RepositoryCategoryHelper.GetIcon(group.Key)"
-                         Expanded="@IsGroupExpanded(group.Key)"
-                         ExpandIcon="@Icons.Material.Filled.ExpandMore">
-                @foreach (var repository in group.Value)
-                {
-                    var href = $"/repository/{repository.Name}";
-                    var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
+            var groupName = group.Key;
+            var visible = GroupMatchesSearch(group.Value);
+            var expanded = IsGroupExpanded(groupName);
+            var filteredRepos = expanded ? GetFilteredRepos(group.Value) : null;
+            <div style="@(visible ? "" : "display:none")">
+                <MudNavGroup Title="@groupName"
+                             Icon="@RepositoryCategoryHelper.GetIcon(groupName)"
+                             Expanded="@expanded"
+                             ExpandedChanged="@(value => OnGroupExpandedChanged(groupName, value))"
+                             ExpandIcon="@Icons.Material.Filled.ExpandMore">
+                    @if (filteredRepos is not null)
+                    {
+                        @foreach (var repository in filteredRepos)
+                        {
+                            var href = $"/repository/{repository.Name}";
+                            var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
 
-                    <MudElement HtmlTag="div"
-                                Class="mud-nav-item mud-ripple d-flex items-center">
-                        <a href="@href" class="mud-nav-link">
-                            <img src="@iconSrc" width="20" height="20" alt="" />
-                            <MudText Class="mud-nav-link-text"
-                                     Inline="true">
-                                @repository.Name
-                            </MudText>
-                        </a>
-                    </MudElement>
-                }
-            </MudNavGroup>
+                            <MudElement HtmlTag="div"
+                                        Class="mud-nav-item mud-ripple d-flex items-center">
+                                <a href="@href" class="mud-nav-link">
+                                    <img src="@iconSrc" width="20" height="20" alt="" />
+                                    <MudText Class="mud-nav-link-text"
+                                             Inline="true">
+                                        @repository.Name
+                                    </MudText>
+                                </a>
+                            </MudElement>
+                        }
+                    }
+                </MudNavGroup>
+            </div>
         }
     }
 

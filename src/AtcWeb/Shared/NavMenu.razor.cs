@@ -2,9 +2,12 @@ namespace AtcWeb.Shared;
 
 public partial class NavMenu
 {
+    private readonly Dictionary<string, bool> groupExpandedState = new(StringComparer.Ordinal);
     private string? section;
     private string? componentLink;
     private string searchText = string.Empty;
+
+    private Dictionary<string, List<AtcRepository>>? allGroups;
 
     protected List<AtcRepository>? repositories;
 
@@ -27,6 +30,7 @@ public partial class NavMenu
         if (firstRender)
         {
             repositories = await RepositoryService.GetRepositoriesAsync();
+            allGroups = BuildAllGroups();
 
             // Yield to let the browser process any queued user interactions
             // before the heavy DOM update from rendering all repository groups.
@@ -40,22 +44,18 @@ public partial class NavMenu
         => item is not null &&
            item.GroupItems.Elements.Any(i => i.Link == componentLink);
 
-    private Dictionary<string, List<AtcRepository>> GetGroupedRepositories()
+    private Dictionary<string, List<AtcRepository>> BuildAllGroups()
     {
         if (repositories is null)
         {
             return new Dictionary<string, List<AtcRepository>>(StringComparer.Ordinal);
         }
 
-        var filtered = repositories
-            .Where(x => !x.BaseData.Private)
-            .Where(x => string.IsNullOrWhiteSpace(searchText) ||
-                        x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(x => x.Name, StringComparer.Ordinal);
-
         var groups = new Dictionary<string, List<AtcRepository>>(StringComparer.Ordinal);
 
-        foreach (var repo in filtered)
+        foreach (var repo in repositories
+            .Where(x => !x.BaseData.Private)
+            .OrderBy(x => x.Name, StringComparer.Ordinal))
         {
             var category = RepositoryCategoryHelper.GetCategory(repo.Name);
             if (!groups.TryGetValue(category, out var list))
@@ -73,11 +73,41 @@ public partial class NavMenu
             .ToDictionary(g => g.Key, g => g.Value, StringComparer.Ordinal);
     }
 
+    private bool GroupMatchesSearch(List<AtcRepository> repos)
+    {
+        return string.IsNullOrWhiteSpace(searchText) ||
+               repos.Any(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private List<AtcRepository> GetFilteredRepos(List<AtcRepository> repos)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return repos;
+        }
+
+        return repos
+            .Where(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void OnGroupExpandedChanged(
+        string groupName,
+        bool expanded)
+    {
+        groupExpandedState[groupName] = expanded;
+    }
+
     private bool IsGroupExpanded(string groupName)
     {
         if (!string.IsNullOrWhiteSpace(searchText))
         {
             return true;
+        }
+
+        if (groupExpandedState.TryGetValue(groupName, out var explicitState))
+        {
+            return explicitState;
         }
 
         var currentUri = NavigationManager.Uri;
@@ -86,7 +116,7 @@ public partial class NavMenu
             return false;
         }
 
-        var repoName = currentUri.Split("/repository/", StringSplitOptions.None).LastOrDefault() ?? string.Empty;
+        var repoName = currentUri.Split("/repository/").LastOrDefault() ?? string.Empty;
         return string.Equals(RepositoryCategoryHelper.GetCategory(repoName), groupName, StringComparison.Ordinal);
     }
 }
