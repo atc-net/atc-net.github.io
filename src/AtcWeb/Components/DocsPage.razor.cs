@@ -16,6 +16,9 @@ public partial class DocsPage : ComponentBase
     public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
 
     [Parameter]
+    public bool ShowContentDrawer { get; set; } = true;
+
+    [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     private bool contentDrawerOpen = true;

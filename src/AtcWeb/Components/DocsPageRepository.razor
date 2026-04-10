@@ -1,4 +1,4 @@
-<DocsPage @ref="docsPage" MaxWidth="MaxWidth.Large">
+<DocsPage MaxWidth="MaxWidth.Large" ShowContentDrawer="false">
     @if (Repository is null)
     {
         <MudGrid Justify="Justify.Center">
@@ -9,73 +9,19 @@
     }
     else
     {
-        @* ===== Repository Header Banner ===== *@
-        <div class="accent-top-card pa-6 mb-8">
-            <div class="d-flex align-center flex-wrap gap-3 mb-3">
-                <img src="@ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language)"
-                     width="28" height="28" alt="" />
-                <MudText Typo="Typo.h4" Class="gradient-text" Style="font-weight: 600;">
-                    @Repository.Name
-                </MudText>
-            </div>
-            @if (!string.IsNullOrEmpty(Repository.Description))
-            {
-                <MudText Typo="Typo.body1" Class="mb-4">
-                    @Repository.Description
-                </MudText>
-            }
-            <div class="d-flex align-center flex-wrap gap-2">
-                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
-                         Size="Size.Small" Icon="@Icons.Material.Filled.Code">
-                    @Repository.BaseData.Language
-                </MudChip>
-                @if (!string.IsNullOrEmpty(Repository.BaseData.License?.Key))
-                {
-                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
-                             Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
-                        @Repository.BaseData.License.Key
-                    </MudChip>
-                }
-                @if (Repository.BaseData.PushedAt.HasValue)
-                {
-                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default"
-                             Size="Size.Small" Icon="@Icons.Material.Filled.Update">
-                        Updated @Repository.BaseData.PushedAt.Value.ToString("MMM d, yyyy")
-                    </MudChip>
-                }
-            </div>
-            <div class="d-flex align-center flex-wrap gap-2 mt-4">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
-                           StartIcon="@Icons.Custom.Brands.GitHub"
-                           Href="@($"https://github.com/atc-net/{Repository.Name}")"
-                           Target="_blank">
-                    GitHub
-                </MudButton>
-                @if (Repository.IsDotnetSolution)
-                {
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small"
-                               StartIcon="@Icons.Material.Filled.CloudDownload"
-                               Href="@($"https://www.nuget.org/packages?q=owner%3Aatc-net+{Repository.DotName}")"
-                               Target="_blank">
-                        NuGet
-                    </MudButton>
-                }
-                @if (Repository.OpenIssues.Count > 0)
-                {
-                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small"
-                               StartIcon="@Icons.Material.Filled.BugReport"
-                               Href="@($"https://github.com/atc-net/{Repository.Name}/issues")"
-                               Target="_blank">
-                        @Repository.OpenIssues.Count Issues
-                    </MudButton>
-                }
-            </div>
-        </div>
-        <DocsPageContent>
-            <DocsPageSection>
-                <SectionHeader Title="Readme" />
-                <SectionContent AutoMarginContent="false"
-                                FullWidth="true">
+        <RepositoryDetailHeader Repository="@Repository" />
+
+        <MudTabs ActivePanelIndex="@activeTabIndex"
+                 ActivePanelIndexChanged="OnTabChanged"
+                 Elevation="0"
+                 Rounded="true"
+                 ApplyEffectsToContainer="true"
+                 Class="repo-detail-tabs mb-6"
+                 TabPanelsClass="pt-4">
+
+            @* ===== README Tab ===== *@
+            <MudTabPanel Text="README" Icon="@Icons.Material.Filled.Description">
+                <RepositoryTabPanelWithSidebar Repository="@Repository">
                     <MudCard Elevation="0">
                         @if (Repository.Root.HasReadme)
                         {
@@ -83,8 +29,7 @@
                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
                                                            IdPrefix="readme"
-                                                           Content="@Repository.Root.RawReadme"
-                                                           OnHeadingsExtracted="HandleReadmeHeadings" />
+                                                           Content="@Repository.Root.RawReadme" />
                             </MudCardContent>
                         }
                         else
@@ -96,71 +41,44 @@
                             </MudCardContent>
                         }
                     </MudCard>
-                </SectionContent>
-            </DocsPageSection>
+                </RepositoryTabPanelWithSidebar>
+            </MudTabPanel>
+
+            @* ===== Changelog Tab ===== *@
+            @if (Repository.Root.HasChangelog)
+            {
+                <MudTabPanel Text="Changelog" Icon="@Icons.Material.Filled.History">
+                    <RepositoryTabPanelWithSidebar Repository="@Repository">
+                        <MudCard Elevation="0">
+                            <MudCardContent>
+                                <MarkdownRepositoryContent RepositoryName="@Repository.Name"
+                                                           RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                                                           IdPrefix="changelog"
+                                                           Content="@Repository.Root.RawChangelog" />
+                            </MudCardContent>
+                        </MudCard>
+                    </RepositoryTabPanelWithSidebar>
+                </MudTabPanel>
+            }
+
+            @* ===== Documentation (Wiki) Tab ===== *@
             @if (Repository.Wiki.HasWiki)
             {
-                <DocsPageSection>
-                    <SectionHeader Title="Wiki" />
-                    <SectionContent AutoMarginContent="false" FullWidth="true">
-                        @foreach (var wikiPage in Repository.Wiki.Pages)
-                        {
-                            var wikiH1 = wikiPage.IsLoaded
-                                ? MarkdownHeadingHelper.ExtractFirstH1Title(wikiPage.RawContent, MarkdownPipelineInstance)
-                                : null;
-                            var wikiSectionTitle = wikiH1 ?? wikiPage.Title;
-                            <DocsPageSection>
-                                <SectionHeader Title="@wikiSectionTitle" />
-                                <SectionContent AutoMarginContent="false" FullWidth="true">
-                                    <MudCard Elevation="0">
-                                        @if (wikiPage.IsLoaded)
-                                        {
-                                            <MudCardContent>
-                                                <MarkdownRepositoryContent RepositoryName="@Repository.Name"
-                                                                           RepositoryBranch="@Repository.BaseData.DefaultBranch"
-                                                                           HeaderName="@wikiH1"
-                                                                           Content="@wikiPage.RawContent" />
-                                            </MudCardContent>
-                                        }
-                                        else
-                                        {
-                                            <MudCardContent>
-                                                <MudProgressCircular Color="Color.Primary"
-                                                                     Size="Size.Small"
-                                                                     Indeterminate="true" />
-                                            </MudCardContent>
-                                        }
-                                    </MudCard>
-                                </SectionContent>
-                            </DocsPageSection>
-                        }
-                    </SectionContent>
-                </DocsPageSection>
+                <MudTabPanel Text="Documentation" Icon="@Icons.Material.Filled.MenuBook">
+                    <RepositoryWikiTab Repository="@Repository" />
+                </MudTabPanel>
             }
-            @if (Repository.IsDotnetSolution && Repository.Dotnet is not null)
+
+            @* ===== Dependencies Tab ===== *@
+            @if (Repository.NugetInfo?.DependencyGroups.Count > 0)
             {
-                foreach (var dotnetProject in Repository.Dotnet.Projects
-                    .OrderBy(x => x.Name))
-                {
-                    if (dotnetProject.HasReadme)
-                    {
-                        <DocsPageSection>
-                            <SectionHeader Title="@dotnetProject.Name"/>
-                            <SectionContent AutoMarginContent="false"
-                                            FullWidth="true">
-                                <MudCard Elevation="0">
-                                    <MudCardContent>
-                                        <MarkdownRepositoryContent RepositoryName="@Repository.Name"
-                                                                   RepositoryBranch="@Repository.BaseData.DefaultBranch"
-                                                                   HeaderName="@dotnetProject.Name"
-                                                                   Content="@dotnetProject.RawReadme"/>
-                                    </MudCardContent>
-                                </MudCard>
-                            </SectionContent>
-                        </DocsPageSection>
-                    }
-                }
+                <MudTabPanel Text="Dependencies" Icon="@Icons.Material.Filled.AccountTree">
+                    <RepositoryTabPanelWithSidebar Repository="@Repository">
+                        <RepositoryDependenciesTab Repository="@Repository" />
+                    </RepositoryTabPanelWithSidebar>
+                </MudTabPanel>
             }
-        </DocsPageContent>
+
+        </MudTabs>
     }
 </DocsPage>
