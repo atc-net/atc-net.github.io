@@ -1,0 +1,21 @@
+@if (!string.IsNullOrEmpty(Code))
+{
+    <div class="copyable-snippet">
+        <div class="copyable-snippet-header">
+            <span class="d-flex align-center gap-1">
+                <MudIcon Icon="@Icon" Size="Size.Small" />
+                <span class="copyable-snippet-label">@Label</span>
+            </span>
+            <MudTooltip Text="@(copied ? "Copied!" : "Copy")">
+                <MudIconButton Icon="@(copied ? Icons.Material.Filled.Check : Icons.Material.Filled.ContentCopy)"
+                               Size="Size.Small"
+                               Color="@(copied ? Color.Success : Color.Default)"
+                               Class="copyable-snippet-btn"
+                               OnClick="CopyToClipboard" />
+            </MudTooltip>
+        </div>
+        <div class="copyable-snippet-body">
+            <code>@Code</code>
+        </div>
+    </div>
+}

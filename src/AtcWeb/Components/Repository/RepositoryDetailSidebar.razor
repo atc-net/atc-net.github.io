@@ -1,0 +1,124 @@
+@if (Repository is not null)
+{
+    <div class="d-flex flex-column gap-4">
+        @* ===== Installation ===== *@
+        @if (Repository.NugetInfo is not null)
+        {
+            <MudCard Elevation="0" Class="repo-sidebar-card">
+                <MudCardContent>
+                    <MudText Typo="Typo.subtitle2" Class="mb-3" Style="font-weight: 600;">Installation</MudText>
+                    <CopyableSnippet Code="@GetInstallCommand()"
+                                     Label="Terminal"
+                                     Icon="@Icons.Material.Filled.Terminal" />
+                    <div class="mt-3">
+                        <CopyableSnippet Code="@GetProjectFileSnippet()"
+                                         Label="Project Reference"
+                                         Icon="@Icons.Material.Filled.InsertDriveFile" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        }
+
+        @* ===== Statistics ===== *@
+        @if (Repository.NugetInfo is not null || Repository.BaseData.StargazersCount > 0)
+        {
+            <MudCard Elevation="0" Class="repo-sidebar-card">
+                <MudCardContent>
+                    <MudText Typo="Typo.subtitle2" Class="mb-3" Style="font-weight: 600;">Statistics</MudText>
+                    <div class="d-flex flex-column gap-2">
+                        @if (Repository.NugetInfo is not null)
+                        {
+                            <div class="sidebar-stat-row">
+                                <span class="d-flex align-center gap-2">
+                                    <MudIcon Icon="@Icons.Material.Filled.CloudDownload" Size="Size.Small" />
+                                    Downloads
+                                </span>
+                                <span class="sidebar-stat-value">@Repository.NugetInfo.TotalDownloads.ToString("N0")</span>
+                            </div>
+                        }
+                        <a href="@($"https://github.com/atc-net/{Repository.Name}/stargazers")" target="_blank" rel="noopener noreferrer" class="sidebar-stat-row sidebar-stat-link">
+                            <span class="d-flex align-center gap-2">
+                                <MudIcon Icon="@Icons.Material.Filled.Star" Size="Size.Small" />
+                                Stars
+                            </span>
+                            <span class="sidebar-stat-value">
+                                @Repository.BaseData.StargazersCount
+                                <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" Class="ml-1" Style="opacity: 0.5;" />
+                            </span>
+                        </a>
+                        <a href="@($"https://github.com/atc-net/{Repository.Name}/forks")" target="_blank" rel="noopener noreferrer" class="sidebar-stat-row sidebar-stat-link">
+                            <span class="d-flex align-center gap-2">
+                                <MudIcon Icon="@Icons.Material.Filled.ForkRight" Size="Size.Small" />
+                                Forks
+                            </span>
+                            <span class="sidebar-stat-value">
+                                @Repository.BaseData.ForksCount
+                                <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" Class="ml-1" Style="opacity: 0.5;" />
+                            </span>
+                        </a>
+                        <a href="@($"https://github.com/atc-net/{Repository.Name}/issues")" target="_blank" rel="noopener noreferrer" class="sidebar-stat-row sidebar-stat-link">
+                            <span class="d-flex align-center gap-2">
+                                <MudIcon Icon="@Icons.Material.Filled.BugReport" Size="Size.Small" />
+                                Issues
+                            </span>
+                            <span class="sidebar-stat-value">
+                                @Repository.BaseData.OpenIssuesCount
+                                <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" Class="ml-1" Style="opacity: 0.5;" />
+                            </span>
+                        </a>
+                        @if (Repository.NugetInfo?.Published is not null)
+                        {
+                            <div class="sidebar-stat-row">
+                                <span class="d-flex align-center gap-2">
+                                    <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Size="Size.Small" />
+                                    Latest Release
+                                </span>
+                                <span class="sidebar-stat-value">@FormatDate(Repository.NugetInfo.Published)</span>
+                            </div>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        }
+
+        @* ===== Compatibility ===== *@
+        @if (Repository.NugetInfo?.TargetFrameworks.Count > 0)
+        {
+            <MudCard Elevation="0" Class="repo-sidebar-card">
+                <MudCardContent>
+                    <MudText Typo="Typo.subtitle2" Class="mb-3" Style="font-weight: 600;">Compatibility</MudText>
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var fw in Repository.NugetInfo.TargetFrameworks)
+                        {
+                            <div class="framework-item">
+                                <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Success" Size="Size.Small" />
+                                <span>@fw.Label</span>
+                            </div>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        }
+
+        @* ===== Tags (merged Topics + NuGet tags, deduplicated) ===== *@
+        @{
+            var allTags = GetMergedTags();
+        }
+        @if (allTags.Count > 0)
+        {
+            <MudCard Elevation="0" Class="repo-sidebar-card">
+                <MudCardContent>
+                    <MudText Typo="Typo.subtitle2" Class="mb-3" Style="font-weight: 600;">Tags</MudText>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var tag in allTags)
+                        {
+                            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Default">
+                                @tag
+                            </MudChip>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        }
+    </div>
+}

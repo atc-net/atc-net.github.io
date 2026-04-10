@@ -1,0 +1,9 @@
+@if (!string.IsNullOrEmpty(Href))
+{
+    <a href="@Href" target="_blank" rel="noopener noreferrer" class="nuget-pill-button">
+        <span>Install from NuGet</span>
+        <div class="pill-arrow-circle">
+            <MudIcon Icon="@Icons.Material.Filled.ArrowOutward" Size="Size.Small" Class="pill-arrow" />
+        </div>
+    </a>
+}

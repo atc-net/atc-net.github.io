@@ -1,0 +1,53 @@
+@if (Repository?.NugetInfo?.DependencyGroups.Count > 0)
+{
+    <div class="d-flex flex-column gap-4">
+        @foreach (var group in Repository.NugetInfo.DependencyGroups)
+        {
+            <MudCard Elevation="0">
+                <MudCardContent>
+                    <MudText Typo="Typo.subtitle2" Class="mb-3" Style="font-weight: 600;">
+                        @group.FrameworkLabel
+                    </MudText>
+                    @if (group.Dependencies.Count > 0)
+                    {
+                        <MudSimpleTable Dense="true" Hover="true" Bordered="false" Striped="false"
+                                        Style="background: transparent;">
+                            <thead>
+                                <tr>
+                                    <th>Package</th>
+                                    <th style="text-align: right;">Version</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dep in group.Dependencies.OrderBy(d => d.Id, StringComparer.OrdinalIgnoreCase))
+                                {
+                                    <tr>
+                                        <td>
+                                            <MudLink Href="@($"https://www.nuget.org/packages/{dep.Id}")"
+                                                     Target="_blank"
+                                                     Typo="Typo.body2">
+                                                @dep.Id
+                                            </MudLink>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Default"
+                                                     Style="font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 12px;">
+                                                @dep.DisplayRange
+                                            </MudChip>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">
+                            No dependencies
+                        </MudText>
+                    }
+                </MudCardContent>
+            </MudCard>
+        }
+    </div>
+}
