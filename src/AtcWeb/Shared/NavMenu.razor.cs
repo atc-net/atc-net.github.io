@@ -1,6 +1,6 @@
 namespace AtcWeb.Shared;
 
-public partial class NavMenu
+public partial class NavMenu : IDisposable
 {
     private readonly Dictionary<string, bool> groupExpandedState = new(StringComparer.Ordinal);
     private string? section;
@@ -23,6 +23,32 @@ public partial class NavMenu
 
         section = NavigationManager.GetSection();
         componentLink = NavigationManager.GetComponentLink();
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(
+        object? sender,
+        Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        // Reset explicit expansion state on navigation so URL-based auto-expansion takes over
+        groupExpandedState.Clear();
+        section = NavigationManager.GetSection();
+        componentLink = NavigationManager.GetComponentLink();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            NavigationManager.LocationChanged -= OnLocationChanged;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -94,6 +120,14 @@ public partial class NavMenu
         bool expanded)
     {
         groupExpandedState[groupName] = expanded;
+    }
+
+    private bool IsRepoActive(string repoName)
+    {
+        var uri = NavigationManager.Uri;
+        return uri.EndsWith(
+            $"/repository/{repoName}",
+            StringComparison.OrdinalIgnoreCase);
     }
 
     private bool IsGroupExpanded(string groupName)

@@ -73,7 +73,7 @@
 
                             <MudElement HtmlTag="div"
                                         Class="mud-nav-item mud-ripple d-flex items-center">
-                                <a href="@href" class="mud-nav-link">
+                                <a href="@href" class="mud-nav-link @(IsRepoActive(repository.Name) ? "active" : "")">
                                     <img src="@iconSrc" width="20" height="20" alt="" />
                                     <MudText Class="mud-nav-link-text"
                                              Inline="true">
