@@ -1,0 +1,67 @@
+@if (Repository is not null)
+{
+    <div class="accent-top-card pa-6 mb-6">
+        <div class="d-flex align-center justify-space-between flex-wrap gap-3 mb-3">
+            <div class="d-flex align-center flex-wrap gap-3">
+                <img src="@ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language)"
+                     width="32" height="32" alt="" />
+                <MudText Typo="Typo.h4" Class="gradient-text" Style="font-weight: 600;">
+                    @Repository.Name
+                </MudText>
+                @if (Repository.NugetInfo is not null)
+                {
+                    <MudChip T="string" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small">
+                        v@(Repository.NugetInfo.Version)
+                    </MudChip>
+                }
+                @{
+                    var category = RepositoryCategoryHelper.GetCategory(Repository.Name);
+                }
+                @if (!string.IsNullOrEmpty(category))
+                {
+                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small">
+                        @category
+                    </MudChip>
+                }
+            </div>
+            <div class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small"
+                           StartIcon="@Icons.Custom.Brands.GitHub"
+                           Href="@($"https://github.com/atc-net/{Repository.Name}")"
+                           Target="_blank">
+                    GitHub
+                </MudButton>
+                @if (Repository.IsDotnetSolution && Repository.NugetInfo is not null)
+                {
+                    <NuGetPillButton Href="@($"https://www.nuget.org/packages/{Repository.NugetInfo.PackageId}")" />
+                }
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Repository.Description))
+        {
+            <MudText Typo="Typo.body1" Class="mb-4" Style="color: var(--mud-palette-text-secondary);">
+                @Repository.Description
+            </MudText>
+        }
+        <div class="d-flex align-center flex-wrap gap-2">
+            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
+                     Size="Size.Small" Icon="@Icons.Material.Filled.Code">
+                @Repository.BaseData.Language
+            </MudChip>
+            @if (!string.IsNullOrEmpty(Repository.BaseData.License?.Key))
+            {
+                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
+                         Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
+                    @Repository.BaseData.License.Key
+                </MudChip>
+            }
+            @if (Repository.BaseData.PushedAt.HasValue)
+            {
+                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default"
+                         Size="Size.Small" Icon="@Icons.Material.Filled.Update">
+                    Updated @Repository.BaseData.PushedAt.Value.ToString("MMM d, yyyy")
+                </MudChip>
+            }
+        </div>
+    </div>
+}
