@@ -7,6 +7,8 @@ public class AtcApiNugetClient
     private readonly IMemoryCache memoryCache;
     private static readonly SemaphoreSlim SemaphoreTotalDownloads = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreCliTools = new(1, 1);
+    private static readonly SemaphoreSlim SemaphorePackageMetadata = new(1, 1);
+    private static readonly SemaphoreSlim SemaphorePackageVersions = new(1, 1);
 
     public AtcApiNugetClient(
         HttpClient httpClient,
@@ -98,6 +100,90 @@ public class AtcApiNugetClient
         finally
         {
             SemaphoreCliTools.Release();
+        }
+    }
+
+    public async Task<(bool IsSuccessful, NugetPackageMetadata? Result)> GetPackageMetadata(
+        string packageId,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheKey = $"{CacheConstants.CacheKeyNugetPackageMetadata}_{packageId}";
+        if (memoryCache.TryGetValue(cacheKey, out NugetPackageMetadata? data))
+        {
+            return (IsSuccessful: true, data);
+        }
+
+        await SemaphorePackageMetadata.WaitAsync(cancellationToken);
+
+        try
+        {
+            var url = $"{BaseAddress}/package-metadata?packageId={packageId}";
+
+            var responseMessage = await httpClient.GetAsync(url, cancellationToken);
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                return (IsSuccessful: false, null);
+            }
+
+            var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
+            var result = JsonSerializer.Deserialize<NugetPackageMetadata>(content, JsonSerializerOptionsFactory.Create());
+            if (result is null)
+            {
+                return (IsSuccessful: false, null);
+            }
+
+            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
+            return (IsSuccessful: true, result);
+        }
+        catch
+        {
+            return (IsSuccessful: false, null);
+        }
+        finally
+        {
+            SemaphorePackageMetadata.Release();
+        }
+    }
+
+    public async Task<(bool IsSuccessful, List<NugetVersionEntry> Result)> GetPackageVersions(
+        string packageId,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheKey = $"{CacheConstants.CacheKeyNugetPackageVersions}_{packageId}";
+        if (memoryCache.TryGetValue(cacheKey, out List<NugetVersionEntry>? data) && data is not null)
+        {
+            return (IsSuccessful: true, data);
+        }
+
+        await SemaphorePackageVersions.WaitAsync(cancellationToken);
+
+        try
+        {
+            var url = $"{BaseAddress}/package-versions?packageId={packageId}";
+
+            var responseMessage = await httpClient.GetAsync(url, cancellationToken);
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                return (IsSuccessful: false, []);
+            }
+
+            var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
+            var result = JsonSerializer.Deserialize<List<NugetVersionEntry>>(content, JsonSerializerOptionsFactory.Create());
+            if (result is null)
+            {
+                return (IsSuccessful: false, []);
+            }
+
+            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
+            return (IsSuccessful: true, result);
+        }
+        catch
+        {
+            return (IsSuccessful: false, []);
+        }
+        finally
+        {
+            SemaphorePackageVersions.Release();
         }
     }
 }

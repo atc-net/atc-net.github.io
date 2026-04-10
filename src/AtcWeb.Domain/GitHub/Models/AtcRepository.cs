@@ -42,6 +42,8 @@ public class AtcRepository
 
     public WikiMetadata Wiki { get; set; }
 
+    public NugetPackageMetadata? NugetInfo { get; set; }
+
     public List<GitHubIssue> OpenIssues { get; set; }
 
     public bool HasRootReadme => Root?.HasReadme ?? false;

@@ -20,6 +20,10 @@ public static class CacheConstants
 
     public const string CacheKeyNugetCliTools = "NugetCliTools";
 
+    public const string CacheKeyNugetPackageMetadata = "NugetPackageMetadata";
+
+    public const string CacheKeyNugetPackageVersions = "NugetPackageVersions";
+
     public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
     public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
