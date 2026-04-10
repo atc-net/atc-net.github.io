@@ -1482,3 +1482,156 @@ atc-appbar-band {
       background-color: var(--mud-palette-surface);
   }*/
 }
+
+.nuget-pill-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 3px 3px 14px;
+  background: var(--atc-gradient-purple);
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow 0.3s ease;
+  gap: 8px;
+  white-space: nowrap;
+}
+.nuget-pill-button:hover {
+  box-shadow: var(--atc-glow-purple);
+  text-decoration: none;
+  color: #fff;
+}
+.nuget-pill-button:hover .pill-arrow-circle .pill-arrow {
+  transform: rotate(45deg);
+}
+.nuget-pill-button .pill-arrow-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  border-radius: 50%;
+}
+.nuget-pill-button .pill-arrow-circle .pill-arrow {
+  color: #776be7;
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.repo-detail-tabs .mud-tabs-toolbar {
+  border-bottom: 1px solid rgba(119, 107, 231, 0.15);
+  background: transparent;
+}
+.repo-detail-tabs .mud-tab {
+  text-transform: none !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.02em !important;
+  min-width: auto !important;
+  padding: 12px 20px !important;
+}
+.repo-detail-tabs .mud-tab-active {
+  color: #776be7 !important;
+}
+.repo-detail-tabs .mud-tabs-toolbar-indicator {
+  background: var(--atc-gradient-primary) !important;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+.repo-sidebar-card {
+  background-color: var(--mud-palette-surface);
+  border: 1px solid var(--mud-palette-lines-default);
+}
+.repo-sidebar-card .mud-card-content {
+  padding: 20px;
+}
+
+.sidebar-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 14px;
+  color: var(--mud-palette-text-secondary);
+}
+
+.sidebar-stat-link {
+  text-decoration: none;
+  color: var(--mud-palette-text-secondary);
+  transition: color 0.2s ease;
+}
+.sidebar-stat-link:hover {
+  color: var(--mud-palette-text-primary);
+  text-decoration: none;
+}
+
+.sidebar-stat-value {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--mud-palette-text-primary);
+}
+
+.framework-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--mud-palette-text-secondary);
+}
+
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #776be7;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.copyable-snippet {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(119, 107, 231, 0.15);
+}
+.copyable-snippet .copyable-snippet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mud-palette-text-secondary);
+  border-bottom: 1px solid rgba(119, 107, 231, 0.1);
+}
+.copyable-snippet .copyable-snippet-header .copyable-snippet-btn {
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+.copyable-snippet .copyable-snippet-header .copyable-snippet-btn:hover {
+  opacity: 1;
+}
+.copyable-snippet .copyable-snippet-body {
+  padding: 10px 12px;
+  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+.copyable-snippet .copyable-snippet-body code {
+  color: var(--mud-palette-text-primary);
+  white-space: nowrap;
+}
+
+.mud-theme-dark .copyable-snippet .copyable-snippet-body {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+:not(.mud-theme-dark) .copyable-snippet .copyable-snippet-body {
+  background: rgba(0, 0, 0, 0.03);
+}
