@@ -28,6 +28,14 @@ public class GitHubRepository
 
     public DateTimeOffset? PushedAt { get; set; }
 
+    public int StargazersCount { get; set; }
+
+    public int ForksCount { get; set; }
+
+    public int OpenIssuesCount { get; set; }
+
+    public List<string> Topics { get; set; } = [];
+
     public override string ToString()
         => $"{nameof(Name)}: {Name}, {nameof(Language)}: {Language}";
 }

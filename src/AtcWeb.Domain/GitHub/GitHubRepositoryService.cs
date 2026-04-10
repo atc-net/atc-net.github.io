@@ -7,19 +7,23 @@ public class GitHubRepositoryService
     private readonly AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient;
     private readonly AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient;
     private readonly AtcApiGitHubWikiClient atcApiGitHubWikiClient;
+    private readonly AtcApiNugetClient atcApiNugetClient;
 
     public GitHubRepositoryService(
         AtcApiGitHubApiInformationClient atcApiGitHubApiInformationClient,
         AtcApiGitHubRepositoryClient atcApiGitHubRepositoryClient,
-        AtcApiGitHubWikiClient atcApiGitHubWikiClient)
+        AtcApiGitHubWikiClient atcApiGitHubWikiClient,
+        AtcApiNugetClient atcApiNugetClient)
     {
         ArgumentNullException.ThrowIfNull(atcApiGitHubApiInformationClient);
         ArgumentNullException.ThrowIfNull(atcApiGitHubRepositoryClient);
         ArgumentNullException.ThrowIfNull(atcApiGitHubWikiClient);
+        ArgumentNullException.ThrowIfNull(atcApiNugetClient);
 
         this.atcApiGitHubApiInformationClient = atcApiGitHubApiInformationClient;
         this.atcApiGitHubRepositoryClient = atcApiGitHubRepositoryClient;
         this.atcApiGitHubWikiClient = atcApiGitHubWikiClient;
+        this.atcApiNugetClient = atcApiNugetClient;
     }
 
     public async Task<GitHubApiRateLimits?> GetRestApiRateLimitsAsync()
@@ -176,6 +180,44 @@ public class GitHubRepositoryService
             repository.FolderAndFilePaths,
             repository.Name,
             repository.BaseData.DefaultBranch);
+    }
+
+    public async Task PopulateNugetInfoAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        if (!repository.IsDotnetSolution)
+        {
+            return;
+        }
+
+        var (isSuccessful, metadata) = await atcApiNugetClient.GetPackageMetadata(repository.DotName);
+        if (isSuccessful && metadata is not null)
+        {
+            repository.NugetInfo = metadata;
+        }
+    }
+
+    public async Task PopulateChangelogAsync(AtcRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        var hasChangelog = repository.FolderAndFilePaths
+            .Any(x => x.IsFile &&
+                       x.Path.Equals("CHANGELOG.md", StringComparison.OrdinalIgnoreCase));
+
+        if (!hasChangelog)
+        {
+            return;
+        }
+
+        var (isSuccessful, content) = await atcApiGitHubRepositoryClient
+            .GetFileByRepositoryNameAndFilePath(repository.Name, "CHANGELOG.md");
+
+        if (isSuccessful && !string.IsNullOrEmpty(content))
+        {
+            repository.Root.RawChangelog = content;
+        }
     }
 
     public async Task PopulateWikiAsync(AtcRepository repository)
