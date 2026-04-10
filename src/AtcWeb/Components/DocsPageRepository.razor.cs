@@ -2,12 +2,7 @@ namespace AtcWeb.Components;
 
 public partial class DocsPageRepository : ComponentBase
 {
-    private static readonly MarkdownPipeline MarkdownPipelineInstance = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions()
-        .UseEmojiAndSmiley()
-        .Build();
-
-    private DocsPage? docsPage;
+    private int activeTabIndex;
 
     [Parameter]
     public AtcRepository? Repository { get; set; }
@@ -15,8 +10,8 @@ public partial class DocsPageRepository : ComponentBase
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private void HandleReadmeHeadings(List<MarkdownHeadingInfo> headings)
+    private void OnTabChanged(int index)
     {
-        docsPage?.AddMarkdownHeadingSections("readme", headings);
+        activeTabIndex = index;
     }
 }

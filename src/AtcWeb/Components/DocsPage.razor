@@ -6,17 +6,20 @@
             </CascadingValue>
         </div>
     </MudContainer>
-    <MudDrawer
-        @bind-Open="contentDrawerOpen"
-        Breakpoint="Breakpoint.Md"
-        Anchor="Anchor.End"
-        ClipMode="DrawerClipMode.Always"
-        Elevation="0"
-        Color="Color.Transparent"
-        Class="docs-page-content-navigation-drawer">
-        <MudPageContentNavigation @key="navigationKey"
-                                  SectionClassSelector="docs-section-header"
-                                  @ref="contentNavigation"
-                                  ActivateFirstSectionAsDefault="true" />
-    </MudDrawer>
+    @if (ShowContentDrawer)
+    {
+        <MudDrawer
+            @bind-Open="contentDrawerOpen"
+            Breakpoint="Breakpoint.Md"
+            Anchor="Anchor.End"
+            ClipMode="DrawerClipMode.Always"
+            Elevation="0"
+            Color="Color.Transparent"
+            Class="docs-page-content-navigation-drawer">
+            <MudPageContentNavigation @key="navigationKey"
+                                      SectionClassSelector="docs-section-header"
+                                      @ref="contentNavigation"
+                                      ActivateFirstSectionAsDefault="true" />
+        </MudDrawer>
+    }
 </MudMainContent>

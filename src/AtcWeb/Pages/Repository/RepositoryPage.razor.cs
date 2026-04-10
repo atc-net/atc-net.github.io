@@ -38,10 +38,12 @@ public partial class RepositoryPage : ComponentBase
         await RepositoryService.PopulateReadmeAsync(repository);
         StateHasChanged();
 
-        // Phase 3: Advanced metadata (coding rules, issues, .NET projects)
-        // Start wiki fetch in parallel (independent of advanced metadata)
+        // Phase 3: Advanced metadata, NuGet info, and Changelog — all in parallel
+        var taskAdvanced = RepositoryService.PopulateMetaDataAdvancedAsync(repository);
+        var taskNuget = RepositoryService.PopulateNugetInfoAsync(repository);
+        var taskChangelog = RepositoryService.PopulateChangelogAsync(repository);
         var taskWiki = RepositoryService.PopulateWikiAsync(repository);
-        await RepositoryService.PopulateMetaDataAdvancedAsync(repository);
+        await Task.WhenAll(taskAdvanced, taskNuget, taskChangelog);
         StateHasChanged();
 
         // Phase 4: Wiki content
