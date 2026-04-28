@@ -153,6 +153,15 @@ public partial class MarkdownRepositoryContent : ComponentBase
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
 
+        // Rewrite absolute github.com blob URLs in <img> tags to raw.githubusercontent.com
+        // (github.com/.../blob/... serves the HTML web view, not the image bytes)
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<img src=""https://github\.com/([^/""]+)/([^/""]+)/blob/([^""]+)""",
+            @"<img src=""https://raw.githubusercontent.com/$1/$2/$3""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
         // Add responsive styling to absolute raw.githubusercontent images
         sanitizedHtml = sanitizedHtml.Replace(
             "<img src=\"https://raw.githubusercontent.com/",
