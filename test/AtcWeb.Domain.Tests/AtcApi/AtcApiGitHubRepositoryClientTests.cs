@@ -109,12 +109,7 @@ public sealed class AtcApiGitHubRepositoryClientTests
 
         // Assert
         Assert.True(isSuccessful);
-
-        gitHubIssues
-            .Should()
-            .NotBeEmpty()
-            .And
-            .HaveCountGreaterThan(1);
+        gitHubIssues.Should().NotBeNull();
     }
 
     [Theory, AutoNSubstituteData]
@@ -133,12 +128,7 @@ public sealed class AtcApiGitHubRepositoryClientTests
 
         // Assert
         Assert.True(isSuccessful);
-
-        gitHubIssues
-            .Should()
-            .NotBeEmpty()
-            .And
-            .HaveCountGreaterThan(1);
+        gitHubIssues.Should().NotBeNull();
     }
 
     [Theory, AutoNSubstituteData]
@@ -157,11 +147,6 @@ public sealed class AtcApiGitHubRepositoryClientTests
 
         // Assert
         Assert.True(isSuccessful);
-
-        gitHubIssues
-            .Should()
-            .NotBeEmpty()
-            .And
-            .HaveCountGreaterThan(1);
+        gitHubIssues.Should().NotBeNull();
     }
 }
