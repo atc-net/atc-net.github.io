@@ -138,23 +138,39 @@ public partial class MarkdownRepositoryContent : ComponentBase
     private MarkupString SanitizeHtmlToMarkup(string html)
     {
         const string hrefBase = "https://github.com/atc-net/";
-        const string imgSrcRaw = "https://raw.githubusercontent.com/atc-net/";
+        const string imgStyle = "max-width: 100%; height: auto;";
         var hrefRepo = $"{hrefBase}{RepositoryName}/blob/{RepositoryBranch}/";
         var hrefRepoTree = $"{hrefBase}{RepositoryName}/tree/{RepositoryBranch}/";
-        var imgRepoRaw = $"{imgSrcRaw}{RepositoryName}/{RepositoryBranch}/";
 
         var sanitizedHtml = HtmlSanitizer.Sanitize(html);
 
-        // Rewrite relative image sources to raw GitHub URLs
+        // Rewrite relative <img src="..."> to the atc-api raw-file proxy
         sanitizedHtml = Regex.Replace(
             sanitizedHtml,
-            @"<img src=""(?!https?://)([^""]+)""",
-            $@"<img style='max-width: 100%; height: auto;' src=""{imgRepoRaw}$1""",
+            @"<img src=""(?!https?://)(?:\./)?([^""]+)""",
+            m => $@"<img style='{imgStyle}' src=""{AtcApiUrlBuilder.BuildRawFileUrl(RepositoryName, RepositoryBranch, m.Groups[1].Value)}""",
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
 
-        // Rewrite absolute github.com blob URLs in <img> tags to raw.githubusercontent.com
-        // (github.com/.../blob/... serves the HTML web view, not the image bytes)
+        // Rewrite absolute github.com/atc-net/{repo}/blob/{branch}/{path} <img> URLs to the proxy
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<img src=""https://github\.com/atc-net/([^/""]+)/blob/([^/""]+)/([^""]+)""",
+            m => $@"<img style='{imgStyle}' src=""{AtcApiUrlBuilder.BuildRawFileUrl(m.Groups[1].Value, m.Groups[2].Value, m.Groups[3].Value)}""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
+        // Rewrite absolute raw.githubusercontent.com/atc-net/{repo}/{branch}/{path} <img> URLs to the proxy
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<img src=""https://raw\.githubusercontent\.com/atc-net/([^/""]+)/([^/""]+)/([^""]+)""",
+            m => $@"<img style='{imgStyle}' src=""{AtcApiUrlBuilder.BuildRawFileUrl(m.Groups[1].Value, m.Groups[2].Value, m.Groups[3].Value)}""",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
+
+        // Normalize non-atc-net github.com/{owner}/{repo}/blob/{branch}/{path} <img> URLs
+        // to raw.githubusercontent.com so the next step can apply a single routing rule.
+        // (github.com/.../blob/... serves the HTML web view, not the image bytes.)
         sanitizedHtml = Regex.Replace(
             sanitizedHtml,
             @"<img src=""https://github\.com/([^/""]+)/([^/""]+)/blob/([^""]+)""",
@@ -162,11 +178,25 @@ public partial class MarkdownRepositoryContent : ComponentBase
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
 
-        // Add responsive styling to absolute raw.githubusercontent images
-        sanitizedHtml = sanitizedHtml.Replace(
-            "<img src=\"https://raw.githubusercontent.com/",
-            "<img style='max-width: 100%; height: auto;' src=\"https://raw.githubusercontent.com/",
-            StringComparison.Ordinal);
+        // Route remaining non-atc-net raw.githubusercontent.com images through the atc-api
+        // external proxy when the owner is allow-listed, otherwise leave the direct CDN URL
+        // in place. Responsive styling is applied either way.
+        sanitizedHtml = Regex.Replace(
+            sanitizedHtml,
+            @"<img src=""https://raw\.githubusercontent\.com/([^/""]+)/([^/""]+)/([^/""]+)/([^""]+)""",
+            m =>
+            {
+                var owner = m.Groups[1].Value;
+                var repo = m.Groups[2].Value;
+                var branch = m.Groups[3].Value;
+                var path = m.Groups[4].Value;
+                var src = AtcApiUrlBuilder.IsExternalProxyOwner(owner)
+                    ? AtcApiUrlBuilder.BuildExternalRawFileUrl(owner, repo, branch, path)
+                    : $"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}";
+                return $@"<img style='{imgStyle}' src=""{src}""";
+            },
+            RegexOptions.None,
+            TimeSpan.FromSeconds(5));
 
         // Rewrite relative src/ links to GitHub tree URLs
         sanitizedHtml = Regex.Replace(
