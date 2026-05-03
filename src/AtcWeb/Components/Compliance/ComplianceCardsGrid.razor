@@ -1,0 +1,33 @@
+@namespace AtcWeb.Components.Compliance
+
+<div class="featured-repos-grid">
+    @foreach (var s in Summaries)
+    {
+        var health = ComplianceHealth.Compute(s);
+        <a href="@($"/repository/{s.Name}")"
+           class="repo-card @RepositoryCategoryHelper.GetCardCssClass(s.Name)"
+           style="text-decoration: none;">
+            <div class="repo-card-name">@s.Name</div>
+            <div class="repo-card-description">
+                @(string.IsNullOrEmpty(s.Description) ? "No description available." : s.Description)
+            </div>
+            <div class="repo-card-meta d-flex gap-1 flex-wrap">
+                @if (!string.IsNullOrEmpty(s.Language))
+                {
+                    <MudChip T="string"
+                             Variant="Variant.Outlined"
+                             Size="Size.Small"
+                             Color="Color.Primary">
+                        @s.Language
+                    </MudChip>
+                }
+                <MudChip T="string"
+                         Variant="Variant.Outlined"
+                         Size="Size.Small"
+                         Color="@HealthColor(health)">
+                    @health
+                </MudChip>
+            </div>
+        </a>
+    }
+</div>
