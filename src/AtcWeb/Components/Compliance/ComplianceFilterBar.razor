@@ -1,0 +1,67 @@
+@namespace AtcWeb.Components.Compliance
+
+<div class="atc-filter-bar d-flex flex-wrap align-center gap-2 mb-3">
+    <MudTextField T="string"
+                  Value="@State.SearchText"
+                  ValueChanged="OnSearchChanged"
+                  Placeholder="Search repos…"
+                  Variant="Variant.Outlined"
+                  Margin="Margin.Dense"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  Style="min-width: 220px;" />
+
+    <MudSelect T="string"
+               Value="@State.Language"
+               ValueChanged="OnLanguageChanged"
+               Placeholder="Language"
+               Variant="Variant.Outlined"
+               Margin="Margin.Dense"
+               Clearable="true"
+               Style="min-width: 140px;">
+        <MudSelectItem Value="@("C#")">C#</MudSelectItem>
+        <MudSelectItem Value="@("Python")">Python</MudSelectItem>
+    </MudSelect>
+
+    <MudSelect T="string"
+               Value="@State.Category"
+               ValueChanged="OnCategoryChanged"
+               Placeholder="Category"
+               Variant="Variant.Outlined"
+               Margin="Margin.Dense"
+               Clearable="true"
+               Style="min-width: 180px;">
+        @foreach (var cat in Categories)
+        {
+            <MudSelectItem Value="@cat">@cat</MudSelectItem>
+        }
+    </MudSelect>
+
+    <MudSelect T="HealthStatus?"
+               Value="@State.Health"
+               ValueChanged="OnHealthChanged"
+               Placeholder="Health"
+               Variant="Variant.Outlined"
+               Margin="Margin.Dense"
+               Clearable="true"
+               Style="min-width: 160px;">
+        <MudSelectItem T="HealthStatus?" Value="@((HealthStatus?)HealthStatus.Ok)">All green</MudSelectItem>
+        <MudSelectItem T="HealthStatus?" Value="@((HealthStatus?)HealthStatus.Warning)">Has warning</MudSelectItem>
+        <MudSelectItem T="HealthStatus?" Value="@((HealthStatus?)HealthStatus.Error)">Has error</MudSelectItem>
+    </MudSelect>
+
+    <MudSpacer />
+
+    <MudSelect T="string"
+               Value="@GroupBy"
+               ValueChanged="OnGroupByChanged"
+               Label="Group by"
+               Variant="Variant.Outlined"
+               Margin="Margin.Dense"
+               Style="min-width: 160px;">
+        <MudSelectItem Value="@("None")">None</MudSelectItem>
+        <MudSelectItem Value="@("Category")">Category</MudSelectItem>
+        <MudSelectItem Value="@("Health")">Health</MudSelectItem>
+        <MudSelectItem Value="@("Language")">Language</MudSelectItem>
+    </MudSelect>
+</div>
