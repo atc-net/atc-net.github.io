@@ -1,0 +1,24 @@
+@namespace AtcWeb.Components.Insights
+
+<div class="atc-insights-tile">
+    @if (Percent is { } p)
+    {
+        <div class="atc-insights-tile-value">@p.ToString(CultureInfo.InvariantCulture)%</div>
+    }
+    else
+    {
+        <div class="atc-insights-tile-value">@Value</div>
+    }
+    <div class="atc-insights-tile-label">@Label</div>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public int? Percent { get; set; }
+}

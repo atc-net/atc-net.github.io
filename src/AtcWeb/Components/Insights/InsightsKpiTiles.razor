@@ -1,0 +1,14 @@
+@namespace AtcWeb.Components.Insights
+
+<div class="atc-insights-tiles d-flex flex-wrap gap-3">
+    <Tile Label="Total repos" Value="@Total.ToString(CultureInfo.InvariantCulture)" />
+    <Tile Label="MIT licensed" Percent="@Pct(s => s.Signals.LicenseIsMit)" />
+    <Tile Label="On net10.0" Percent="@Pct(s => s.Signals.GlobalTargetFrameworkIsLatest)" />
+    <Tile Label="release-please" Percent="@Pct(s => s.Signals.ReleasePleasePresent)" />
+    <Tile Label="EditorCfg latest" Percent="@Pct(s =>
+        s.Signals.EditorConfigStatus.RootIsLatest &&
+        s.Signals.EditorConfigStatus.SrcIsLatest &&
+        s.Signals.EditorConfigStatus.TestIsLatest)" />
+    <Tile Label="xUnit v3" Percent="@Pct(s => s.Signals.XunitV3Status == XunitV3Status.Yes)" />
+    <Tile Label="Homepage OK" Percent="@Pct(s => s.Signals.HomepageIsAtcWeb)" />
+</div>
