@@ -844,3 +844,26 @@
     text-decoration: underline;
   }
 }
+
+.atc-insights-tiles {
+  .atc-insights-tile {
+    background: var(--mud-palette-surface);
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 140px;
+
+    .atc-insights-tile-value {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--mud-palette-primary);
+    }
+
+    .atc-insights-tile-label {
+      font-size: 0.75rem;
+      color: var(--mud-palette-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}
