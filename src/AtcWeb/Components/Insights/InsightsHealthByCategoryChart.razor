@@ -1,0 +1,14 @@
+@namespace AtcWeb.Components.Insights
+
+@if (XAxis.Length > 0)
+{
+    <MudChart ChartType="ChartType.StackedBar"
+              ChartSeries="@Series"
+              ChartLabels="@XAxis"
+              Width="100%"
+              Height="320px" />
+}
+else
+{
+    <MudText Typo="Typo.body2"><i>No data.</i></MudText>
+}
