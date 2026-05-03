@@ -1,0 +1,38 @@
+@namespace AtcWeb.Components.Compliance
+
+@if (Summary is not null)
+{
+    <div class="atc-row-detail pa-3">
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2">Frameworks</MudText>
+                <div><b>src:</b> @JoinOrDash(Summary.Detail.SrcFrameworks)</div>
+                <div><b>test:</b> @JoinOrDash(Summary.Detail.TestFrameworks)</div>
+                <div><b>sample:</b> @JoinOrDash(Summary.Detail.SampleFrameworks)</div>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2">Analyzer packages</MudText>
+                @if (Summary.Detail.AnalyzerPackages.Count == 0)
+                {
+                    <MudText Typo="Typo.body2"><i>None pinned</i></MudText>
+                }
+                else
+                {
+                    foreach (var p in Summary.Detail.AnalyzerPackages)
+                    {
+                        <div>@p.PackageId <b>@p.Version</b></div>
+                    }
+                }
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2">Open issues</MudText>
+                <div>Count: <b>@Summary.OpenIssuesCount</b></div>
+                <div>Oldest: @FormatDate(Summary.OldestOpenIssueAt)</div>
+                <div>Newest: @FormatDate(Summary.NewestOpenIssueAt)</div>
+                <MudLink Href="@($"/repository/{Summary.Name}")" Color="Color.Primary">
+                    Open full repo page
+                </MudLink>
+            </MudItem>
+        </MudGrid>
+    </div>
+}
