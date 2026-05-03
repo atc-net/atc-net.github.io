@@ -13,6 +13,7 @@ global using Atc.Helpers;
 global using Atc.Serialization;
 global using AtcWeb.Domain.AtcApi;
 global using AtcWeb.Domain.AtcApi.Models;
+global using AtcWeb.Domain.AtcApi.Models.Compliance;
 global using AtcWeb.Domain.Caching;
 global using AtcWeb.Domain.Data;
 global using AtcWeb.Domain.Data.Models;
