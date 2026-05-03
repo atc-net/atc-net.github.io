@@ -1,0 +1,95 @@
+@namespace AtcWeb.Components.Compliance
+
+<MudDataGrid T="RepositoryComplianceSummary"
+             Items="@Summaries"
+             Dense="true"
+             Hover="true"
+             Bordered="false"
+             Filterable="false"
+             SortMode="SortMode.Multiple"
+             Groupable="true"
+             GroupExpanded="true"
+             Virtualize="true"
+             Height="700px"
+             Class="atc-compliance-grid">
+    <Columns>
+        <HierarchyColumn T="RepositoryComplianceSummary" />
+        <PropertyColumn Property="x => x.Name" Title="Name">
+            <CellTemplate>
+                <a href="@($"/repository/{context.Item.Name}")" class="atc-link">@context.Item.Name</a>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Language" Title="Lang" />
+        <TemplateColumn Title="License" SortBy="x => x.Signals.LicenseIsMit">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.LicenseIsMit ? ChipState.Ok : ChipState.Error)"
+                                      Label="@(context.Item.LicenseKey ?? "—")"
+                                      Tooltip="MIT required" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="Homepage" SortBy="x => x.Signals.HomepageIsAtcWeb">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.HomepageIsAtcWeb ? ChipState.Ok : ChipState.Warning)"
+                                      Label="@(context.Item.Signals.HomepageIsAtcWeb ? "OK" : "Wrong")"
+                                      Tooltip="Should be https://atc-net.github.io/repository/{name}" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="README" SortBy="x => x.Signals.HasGoodReadme">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.HasGoodReadme ? ChipState.Ok : ChipState.Warning)"
+                                      Label="@(context.Item.Signals.HasGoodReadme ? "OK" : "Thin")"
+                                      Tooltip="readme.md should exist and be > 1500 bytes" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="EditorCfg (R/S/T)">
+            <CellTemplate>
+                <span>@(Bool(context.Item.Signals.EditorConfigStatus.RootIsLatest))/@(Bool(context.Item.Signals.EditorConfigStatus.SrcIsLatest))/@(Bool(context.Item.Signals.EditorConfigStatus.TestIsLatest))</span>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="Updater" SortBy="x => x.Signals.UpdaterTargetIsLatest">
+            <CellTemplate>
+                <ComplianceStatusChip State="@UpdaterState(context.Item)"
+                                      Label="@(context.Item.Signals.UpdaterProjectTarget ?? "–")"
+                                      Tooltip="atc-coding-rules-updater.json projectTarget should be DotNet10" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="LangVer" SortBy="x => x.Signals.GlobalLangVersionIsLatest">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.GlobalLangVersionIsLatest ? ChipState.Ok : ChipState.Warning)"
+                                      Label="@(context.Item.Signals.GlobalLangVersion ?? "–")"
+                                      Tooltip="LangVersion in Directory.Build.props should be 14.0" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="TFM" SortBy="x => x.Signals.GlobalTargetFrameworkIsLatest">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.GlobalTargetFrameworkIsLatest ? ChipState.Ok : ChipState.Error)"
+                                      Label="@(context.Item.Signals.GlobalTargetFramework ?? "–")"
+                                      Tooltip="TargetFramework should be net10.0" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="xUnit v3">
+            <CellTemplate>
+                <ComplianceStatusChip State="@XunitState(context.Item.Signals.XunitV3Status)"
+                                      Label="@context.Item.Signals.XunitV3Status.ToString()"
+                                      Tooltip="xunit.v3 in test/Directory.Build.props" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="Workflows">
+            <CellTemplate>
+                <ComplianceStatusChip State="@WorkflowsState(context.Item.Signals.WorkflowsStatus)"
+                                      Label="@WorkflowsLabel(context.Item.Signals.WorkflowsStatus)"
+                                      Tooltip="checkout@v6, setup-dotnet@v5, .NET 10, no Java" />
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="release-please" SortBy="x => x.Signals.ReleasePleasePresent">
+            <CellTemplate>
+                <ComplianceStatusChip State="@(context.Item.Signals.ReleasePleasePresent ? ChipState.Ok : ChipState.Warning)"
+                                      Label="@(context.Item.Signals.ReleasePleasePresent ? "Yes" : "No")"
+                                      Tooltip=".github/workflows/release-please.yml present" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <ChildRowContent>
+        <ComplianceDashboardRowDetail Summary="@context.Item" />
+    </ChildRowContent>
+</MudDataGrid>
