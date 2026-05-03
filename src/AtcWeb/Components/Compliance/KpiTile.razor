@@ -1,0 +1,14 @@
+@namespace AtcWeb.Components.Compliance
+
+<div class="atc-kpi-tile">
+    <div class="atc-kpi-value">@Value</div>
+    <div class="atc-kpi-label">@Label</div>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+}

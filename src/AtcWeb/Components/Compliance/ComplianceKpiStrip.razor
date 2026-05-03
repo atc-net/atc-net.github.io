@@ -1,0 +1,15 @@
+@namespace AtcWeb.Components.Compliance
+
+<div class="atc-kpi-strip d-flex flex-wrap gap-3 mb-4">
+    <KpiTile Label="Repos" Value="@Total.ToString(CultureInfo.InvariantCulture)" />
+    <KpiTile Label="C#" Value="@CountByLanguage("C#").ToString(CultureInfo.InvariantCulture)" />
+    <KpiTile Label="Python" Value="@CountByLanguage("Python").ToString(CultureInfo.InvariantCulture)" />
+    <KpiTile Label="MIT licensed" Value="@PercentText(s => s.Signals.LicenseIsMit)" />
+    <KpiTile Label="net10.0" Value="@PercentText(s => s.Signals.GlobalTargetFrameworkIsLatest)" />
+    <KpiTile Label="release-please" Value="@PercentText(s => s.Signals.ReleasePleasePresent)" />
+    <KpiTile Label=".editorconfig latest" Value="@PercentText(s =>
+        s.Signals.EditorConfigStatus.RootIsLatest &&
+        s.Signals.EditorConfigStatus.SrcIsLatest &&
+        s.Signals.EditorConfigStatus.TestIsLatest)" />
+    <KpiTile Label="xUnit v3" Value="@PercentText(s => s.Signals.XunitV3Status == XunitV3Status.Yes)" />
+</div>
