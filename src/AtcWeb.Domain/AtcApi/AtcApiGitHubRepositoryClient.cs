@@ -10,6 +10,7 @@ public class AtcApiGitHubRepositoryClient
     private static readonly SemaphoreSlim SemaphorePaths = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreFiles = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreIssues = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreCompliance = new(1, 1);
 
     public AtcApiGitHubRepositoryClient(
         HttpClient httpClient,
@@ -97,6 +98,55 @@ public class AtcApiGitHubRepositoryClient
         return repository is null
             ? (IsSuccessful: false, gitHubRepository: null)
             : (IsSuccessful: true, gitHubRepository: repository);
+    }
+
+    public async Task<(bool IsSuccessful, List<RepositoryComplianceSummary> Summaries)> GetComplianceSummary(
+        CancellationToken cancellationToken = default)
+    {
+        const string cacheKey = CacheConstants.CacheKeyComplianceSummary;
+        if (memoryCache.TryGetValue(cacheKey, out List<RepositoryComplianceSummary> data))
+        {
+            return (IsSuccessful: true, data!);
+        }
+
+        var browserCached = await browserCache.GetAsync<List<RepositoryComplianceSummary>>(cacheKey);
+        if (browserCached is not null)
+        {
+            memoryCache.Set(cacheKey, browserCached, CacheConstants.AbsoluteExpirationRelativeToNow);
+            return (IsSuccessful: true, browserCached);
+        }
+
+        await SemaphoreCompliance.WaitAsync(cancellationToken);
+
+        try
+        {
+            const string url = $"{BaseAddress}/compliance-summary";
+
+            var responseMessage = await httpClient.GetAsync(url, cancellationToken);
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                return (IsSuccessful: false, []);
+            }
+
+            var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
+            var result = JsonSerializer.Deserialize<List<RepositoryComplianceSummary>>(content, JsonSerializerOptionsFactory.Create());
+            if (result is null)
+            {
+                return (IsSuccessful: false, []);
+            }
+
+            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
+            await browserCache.SetAsync(cacheKey, result);
+            return (IsSuccessful: true, result);
+        }
+        catch
+        {
+            return (IsSuccessful: false, []);
+        }
+        finally
+        {
+            SemaphoreCompliance.Release();
+        }
     }
 
     public async Task<(bool IsSuccessful, List<DotnetNugetPackageMetadataBase> DotnetNugetPackagesMetadata)> GetLatestNugetPackageVersionsUsed(

@@ -24,6 +24,8 @@ public static class CacheConstants
 
     public const string CacheKeyNugetPackageVersions = "NugetPackageVersions";
 
+    public const string CacheKeyComplianceSummary = "ComplianceSummary";
+
     public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
     public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
