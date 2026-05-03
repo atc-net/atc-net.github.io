@@ -2,12 +2,12 @@
 
 @inherits RepositoryComplianceOverviewBase
 
-<DocsPage MaxWidth="MaxWidth.Large">
+<DocsPage MaxWidth="MaxWidth.ExtraLarge">
     <DocsPageHeader Title="Repository compliance overview"
-                    SubTitle="This is the technical compliance overview of all atc repositories.">
+                    SubTitle="Latest ATC compliance signals across all repositories.">
     </DocsPageHeader>
     <DocsPageContent>
-        @if (Repositories is null)
+        @if (Summaries is null)
         {
             <MudGrid Justify="Justify.Center">
                 <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
@@ -15,51 +15,15 @@
         }
         else
         {
-            foreach (var repository in Repositories.OrderBy(x => x.Name))
-            {
-                <DocsPageSection>
-                    <SectionHeader Title="@repository.Name"
-                                   TitleColor="Color.Primary"
-                                   TitleLink="@($"/repository/{repository.Name}")">
-                        <SubTitle>
-                            <RepositoryDescription Repository="@repository" />
-                        </SubTitle>
-                    </SectionHeader>
-                    <SectionContent AutoMarginContent="false"
-                                    FullWidth="true">
-                        <RepositorySummery Repository="@repository"/>
-
-                        @if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))
-                        {
-                            <div class="py-4">
-                                <h2>Solution</h2>
-                                <RepositoryDotNetSolution Repository="@repository" />
-                            </div>
-                            <div class="py-4">
-                                <h2>.NET projects</h2>
-                                <RepositoryDotNetProjects Repository="@repository" />
-                            </div>
-                        }
-                        else if ("Python".Equals(repository.BaseData.Language, StringComparison.Ordinal))
-                        {
-                            <div class="py-4">
-                                <h2>Python projects</h2>
-                                <i>TODO: Data rendering is not implemented yet.</i>
-                            </div>
-                        }
-
-                        @if (!repository.Name.Equals("atc-docs") ||
-                             !repository.Name.Equals("atc-snippets"))
-                        {
-                            <div class="py-4">
-                                <h2>Atc Coding Rules</h2>
-                                <RepositoryCodingRules Repository="@repository" />
-                            </div>
-                        }
-
-                    </SectionContent>
-                </DocsPageSection>
-            }
+            <ComplianceKpiStrip Summaries="@Summaries" />
+            <ComplianceFilterBar State="FilterState"
+                                 StateChanged="OnFilterChanged"
+                                 Categories="@GetCategoryNames()"
+                                 GroupBy="@GroupBy"
+                                 GroupByChanged="OnGroupByChanged" />
+            <ComplianceDashboardTable Summaries="@GetFiltered()" />
+            <MudDivider Class="my-6" />
+            <ComplianceCardsGrid Summaries="@GetFiltered()" />
         }
     </DocsPageContent>
 </DocsPage>
