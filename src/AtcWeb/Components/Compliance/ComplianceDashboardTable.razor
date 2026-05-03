@@ -43,27 +43,29 @@
         </TemplateColumn>
         <TemplateColumn Title="EditorCfg (R/S/T)">
             <CellTemplate>
-                <span>@(Bool(context.Item.Signals.EditorConfigStatus.RootIsLatest))/@(Bool(context.Item.Signals.EditorConfigStatus.SrcIsLatest))/@(Bool(context.Item.Signals.EditorConfigStatus.TestIsLatest))</span>
+                <ComplianceStatusChip State="@EditorConfigState(context.Item)"
+                                      Label="@EditorConfigLabel(context.Item)"
+                                      Tooltip="root/src/test .editorconfig should all be at latest version" />
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="Updater" SortBy="x => x.Signals.UpdaterTargetIsLatest">
             <CellTemplate>
                 <ComplianceStatusChip State="@UpdaterState(context.Item)"
-                                      Label="@(context.Item.Signals.UpdaterProjectTarget ?? "–")"
+                                      Label="@UpdaterLabel(context.Item)"
                                       Tooltip="atc-coding-rules-updater.json projectTarget should be DotNet10" />
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="LangVer" SortBy="x => x.Signals.GlobalLangVersionIsLatest">
             <CellTemplate>
-                <ComplianceStatusChip State="@(context.Item.Signals.GlobalLangVersionIsLatest ? ChipState.Ok : ChipState.Warning)"
-                                      Label="@(context.Item.Signals.GlobalLangVersion ?? "–")"
+                <ComplianceStatusChip State="@LangVerState(context.Item)"
+                                      Label="@LangVerLabel(context.Item)"
                                       Tooltip="LangVersion in Directory.Build.props should be 14.0" />
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="TFM" SortBy="x => x.Signals.GlobalTargetFrameworkIsLatest">
             <CellTemplate>
-                <ComplianceStatusChip State="@(context.Item.Signals.GlobalTargetFrameworkIsLatest ? ChipState.Ok : ChipState.Error)"
-                                      Label="@(context.Item.Signals.GlobalTargetFramework ?? "–")"
+                <ComplianceStatusChip State="@TfmState(context.Item)"
+                                      Label="@TfmLabel(context.Item)"
                                       Tooltip="TargetFramework should be net10.0" />
             </CellTemplate>
         </TemplateColumn>
@@ -76,15 +78,15 @@
         </TemplateColumn>
         <TemplateColumn Title="Workflows">
             <CellTemplate>
-                <ComplianceStatusChip State="@WorkflowsState(context.Item.Signals.WorkflowsStatus)"
-                                      Label="@WorkflowsLabel(context.Item.Signals.WorkflowsStatus)"
+                <ComplianceStatusChip State="@WorkflowsState(context.Item)"
+                                      Label="@WorkflowsLabel(context.Item)"
                                       Tooltip="checkout@v6, setup-dotnet@v5, .NET 10, no Java" />
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="release-please" SortBy="x => x.Signals.ReleasePleasePresent">
             <CellTemplate>
-                <ComplianceStatusChip State="@(context.Item.Signals.ReleasePleasePresent ? ChipState.Ok : ChipState.Warning)"
-                                      Label="@(context.Item.Signals.ReleasePleasePresent ? "Yes" : "No")"
+                <ComplianceStatusChip State="@ReleasePleaseState(context.Item)"
+                                      Label="@ReleasePleaseLabel(context.Item)"
                                       Tooltip=".github/workflows/release-please.yml present" />
             </CellTemplate>
         </TemplateColumn>
