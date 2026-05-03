@@ -11,7 +11,6 @@ public class AtcRepository
         FolderAndFilePaths = [];
         OpenIssues = [];
         Root = new RootMetadata();
-        CodingRules = new CodingRulesMetadata();
         Dotnet = new DotnetMetadata();
         Python = new PythonMetadata();
         Wiki = new WikiMetadata();
@@ -34,8 +33,6 @@ public class AtcRepository
 
     public RootMetadata Root { get; set; }
 
-    public CodingRulesMetadata CodingRules { get; set; }
-
     public DotnetMetadata? Dotnet { get; set; }
 
     public PythonMetadata? Python { get; set; }
@@ -47,15 +44,6 @@ public class AtcRepository
     public List<GitHubIssue> OpenIssues { get; set; }
 
     public bool HasRootReadme => Root?.HasReadme ?? false;
-
-    public bool HasCodingRulesEditorConfigRoot
-        => CodingRules?.HasRoot ?? false;
-
-    public bool HasCodingRulesEditorConfigSrc
-        => CodingRules?.HasSrc ?? false;
-
-    public bool HasCodingRulesEditorConfigTest
-        => CodingRules?.HasTest ?? false;
 
     public bool HasDotnetSolution => Dotnet?.HasSolution ?? false;
 

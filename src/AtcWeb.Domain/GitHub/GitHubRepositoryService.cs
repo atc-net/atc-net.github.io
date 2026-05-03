@@ -236,18 +236,13 @@ public class GitHubRepositoryService
     {
         ArgumentNullException.ThrowIfNull(repository);
 
-        var taskCodingRules = GitHubRepositoryMetadataHelper.LoadCodingRules(
-            atcApiGitHubRepositoryClient,
-            repository.FolderAndFilePaths,
-            repository.Name);
-
         var taskOpenIssues = GitHubRepositoryMetadataHelper.LoadOpenIssues(
             atcApiGitHubRepositoryClient,
             repository.Name);
 
         var tasks = new List<Task>
         {
-            taskCodingRules, taskOpenIssues,
+            taskOpenIssues,
         };
 
         Task<DotnetMetadata>? taskDotnet = null;
@@ -275,7 +270,6 @@ public class GitHubRepositoryService
 
         await TaskHelper.WhenAll(tasks);
 
-        repository.CodingRules = await taskCodingRules;
         repository.OpenIssues = await taskOpenIssues;
 
         if ("C#".Equals(repository.BaseData.Language, StringComparison.Ordinal))

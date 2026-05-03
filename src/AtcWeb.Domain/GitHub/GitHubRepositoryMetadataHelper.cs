@@ -26,33 +26,6 @@ public static class GitHubRepositoryMetadataHelper
         return data;
     }
 
-    public static async Task<CodingRulesMetadata> LoadCodingRules(
-        AtcApiGitHubRepositoryClient gitHubRepositoryClient,
-        List<GitHubPath> foldersAndFiles,
-        string repositoryName)
-    {
-        ArgumentNullException.ThrowIfNull(gitHubRepositoryClient);
-        ArgumentNullException.ThrowIfNull(foldersAndFiles);
-
-        var taskRoot = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient, foldersAndFiles, repositoryName, ".editorconfig");
-
-        var taskSrc = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient, foldersAndFiles, repositoryName, "src/.editorconfig");
-
-        var taskTest = GitHubRepositoryMetadataFileHelper.GetFileByPath(
-            gitHubRepositoryClient, foldersAndFiles, repositoryName, "test/.editorconfig");
-
-        await Task.WhenAll(taskRoot, taskSrc, taskTest);
-
-        return new CodingRulesMetadata
-        {
-            RawEditorConfigRoot = await taskRoot,
-            RawEditorConfigSrc = await taskSrc,
-            RawEditorConfigTest = await taskTest,
-        };
-    }
-
     public static async Task<List<GitHubIssue>> LoadOpenIssues(
         AtcApiGitHubRepositoryClient gitHubRepositoryClient,
         string repositoryName)
