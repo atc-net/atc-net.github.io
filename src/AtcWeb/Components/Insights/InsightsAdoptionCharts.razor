@@ -1,0 +1,49 @@
+@namespace AtcWeb.Components.Insights
+
+<MudGrid>
+    <MudItem xs="12" md="4">
+        <MudText Typo="Typo.h6">.NET TFM distribution</MudText>
+        @if (TfmLabels.Length > 0)
+        {
+            <MudChart ChartType="ChartType.Donut"
+                      ChartSeries="@TfmSeries"
+                      ChartLabels="@TfmLabels"
+                      Width="100%"
+                      Height="280px" />
+        }
+        else
+        {
+            <MudText Typo="Typo.body2"><i>No TFM data found.</i></MudText>
+        }
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudText Typo="Typo.h6">Atc.Analyzer versions</MudText>
+        @if (AnalyzerLabels.Length > 0)
+        {
+            <MudChart ChartType="ChartType.Bar"
+                      ChartSeries="@AnalyzerSeries"
+                      ChartLabels="@AnalyzerLabels"
+                      Width="100%"
+                      Height="280px" />
+        }
+        else
+        {
+            <MudText Typo="Typo.body2"><i>No Atc.Analyzer references found.</i></MudText>
+        }
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudText Typo="Typo.h6">Languages</MudText>
+        @if (LanguageLabels.Length > 0)
+        {
+            <MudChart ChartType="ChartType.Donut"
+                      ChartSeries="@LanguageSeries"
+                      ChartLabels="@LanguageLabels"
+                      Width="100%"
+                      Height="280px" />
+        }
+        else
+        {
+            <MudText Typo="Typo.body2"><i>No language data found.</i></MudText>
+        }
+    </MudItem>
+</MudGrid>
