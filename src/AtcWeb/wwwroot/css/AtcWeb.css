@@ -1238,6 +1238,15 @@ atc-appbar-band {
   text-decoration: underline;
 }
 
+.atc-menu-section-label {
+  padding: 6px 16px 2px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mud-palette-text-secondary);
+}
+
 .atc-insights-tiles .atc-insights-tile {
   background: var(--mud-palette-surface);
   border: 1px solid var(--mud-palette-lines-default);
