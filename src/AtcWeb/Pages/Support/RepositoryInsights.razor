@@ -1,0 +1,35 @@
+@page "/support/repository-insights"
+
+@inherits RepositoryInsightsBase
+
+<DocsPage MaxWidth="MaxWidth.ExtraLarge">
+    <DocsPageHeader Title="Repository insights"
+                    SubTitle="Org-wide health, technology adoption, and a punch-list of repos needing attention.">
+    </DocsPageHeader>
+    <DocsPageContent>
+        @if (Summaries is null)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            </MudGrid>
+        }
+        else
+        {
+            <MudText Typo="Typo.h5" Class="mt-2 mb-3">Org Health</MudText>
+            <InsightsKpiTiles Summaries="@Summaries" />
+            <div class="mt-4">
+                <InsightsHealthByCategoryChart Summaries="@Summaries" />
+            </div>
+
+            <MudDivider Class="my-6" />
+
+            <MudText Typo="Typo.h5" Class="mb-3">Tech Adoption</MudText>
+            <InsightsAdoptionCharts Summaries="@Summaries" />
+
+            <MudDivider Class="my-6" />
+
+            <MudText Typo="Typo.h5" Class="mb-3">Needs attention</MudText>
+            <InsightsActionList Summaries="@Summaries" />
+        }
+    </DocsPageContent>
+</DocsPage>
