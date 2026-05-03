@@ -1193,6 +1193,79 @@ atc-appbar-band {
   gap: 2px;
 }
 
+.atc-kpi-strip .atc-kpi-tile {
+  background: var(--mud-palette-surface);
+  border: 1px solid var(--mud-palette-lines-default);
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-width: 120px;
+}
+.atc-kpi-strip .atc-kpi-tile .atc-kpi-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--mud-palette-primary);
+}
+.atc-kpi-strip .atc-kpi-tile .atc-kpi-label {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+}
+
+.atc-filter-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+  background: var(--mud-palette-background);
+  padding: 8px 0;
+}
+
+.atc-compliance-chip {
+  min-width: 64px;
+  justify-content: center;
+}
+
+.atc-row-detail {
+  background: var(--mud-palette-surface);
+  border-left: 3px solid var(--mud-palette-primary);
+}
+
+.atc-link {
+  color: var(--mud-palette-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.atc-link:hover {
+  text-decoration: underline;
+}
+
+.atc-menu-section-label {
+  padding: 6px 16px 2px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mud-palette-text-secondary);
+}
+
+.atc-insights-tiles .atc-insights-tile {
+  background: var(--mud-palette-surface);
+  border: 1px solid var(--mud-palette-lines-default);
+  border-radius: 10px;
+  padding: 16px 20px;
+  min-width: 140px;
+}
+.atc-insights-tiles .atc-insights-tile .atc-insights-tile-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mud-palette-primary);
+}
+.atc-insights-tiles .atc-insights-tile .atc-insights-tile-label {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .docs-page {
   max-width: 100%;
 }
