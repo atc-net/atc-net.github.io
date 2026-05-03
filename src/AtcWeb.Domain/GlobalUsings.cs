@@ -6,7 +6,6 @@ global using System.Text.Json;
 global using System.Text.RegularExpressions;
 
 global using Atc;
-global using Atc.Data.Models;
 global using Atc.DotNet;
 global using Atc.DotNet.Models;
 global using Atc.Helpers;
