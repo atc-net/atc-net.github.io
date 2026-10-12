@@ -1,0 +1,12 @@
+@if (Values.Count > 0)
+{
+    <span class="repo-fact-chip">
+        <span class="repo-fact-key">@Label</span>
+        <span class="repo-fact-values">
+            @foreach (var value in Values)
+            {
+                <span class="repo-fact-value">@value</span>
+            }
+        </span>
+    </span>
+}

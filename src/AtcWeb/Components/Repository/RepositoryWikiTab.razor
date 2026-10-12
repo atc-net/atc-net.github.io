@@ -1,8 +1,43 @@
 @if (Repository?.Wiki.HasWiki == true)
 {
-    <MudGrid Spacing="4">
-        @* Wiki content (same width as readme: lg=8) *@
-        <MudItem xs="12" lg="8">
+    <div class="repo-side-layout repo-wiki-layout has-side">
+        <nav class="repo-side-nav repo-wiki-nav" aria-label="Wiki pages">
+            <MudNavMenu Dense="true">
+                @{
+                    var grouped = GetGroupedPages();
+                }
+                @foreach (var group in grouped)
+                {
+                    @if (!string.IsNullOrEmpty(group.Key))
+                    {
+                        <MudNavGroup Title="@GetGroupTitle(group.Key)" Expanded="true">
+                            @foreach (var page in group.Value)
+                            {
+                                var isActive = page == selectedPage;
+                                <MudNavLink OnClick="@(() => SelectPage(page))"
+                                            Match="NavLinkMatch.All"
+                                            Class="@(isActive ? "active" : "")">
+                                    @(GetNavTitle(page))
+                                </MudNavLink>
+                            }
+                        </MudNavGroup>
+                    }
+                    else
+                    {
+                        @foreach (var page in group.Value)
+                        {
+                            var isActive = page == selectedPage;
+                            <MudNavLink OnClick="@(() => SelectPage(page))"
+                                        Match="NavLinkMatch.All"
+                                        Class="@(isActive ? "active" : "")">
+                                @(GetNavTitle(page))
+                            </MudNavLink>
+                        }
+                    }
+                }
+            </MudNavMenu>
+        </nav>
+        <div id="repo-wiki-content" class="repo-side-layout-content">
             <MudCard Elevation="0">
                 @if (selectedPage is not null && selectedPage.IsLoaded)
                 {
@@ -20,47 +55,6 @@
                     </MudCardContent>
                 }
             </MudCard>
-        </MudItem>
-        @* Wiki sidebar navigation (to the right, lg=4) *@
-        <MudItem xs="12" lg="4">
-            <MudCard Elevation="0" Class="repo-sidebar-card">
-                <MudCardContent>
-                    <MudNavMenu Dense="true">
-                        @{
-                            var grouped = GetGroupedPages();
-                        }
-                        @foreach (var group in grouped)
-                        {
-                            @if (!string.IsNullOrEmpty(group.Key))
-                            {
-                                <MudNavGroup Title="@GetGroupTitle(group.Key)" Expanded="true">
-                                    @foreach (var page in group.Value)
-                                    {
-                                        var isActive = page == selectedPage;
-                                        <MudNavLink OnClick="@(() => SelectPage(page))"
-                                                    Match="NavLinkMatch.All"
-                                                    Class="@(isActive ? "active" : "")">
-                                            @(GetNavTitle(page))
-                                        </MudNavLink>
-                                    }
-                                </MudNavGroup>
-                            }
-                            else
-                            {
-                                @foreach (var page in group.Value)
-                                {
-                                    var isActive = page == selectedPage;
-                                    <MudNavLink OnClick="@(() => SelectPage(page))"
-                                                Match="NavLinkMatch.All"
-                                                Class="@(isActive ? "active" : "")">
-                                        @(GetNavTitle(page))
-                                    </MudNavLink>
-                                }
-                            }
-                        }
-                    </MudNavMenu>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
+        </div>
+    </div>
 }

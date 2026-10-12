@@ -1,7 +1,11 @@
 @if (Repository is not null)
 {
-    <div class="accent-top-card pa-6 mb-6">
-        <div class="d-flex align-center justify-space-between flex-wrap gap-3 mb-3">
+    var statTiles = GetStatTiles();
+    var tags = GetMergedTags();
+    var frameworks = GetFrameworkLabels();
+
+    <div class="accent-top-card repo-hero pa-6 mb-6">
+        <div class="d-flex align-center justify-space-between flex-wrap gap-3 mb-4">
             <div class="d-flex align-center flex-wrap gap-3">
                 <img src="@ImageHelper.GetProgramIconPathForLanguage(Repository.BaseData.Language)"
                      width="32" height="32" alt="" />
@@ -24,44 +28,83 @@
                     </MudChip>
                 }
             </div>
-            <div class="d-flex align-center gap-2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small"
-                           StartIcon="@Icons.Custom.Brands.GitHub"
-                           Href="@($"https://github.com/atc-net/{Repository.Name}")"
-                           Target="_blank">
-                    GitHub
-                </MudButton>
-                @if (Repository.IsDotnetSolution && Repository.NugetInfo is not null)
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small"
+                       StartIcon="@Icons.Custom.Brands.GitHub"
+                       Href="@Repository.Url"
+                       Target="_blank">
+                GitHub
+            </MudButton>
+        </div>
+
+        <div class="repo-hero-body">
+            <div class="repo-hero-main">
+                @if (!string.IsNullOrEmpty(Repository.Description))
                 {
-                    <NuGetPillButton Href="@($"https://www.nuget.org/packages/{Repository.NugetInfo.PackageId}")" />
+                    <MudText Typo="Typo.body1" Class="repo-hero-description">
+                        @Repository.Description
+                    </MudText>
+                }
+                <div class="repo-fact-chips">
+                    @if (!string.IsNullOrEmpty(Repository.BaseData.Language))
+                    {
+                        <RepositoryFactChip Label="Language" Values="@([Repository.BaseData.Language])" />
+                    }
+                    @if (!string.IsNullOrEmpty(Repository.BaseData.License?.Key))
+                    {
+                        <RepositoryFactChip Label="License" Values="@([Repository.BaseData.License.Key.ToUpperInvariant()])" />
+                    }
+                    @if (Repository.BaseData.PushedAt.HasValue)
+                    {
+                        <RepositoryFactChip Label="Updated" Values="@([Repository.BaseData.PushedAt.Value.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)])" />
+                    }
+                    <RepositoryFactChip Label="@(frameworks.Count > 1 ? "Frameworks" : "Framework")" Values="@frameworks" />
+                </div>
+                @if (tags.Count > 0)
+                {
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var tag in tags)
+                        {
+                            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Default" Class="ma-0">
+                                @tag
+                            </MudChip>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="repo-hero-stats @(statTiles.Count <= 2 ? "is-stacked" : null)">
+                @foreach (var tile in statTiles)
+                {
+                    @if (tile.Href is null)
+                    {
+                        <div class="repo-stat-tile" title="@tile.Title">
+                            <span class="repo-stat-value">@tile.Value</span>
+                            <span class="repo-stat-label">
+                                <MudIcon Icon="@tile.Icon" Size="Size.Small" />
+                                @tile.Label
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="repo-stat-tile repo-stat-tile-link" href="@tile.Href" target="_blank" rel="noopener noreferrer" title="@tile.Title">
+                            <span class="repo-stat-value">
+                                @tile.Value
+                                <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" Class="repo-stat-github" />
+                            </span>
+                            <span class="repo-stat-label">
+                                <MudIcon Icon="@tile.Icon" Size="Size.Small" />
+                                @tile.Label
+                            </span>
+                        </a>
+                    }
                 }
             </div>
         </div>
-        @if (!string.IsNullOrEmpty(Repository.Description))
+
+        @if (Repository.NugetPackages.Count > 0)
         {
-            <MudText Typo="Typo.body1" Class="mb-4" Style="color: var(--mud-palette-text-secondary);">
-                @Repository.Description
-            </MudText>
+            <RepositoryInstallation @key="Repository.Name" Packages="@Repository.NugetPackages" />
         }
-        <div class="d-flex align-center flex-wrap gap-2">
-            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
-                     Size="Size.Small" Icon="@Icons.Material.Filled.Code">
-                @Repository.BaseData.Language
-            </MudChip>
-            @if (!string.IsNullOrEmpty(Repository.BaseData.License?.Key))
-            {
-                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
-                         Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
-                    @Repository.BaseData.License.Key
-                </MudChip>
-            }
-            @if (Repository.BaseData.PushedAt.HasValue)
-            {
-                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default"
-                         Size="Size.Small" Icon="@Icons.Material.Filled.Update">
-                    Updated @Repository.BaseData.PushedAt.Value.ToString("MMM d, yyyy")
-                </MudChip>
-            }
-        </div>
     </div>
 }

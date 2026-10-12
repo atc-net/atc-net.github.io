@@ -38,6 +38,14 @@ public partial class MarkdownRepositoryContent : ComponentBase
         get => this.content;
         set
         {
+            // Skip re-parsing unchanged content: re-parsing would re-raise OnHeadingsExtracted,
+            // and the parent's re-render would hand us the same content again in a loop.
+            if (string.Equals(this.content, value, StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(HtmlContent.Value))
+            {
+                return;
+            }
+
             this.content = value;
             HtmlContent = ConvertMarkdownToHtml(this.content);
         }

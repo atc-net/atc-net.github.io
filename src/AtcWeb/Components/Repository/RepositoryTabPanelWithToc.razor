@@ -1,0 +1,10 @@
+@* The content element stays in place when the TOC appears, so the markdown is not re-created. *@
+<div class="repo-side-layout repo-toc-layout @(HasToc ? "has-side" : null)">
+    @if (HasToc)
+    {
+        <RepositoryContentToc Title="@TocTitle" Headings="@(Headings!)" />
+    }
+    <div class="repo-side-layout-content">
+        @ChildContent
+    </div>
+</div>

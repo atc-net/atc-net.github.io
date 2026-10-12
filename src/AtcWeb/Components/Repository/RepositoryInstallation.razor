@@ -1,0 +1,69 @@
+@if (SelectedPackage is not null)
+{
+    <div class="repo-install-dock">
+        <div class="repo-install-dock-header">
+            <span class="repo-section-label">Installation</span>
+            <NuGetPillButton Href="@($"https://www.nuget.org/packages/{SelectedPackage.PackageId}")"
+                             Text="@($"{SelectedPackage.PackageId} on NuGet")" />
+        </div>
+
+        @if (Packages.Count > 1)
+        {
+            @if (Packages.Count <= MaxPackagePills)
+            {
+                <div class="repo-package-pills" role="group" aria-label="Package">
+                    @foreach (var package in Packages)
+                    {
+                        <button type="button"
+                                class="repo-package-pill"
+                                aria-pressed="@(package == SelectedPackage ? "true" : "false")"
+                                @onclick="() => SelectPackage(package.PackageId)">
+                            @package.PackageId
+                            @if (package.IsTool)
+                            {
+                                <small>CLI tool</small>
+                            }
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <MudSelect T="string"
+                           Value="@SelectedPackage.PackageId"
+                           ValueChanged="SelectPackage"
+                           Label="@($"Package ({Packages.Count})")"
+                           Variant="Variant.Outlined"
+                           Dense="true"
+                           Margin="Margin.Dense"
+                           Class="repo-package-select">
+                    @foreach (var package in Packages)
+                    {
+                        <MudSelectItem T="string" Value="@package.PackageId">
+                            @package.PackageId@(package.IsTool ? " (CLI tool)" : string.Empty)
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            }
+        }
+
+        @if (Packages.Count > 1)
+        {
+            @* Always reserves two lines, so switching packages doesn't move the snippets *@
+            <div class="repo-package-description" title="@SelectedPackage.Description">
+                @SelectedPackage.Description
+                <span class="repo-package-downloads">· @SelectedPackage.TotalDownloads.ToString("N0", CultureInfo.CurrentCulture) downloads</span>
+            </div>
+        }
+
+        <div class="repo-install-grid">
+            @foreach (var snippet in GetSnippets(SelectedPackage))
+            {
+                <CopyableSnippet @key="@snippet.Code"
+                                 Code="@snippet.Code"
+                                 Label="@snippet.Label"
+                                 Icon="@snippet.Icon" />
+            }
+        </div>
+    </div>
+}

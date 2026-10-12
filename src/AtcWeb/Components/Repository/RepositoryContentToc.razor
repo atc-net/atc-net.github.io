@@ -1,0 +1,13 @@
+<nav id="@navId" class="repo-side-nav" aria-label="@Title">
+    <div class="repo-side-nav-title">@Title</div>
+    @foreach (var heading in Headings)
+    {
+        <button type="button"
+                class="repo-side-nav-link @(heading.Id == activeId ? "active" : null)"
+                data-heading-id="@heading.Id"
+                aria-current="@(heading.Id == activeId ? "location" : null)"
+                @onclick="() => ScrollToHeading(heading.Id)">
+            @heading.Title
+        </button>
+    }
+</nav>
