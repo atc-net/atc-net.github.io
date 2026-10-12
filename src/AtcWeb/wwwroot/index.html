@@ -94,6 +94,98 @@
         mermaid.run({ nodes: elements });
       }
     };
+
+    // Repository page navigation: TOC jumps, wiki page switches and the "you are here" scroll spy.
+    // Targets carry scroll-margin-top, so scrollIntoView keeps them clear of the app bar.
+    window.atcRepoNav = {
+      spies: {},
+
+      scrollTo: function (id) {
+        var element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      },
+
+      // Scrolls to the content only when its top is hidden under the app bar,
+      // or when the side nav is stacked above it (narrow screens)
+      scrollToContentIfNeeded: function (id, offset) {
+        var element = document.getElementById(id);
+        if (!element) {
+          return;
+        }
+
+        var top = element.getBoundingClientRect().top;
+        var nav = element.parentElement && element.parentElement.querySelector('.repo-side-nav');
+        var navStacked = nav && nav.getBoundingClientRect().bottom <= top + 1;
+        if (top < offset || navStacked) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      },
+
+      // Reports the heading currently at the top of the viewport to .NET, and keeps it visible in the nav
+      observe: function (navId, dotnetRef, ids, offset) {
+        window.atcRepoNav.dispose(navId);
+
+        var current;
+        var frame = null;
+        var update = function () {
+          frame = null;
+          var active = null;
+          for (var i = 0; i < ids.length; i++) {
+            var heading = document.getElementById(ids[i]);
+            if (!heading) {
+              continue;
+            }
+            if (heading.getBoundingClientRect().top - offset > 1) {
+              break;
+            }
+            active = ids[i];
+          }
+
+          // At the very bottom the last headings may never reach the top, so mark the last one
+          var root = document.documentElement;
+          if (ids.length > 0 && window.innerHeight + window.scrollY >= root.scrollHeight - 2) {
+            active = ids[ids.length - 1];
+          }
+
+          if (active === current) {
+            return;
+          }
+
+          current = active;
+          dotnetRef.invokeMethodAsync('SetActiveHeading', active);
+
+          var nav = document.getElementById(navId);
+          var link = active && nav && nav.querySelector('[data-heading-id="' + CSS.escape(active) + '"]');
+          if (link) {
+            if (link.offsetTop < nav.scrollTop) {
+              nav.scrollTop = link.offsetTop - 8;
+            } else if (link.offsetTop + link.offsetHeight > nav.scrollTop + nav.clientHeight) {
+              nav.scrollTop = link.offsetTop + link.offsetHeight - nav.clientHeight + 8;
+            }
+          }
+        };
+
+        var onScroll = function () {
+          if (frame === null) {
+            frame = window.requestAnimationFrame(update);
+          }
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.atcRepoNav.spies[navId] = onScroll;
+        update();
+      },
+
+      dispose: function (navId) {
+        var onScroll = window.atcRepoNav.spies[navId];
+        if (onScroll) {
+          window.removeEventListener('scroll', onScroll);
+          delete window.atcRepoNav.spies[navId];
+        }
+      }
+    };
   </script>
   <script src="_framework/blazor.webassembly.js"></script>
   <script src="_content/MudBlazor/MudBlazor.min.js"></script>

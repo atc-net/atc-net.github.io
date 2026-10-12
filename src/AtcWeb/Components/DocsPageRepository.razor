@@ -21,7 +21,7 @@
 
             @* ===== README Tab ===== *@
             <MudTabPanel Text="README" Icon="@Icons.Material.Filled.Description">
-                <RepositoryTabPanelWithSidebar Repository="@Repository">
+                <RepositoryTabPanelWithToc Headings="@readmeHeadings">
                     <MudCard Elevation="0">
                         @if (Repository.Root.HasReadme)
                         {
@@ -29,6 +29,7 @@
                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
                                                            IdPrefix="readme"
+                                                           OnHeadingsExtracted="OnReadmeHeadingsExtracted"
                                                            Content="@Repository.Root.RawReadme" />
                             </MudCardContent>
                         }
@@ -41,23 +42,24 @@
                             </MudCardContent>
                         }
                     </MudCard>
-                </RepositoryTabPanelWithSidebar>
+                </RepositoryTabPanelWithToc>
             </MudTabPanel>
 
             @* ===== Changelog Tab ===== *@
             @if (Repository.Root.HasChangelog)
             {
                 <MudTabPanel Text="Changelog" Icon="@Icons.Material.Filled.History">
-                    <RepositoryTabPanelWithSidebar Repository="@Repository">
+                    <RepositoryTabPanelWithToc Headings="@changelogHeadings" TocTitle="Versions">
                         <MudCard Elevation="0">
                             <MudCardContent>
                                 <MarkdownRepositoryContent RepositoryName="@Repository.Name"
                                                            RepositoryBranch="@Repository.BaseData.DefaultBranch"
                                                            IdPrefix="changelog"
+                                                           OnHeadingsExtracted="OnChangelogHeadingsExtracted"
                                                            Content="@Repository.Root.RawChangelog" />
                             </MudCardContent>
                         </MudCard>
-                    </RepositoryTabPanelWithSidebar>
+                    </RepositoryTabPanelWithToc>
                 </MudTabPanel>
             }
 
@@ -73,9 +75,7 @@
             @if (Repository.NugetInfo?.DependencyGroups.Count > 0)
             {
                 <MudTabPanel Text="Dependencies" Icon="@Icons.Material.Filled.AccountTree">
-                    <RepositoryTabPanelWithSidebar Repository="@Repository">
-                        <RepositoryDependenciesTab Repository="@Repository" />
-                    </RepositoryTabPanelWithSidebar>
+                    <RepositoryDependenciesTab Repository="@Repository" />
                 </MudTabPanel>
             }
 

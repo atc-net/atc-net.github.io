@@ -2,6 +2,11 @@ namespace AtcWeb.Components.Repository;
 
 public partial class RepositoryWikiTab : ComponentBase
 {
+    /// <summary>
+    /// Below this distance from the viewport top, the content is hidden under the app bar.
+    /// </summary>
+    private const int ContentTopOffset = 80;
+
     private static readonly MarkdownPipeline MarkdownPipelineInstance = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
         .UseEmojiAndSmiley()
@@ -21,6 +26,9 @@ public partial class RepositoryWikiTab : ComponentBase
     private Dictionary<string, string>? sidebarTitleMap;
     private Dictionary<string, string>? sidebarGroupTitleMap;
 
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
+
     [Parameter]
     public AtcRepository? Repository { get; set; }
 
@@ -37,10 +45,13 @@ public partial class RepositoryWikiTab : ComponentBase
         }
     }
 
-    private void SelectPage(WikiPage page)
+    private async Task SelectPage(WikiPage page)
     {
         selectedPage = page;
         StateHasChanged();
+
+        // Bring the start of the new page into view, so reading can continue from the top
+        await JsRuntime.InvokeVoidAsync("atcRepoNav.scrollToContentIfNeeded", "repo-wiki-content", ContentTopOffset);
     }
 
     private static string? GetWikiPageTitle(WikiPage page) =>
@@ -124,7 +135,8 @@ public partial class RepositoryWikiTab : ComponentBase
         // Extract wiki links: "🚀 [[Getting Started with Basic]]" or "💼 [[Display|Slug]]"
         foreach (var line in sidebar.Split('\n'))
         {
-            var trimmed = line.TrimStart('-', ' ', '*');
+            // Also strip heading markers, so "# 🏠 [[Home]]" shows as "🏠 Home"
+            var trimmed = line.TrimStart('-', ' ', '*', '#');
             var linkMatch = WikiLinkPattern.Match(trimmed);
             if (!linkMatch.Success)
             {
