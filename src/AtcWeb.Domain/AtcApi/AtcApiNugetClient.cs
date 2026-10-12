@@ -7,6 +7,7 @@ public class AtcApiNugetClient
     private readonly IMemoryCache memoryCache;
     private static readonly SemaphoreSlim SemaphoreTotalDownloads = new(1, 1);
     private static readonly SemaphoreSlim SemaphoreCliTools = new(1, 1);
+    private static readonly SemaphoreSlim SemaphoreSearch = new(1, 1);
     private static readonly SemaphoreSlim SemaphorePackageMetadata = new(1, 1);
     private static readonly SemaphoreSlim SemaphorePackageVersions = new(1, 1);
 
@@ -100,6 +101,53 @@ public class AtcApiNugetClient
         finally
         {
             SemaphoreCliTools.Release();
+        }
+    }
+
+    public async Task<(bool IsSuccessful, NugetPackageSearchResult Result)> Search(
+        string query,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheKey = $"{CacheConstants.CacheKeyNugetSearchQuery}_{query}";
+        if (memoryCache.TryGetValue(cacheKey, out NugetPackageSearchResult? data) && data is not null)
+        {
+            return (IsSuccessful: true, data);
+        }
+
+        await SemaphoreSearch.WaitAsync(cancellationToken);
+
+        try
+        {
+            if (memoryCache.TryGetValue(cacheKey, out data) && data is not null)
+            {
+                return (IsSuccessful: true, data);
+            }
+
+            var url = $"{BaseAddress}?query={Uri.EscapeDataString(query)}";
+
+            var responseMessage = await httpClient.GetAsync(url, cancellationToken);
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                return (IsSuccessful: false, new NugetPackageSearchResult());
+            }
+
+            var content = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
+            var result = JsonSerializer.Deserialize<NugetPackageSearchResult>(content, JsonSerializerOptionsFactory.Create());
+            if (result is null)
+            {
+                return (IsSuccessful: false, new NugetPackageSearchResult());
+            }
+
+            memoryCache.Set(cacheKey, result, CacheConstants.AbsoluteExpirationRelativeToNow);
+            return (IsSuccessful: true, result);
+        }
+        catch
+        {
+            return (IsSuccessful: false, new NugetPackageSearchResult());
+        }
+        finally
+        {
+            SemaphoreSearch.Release();
         }
     }
 
