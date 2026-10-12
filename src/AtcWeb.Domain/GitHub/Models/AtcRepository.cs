@@ -39,7 +39,17 @@ public class AtcRepository
 
     public WikiMetadata Wiki { get; set; }
 
+    /// <summary>
+    /// Full metadata for the primary package (version, frameworks, dependencies).
+    /// </summary>
     public NugetPackageMetadata? NugetInfo { get; set; }
+
+    /// <summary>
+    /// All packages published from this repository, primary package first.
+    /// </summary>
+    public List<RepositoryNugetPackage> NugetPackages { get; set; } = [];
+
+    public long NugetTotalDownloads => NugetPackages.Sum(x => x.TotalDownloads);
 
     public List<GitHubIssue> OpenIssues { get; set; }
 

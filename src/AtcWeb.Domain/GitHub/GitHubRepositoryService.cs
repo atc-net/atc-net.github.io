@@ -182,20 +182,76 @@ public class GitHubRepositoryService
             repository.BaseData.DefaultBranch);
     }
 
+    public async Task<Dictionary<string, long>> GetNugetDownloadsByRepositoryAsync()
+    {
+        var (_, searchResult) = await atcApiNugetClient.Search(RepositoryNugetPackageHelper.OwnerSearchQuery);
+        return RepositoryNugetPackageHelper.GetTotalDownloadsByRepository(searchResult.Data);
+    }
+
     public async Task PopulateNugetInfoAsync(AtcRepository repository)
     {
         ArgumentNullException.ThrowIfNull(repository);
 
-        if (!repository.IsDotnetSolution)
+        var taskSearch = atcApiNugetClient.Search(RepositoryNugetPackageHelper.OwnerSearchQuery);
+        var taskCliTools = atcApiNugetClient.GetCliTools();
+        await Task.WhenAll(taskSearch, taskCliTools);
+
+        var (_, searchResult) = await taskSearch;
+        var (_, cliToolsResult) = await taskCliTools;
+        var toolPackageIds = cliToolsResult.Data
+            .Select(x => x.Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var packages = RepositoryNugetPackageHelper.GetPackagesForRepository(
+            repository.Name,
+            repository.DotName,
+            searchResult.Data,
+            toolPackageIds);
+
+        // Fall back to the name-based lookup when the search finds nothing (or fails)
+        string? primaryPackageId;
+        if (packages.Count > 0)
+        {
+            primaryPackageId = packages[0].PackageId;
+        }
+        else if (repository.IsDotnetSolution)
+        {
+            primaryPackageId = repository.DotName;
+        }
+        else
         {
             return;
         }
 
-        var (isSuccessful, metadata) = await atcApiNugetClient.GetPackageMetadata(repository.DotName);
+        var (isSuccessful, metadata) = await atcApiNugetClient.GetPackageMetadata(primaryPackageId);
         if (isSuccessful && metadata is not null)
         {
             repository.NugetInfo = metadata;
+
+            // The search index can lag a fresh release; keep the snippets in line with the header version.
+            // The metadata also knows whether the package is a tool, should the cli-tools lookup have failed.
+            if (packages.Count > 0 &&
+                packages[0].PackageId.Equals(metadata.PackageId, StringComparison.OrdinalIgnoreCase))
+            {
+                packages[0] = packages[0] with
+                {
+                    Version = metadata.Version,
+                    IsTool = packages[0].IsTool || metadata.IsTool,
+                };
+            }
+
+            if (packages.Count == 0)
+            {
+                packages.Add(new RepositoryNugetPackage(
+                    metadata.PackageId,
+                    metadata.Version,
+                    string.Empty,
+                    metadata.TotalDownloads,
+                    metadata.IsTool));
+            }
         }
+
+        repository.NugetPackages = packages;
     }
 
     public async Task PopulateChangelogAsync(AtcRepository repository)
