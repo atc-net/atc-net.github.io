@@ -30,25 +30,4 @@ public partial class News
             .OrderByDescending(x => x.BaseData.PushedAt)
             .ToList();
     }
-
-    private static string FormatRelativeTime(DateTimeOffset? pushed)
-    {
-        if (pushed is null)
-        {
-            return string.Empty;
-        }
-
-        var diff = DateTimeOffset.UtcNow - pushed.Value;
-
-        return diff.TotalHours switch
-        {
-            < 1 => "just now",
-            < 24 => $"{(int)diff.TotalHours}h ago",
-            < 48 => "yesterday",
-            _ when diff.TotalDays < 7 => $"{(int)diff.TotalDays}d ago",
-            _ when diff.TotalDays < 30 => $"{(int)(diff.TotalDays / 7)}w ago",
-            _ when diff.TotalDays < 365 => $"{(int)(diff.TotalDays / 30)}mo ago",
-            _ => $"{(int)(diff.TotalDays / 365)}y ago",
-        };
-    }
 }

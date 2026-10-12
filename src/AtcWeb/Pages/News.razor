@@ -78,7 +78,7 @@
                 <div class="repo-card-name">@repo.Name</div>
                 <MudText Typo="Typo.caption"
                          Style="margin-left: auto; opacity: 0.6; white-space: nowrap;">
-                    @FormatRelativeTime(repo.BaseData.PushedAt)
+                    @DisplayFormatHelper.FormatRelativeTime(repo.BaseData.PushedAt)
                 </MudText>
             </div>
             <div class="repo-card-description">
@@ -87,22 +87,16 @@
             <div class="repo-card-meta">
                 @if (!string.IsNullOrEmpty(repo.BaseData.Language))
                 {
-                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
-                             Size="Size.Small" Icon="@Icons.Material.Filled.Code">
-                        @repo.BaseData.Language
-                    </MudChip>
+                    <RepositoryFactChip Label="Language" Values="@([repo.BaseData.Language])" />
                 }
                 @if (!string.IsNullOrEmpty(repo.BaseData.License?.Key))
                 {
-                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
-                             Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
-                        @repo.BaseData.License.Key
-                    </MudChip>
+                    <RepositoryFactChip Label="License" Values="@([repo.BaseData.License.Key.ToUpperInvariant()])" />
                 }
-                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default"
-                         Size="Size.Small">
-                    @RepositoryCategoryHelper.GetCategory(repo.Name)
-                </MudChip>
+                @if (!string.IsNullOrEmpty(RepositoryCategoryHelper.GetCategory(repo.Name)))
+                {
+                    <RepositoryFactChip Label="Category" Values="@([RepositoryCategoryHelper.GetCategory(repo.Name)])" />
+                }
             </div>
         </a>;
 }

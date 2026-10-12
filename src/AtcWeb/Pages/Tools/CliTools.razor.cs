@@ -29,12 +29,4 @@ public partial class CliTools
     {
         await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
-
-    private static string FormatDownloads(long downloads)
-        => downloads switch
-        {
-            >= 1_000_000 => $"{downloads / 1_000_000.0:F1}M",
-            >= 1_000 => $"{downloads / 1_000.0:F1}K",
-            _ => downloads.ToString("N0", CultureInfo.InvariantCulture),
-        };
 }

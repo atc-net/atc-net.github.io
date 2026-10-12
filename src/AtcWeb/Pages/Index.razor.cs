@@ -5,6 +5,7 @@ public partial class Index
     private List<AtcRepository>? featuredRepos;
     private int repositoryCount;
     private NugetTotalDownloadsResult? nugetStats;
+    private Dictionary<string, long> downloadsByRepository = new(StringComparer.OrdinalIgnoreCase);
 
     [Inject]
     private GitHubRepositoryService RepositoryService { get; set; }
@@ -16,8 +17,11 @@ public partial class Index
     {
         var taskRepos = RepositoryService.GetRepositoriesAsync();
         var taskNuget = NugetClient.GetTotalDownloads();
+        var taskDownloads = RepositoryService.GetNugetDownloadsByRepositoryAsync();
 
-        await Task.WhenAll(taskRepos, taskNuget);
+        await Task.WhenAll(taskRepos, taskNuget, taskDownloads);
+
+        downloadsByRepository = await taskDownloads;
 
         var allRepos = await taskRepos;
         var (isSuccessful, result) = await taskNuget;
@@ -59,4 +63,11 @@ public partial class Index
 
         await base.OnInitializedAsync();
     }
+
+    private long GetDownloads(AtcRepository repository)
+        => downloadsByRepository.GetValueOrDefault(repository.Name);
+
+    private static bool HasNonMitLicense(AtcRepository repository)
+        => !string.IsNullOrEmpty(repository.BaseData.License?.Key) &&
+           !"mit".Equals(repository.BaseData.License.Key, StringComparison.OrdinalIgnoreCase);
 }

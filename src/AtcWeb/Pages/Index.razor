@@ -76,19 +76,28 @@
                 @foreach (var repo in featuredRepos)
                 {
                     <a href="/repository/@repo.Name" class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repo.Name)" style="text-decoration: none;">
-                        <div class="repo-card-name">@repo.Name</div>
+                        <div class="d-flex align-center gap-2 mb-2">
+                            <img src="@ImageHelper.GetProgramIconPathForLanguage(repo.BaseData.Language)"
+                                 width="20" height="20" alt="@repo.BaseData.Language" title="@repo.BaseData.Language" />
+                            <div class="repo-card-name">@repo.Name</div>
+                        </div>
                         <div class="repo-card-description">@(string.IsNullOrEmpty(repo.BaseData.Description) ? "A .NET library" : repo.BaseData.Description)</div>
                         <div class="repo-card-meta">
-                            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
-                                     Size="Size.Small" Icon="@Icons.Material.Filled.Code">
-                                @repo.BaseData.Language
-                            </MudChip>
-                            @if (!string.IsNullOrEmpty(repo.BaseData.License?.Key))
+                            @{
+                                var downloads = GetDownloads(repo);
+                            }
+                            @if (downloads > 0)
                             {
-                                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
-                                         Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
-                                    @repo.BaseData.License.Key
-                                </MudChip>
+                                <RepositoryFactChip Label="Downloads" Values="@([DisplayFormatHelper.FormatDownloads(downloads)])" />
+                            }
+                            @if (repo.BaseData.PushedAt.HasValue)
+                            {
+                                <RepositoryFactChip Label="Updated" Values="@([DisplayFormatHelper.FormatRelativeTime(repo.BaseData.PushedAt)])" />
+                            }
+                            @* Every ATC repo is MIT, so the license only earns a chip when it differs *@
+                            @if (HasNonMitLicense(repo))
+                            {
+                                <RepositoryFactChip Label="License" Values="@([repo.BaseData.License!.Key.ToUpperInvariant()])" />
                             }
                         </div>
                     </a>

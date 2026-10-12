@@ -56,17 +56,11 @@
                         <div class="repo-card-meta">
                             @if (!string.IsNullOrEmpty(repository.BaseData.Language))
                             {
-                                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary"
-                                         Size="Size.Small" Icon="@Icons.Material.Filled.Code">
-                                    @repository.BaseData.Language
-                                </MudChip>
+                                <RepositoryFactChip Label="Language" Values="@([repository.BaseData.Language])" />
                             }
                             @if (!string.IsNullOrEmpty(repository.BaseData.License?.Key))
                             {
-                                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success"
-                                         Size="Size.Small" Icon="@Icons.Material.Filled.Gavel">
-                                    @repository.BaseData.License.Key
-                                </MudChip>
+                                <RepositoryFactChip Label="License" Values="@([repository.BaseData.License.Key.ToUpperInvariant()])" />
                             }
                         </div>
                     </a>

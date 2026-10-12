@@ -868,6 +868,8 @@ atc-appbar-band {
 }
 
 .repo-card {
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
   padding: 24px;
   background-color: var(--mud-palette-surface);
@@ -910,7 +912,7 @@ atc-appbar-band {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
   margin-top: auto;
 }
 

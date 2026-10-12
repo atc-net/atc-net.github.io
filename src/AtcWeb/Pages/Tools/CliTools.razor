@@ -84,7 +84,7 @@
                             <div class="cli-downloads">
                                 <MudIcon Icon="@Icons.Material.Filled.Download"
                                          Size="Size.Small" />
-                                <span>@FormatDownloads(tool.TotalDownloads)</span>
+                                <span>@DisplayFormatHelper.FormatDownloads(tool.TotalDownloads)</span>
                             </div>
                             <div class="cli-tool-links">
                                 @if (!string.IsNullOrEmpty(tool.ProjectUrl))
