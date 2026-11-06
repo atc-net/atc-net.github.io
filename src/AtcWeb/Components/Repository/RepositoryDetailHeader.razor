@@ -28,6 +28,16 @@
                     </MudChip>
                 }
             </div>
+            @if (!string.IsNullOrEmpty(Repository.BaseData.DocsSiteUrl))
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                           EndIcon="@Icons.Material.Filled.OpenInNew"
+                           Href="@Repository.BaseData.DocsSiteUrl"
+                           Target="_blank"
+                           Class="mr-2">
+                    Open documentation site
+                </MudButton>
+            }
             <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small"
                        StartIcon="@Icons.Custom.Brands.GitHub"
                        Href="@Repository.Url"

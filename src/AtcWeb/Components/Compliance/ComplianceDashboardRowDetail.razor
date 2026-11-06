@@ -29,7 +29,7 @@
                 <div>Count: <b>@Summary.OpenIssuesCount</b></div>
                 <div>Oldest: @FormatDate(Summary.OldestOpenIssueAt)</div>
                 <div>Newest: @FormatDate(Summary.NewestOpenIssueAt)</div>
-                <MudLink Href="@($"/repository/{Summary.Name}")" Color="Color.Primary">
+                <MudLink Href="@($"/libraries/{Summary.Name}")" Color="Color.Primary">
                     Open full repo page
                 </MudLink>
             </MudItem>

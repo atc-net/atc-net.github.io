@@ -1,0 +1,820 @@
+// =============================================================================
+// Two sections, one theme: Apps (ready-to-run apps) and Libraries (packages)
+// share the site's purple→pink. Colors are built on MudBlazor palette variables
+// and translucent tints so they work in both light and dark mode.
+// =============================================================================
+
+:root {
+  --world-accent: var(--mud-palette-primary);
+  --world-gradient: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-secondary) 100%);
+  --world-tint: linear-gradient(135deg, rgba(119, 107, 231, 0.14) 0%, rgba(232, 67, 147, 0.12) 100%);
+}
+
+// ----- App-bar switch ---------------------------------------------------------
+
+.world-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--mud-palette-action-default-hover);
+  margin: 0 8px;
+}
+
+.world-switch__seg {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--mud-palette-text-secondary);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    color: var(--mud-palette-text-primary);
+  }
+
+  &--active-apps {
+    background: var(--world-gradient);
+    color: #fff !important;
+  }
+
+  &--active-components {
+    background: var(--world-gradient);
+    color: #fff !important;
+  }
+}
+
+// ----- Side menu: world links ------------------------------------------------
+
+.world-nav-link {
+  font-weight: 600;
+
+  &--apps .mud-nav-link.active {
+    background: rgba(119, 107, 231, 0.14) !important;
+    color: var(--world-accent) !important;
+
+    .mud-icon-root {
+      color: var(--world-accent) !important;
+    }
+  }
+
+  &--apps .mud-icon-root {
+    color: var(--world-accent);
+  }
+
+  &--components .mud-icon-root {
+    color: var(--mud-palette-primary);
+  }
+}
+
+// AtcApp leaves in the side menu: same 20px slot as the language icon on /libraries leaves.
+.world-nav-app__icon.mud-icon-root {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--mud-palette-primary);
+}
+
+// ----- Accents ----------------------------------------------------------------
+
+.world-button-apps {
+  background: var(--world-gradient) !important;
+  color: #fff !important;
+}
+
+.world-button-components {
+  background: var(--world-gradient) !important;
+  color: #fff !important;
+}
+
+.world-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  &--apps {
+    color: var(--world-accent);
+  }
+
+  &--components {
+    color: var(--mud-palette-primary);
+  }
+}
+
+// ----- Banners ----------------------------------------------------------------
+
+.world-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin: 24px 0;
+  // Same fixed height for Apps and Libraries, so the page doesn't jump when switching between them.
+  // It leaves room for the description to wrap to two lines; the stats sit at the bottom either way.
+  height: 248px;
+  display: flex;
+  // Top-aligned, so the title stays put when switching between AtcApps and Libraries
+  align-items: flex-start;
+  gap: 24px;
+
+  &--apps {
+    background: var(--world-tint), var(--mud-palette-surface);
+  }
+
+  &--components {
+    background: var(--world-tint), var(--mud-palette-surface);
+  }
+}
+
+.world-banner__text {
+  flex: 1 1 50%;
+  z-index: 1;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 4px 0 8px;
+    color: var(--mud-palette-text-primary);
+  }
+
+  p {
+    color: var(--mud-palette-text-secondary);
+    margin: 0;
+    max-width: 460px;
+  }
+}
+
+.world-banner__stats {
+  display: flex;
+  gap: 28px;
+  margin-top: auto;
+  padding-top: 18px;
+
+  b {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--mud-palette-text-primary);
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: var(--mud-palette-text-secondary);
+  }
+}
+
+.world-banner__art {
+  position: relative;
+  flex: 1 1 45%;
+  min-height: 150px;
+}
+
+// Installer window (apps): the twin of the Libraries terminal, cycling through the released apps
+.world-installer {
+  position: absolute;
+  inset: 8px 0 auto auto;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1e1e2e;
+  color: #c8c6d8;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #2a2a3c;
+
+    i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4b4a63;
+    }
+
+    span {
+      margin-left: 8px;
+      font-size: 0.75rem;
+      color: #9896ab;
+    }
+  }
+
+  &__body {
+    padding: 12px 16px 14px;
+  }
+
+  &__app {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  // Lighter purple than the shared .app-icon, for contrast on the dark window.
+  &__icon.mud-icon-root {
+    color: #a29bfe;
+  }
+
+  &__name {
+    flex: 1;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  &__version {
+    font-family: Consolas, 'Cascadia Code', monospace;
+    color: #a29bfe;
+  }
+
+  &__progress {
+    height: 6px;
+    margin: 12px 0 8px;
+    border-radius: 999px;
+    background: #2f2e44;
+    overflow: hidden;
+
+    div {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--world-gradient);
+      animation: world-progress 2.2s ease-out both;
+    }
+  }
+
+  &__ok {
+    color: #55efc4;
+    animation: world-fade-in 0.3s ease-out 2.2s both;
+  }
+}
+
+@keyframes world-progress {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes world-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Typing terminal (components)
+.world-terminal {
+  position: absolute;
+  inset: 8px 0 auto auto;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #c8c6d8;
+  padding: 14px 16px;
+  font-family: Consolas, 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  &__prompt {
+    color: #55efc4;
+  }
+
+  &__package {
+    color: #a29bfe;
+  }
+
+  &__ok {
+    color: #9896ab;
+  }
+
+  &__typed {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: bottom;
+    animation: world-typing 1.4s steps(30, end) both;
+  }
+
+  &__cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    background: #c8c6d8;
+    vertical-align: text-bottom;
+    animation: world-blink 1s steps(1) infinite;
+  }
+}
+
+@keyframes world-typing {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes world-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-terminal__typed,
+  .world-terminal__cursor,
+  .world-installer__progress div,
+  .world-installer__ok {
+    animation: none;
+  }
+}
+
+// ----- AtcApp cards ----------------------------------------------------------
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.app-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--mud-palette-surface);
+  border-top: 3px solid var(--world-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  }
+
+  &__shot {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--mud-palette-background-gray);
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+    }
+  }
+
+  &__body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--mud-palette-text-primary);
+    text-decoration: none;
+  }
+
+  &__pitch {
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    margin-top: auto;
+    display: flex;
+    gap: 8px;
+    padding-top: 6px;
+  }
+}
+
+// One plain app icon everywhere (cards, app page, side menu), sized like the language icon on library cards.
+.app-icon.mud-icon-root {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--mud-palette-primary);
+
+  &.app-icon--large {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.world-chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--mud-palette-action-default-hover);
+  color: var(--mud-palette-text-secondary);
+  margin-right: 4px;
+
+  &--soon {
+    background: rgba(253, 203, 110, 0.25);
+    color: #b7791f;
+  }
+}
+
+.world-filter-chip {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--mud-palette-action-default-hover);
+  color: var(--mud-palette-text-secondary);
+
+  &--active {
+    background: var(--mud-palette-text-primary);
+    color: var(--mud-palette-surface);
+  }
+}
+
+// ----- AtcApp page -----------------------------------------------------------
+
+.download-box__meta {
+  font-size: 0.85rem;
+  color: var(--mud-palette-text-secondary);
+}
+
+// ----- Components catalog ----------------------------------------------------
+
+.components-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.components-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  button {
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.9rem;
+    text-align: left;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--mud-palette-text-secondary);
+
+    &.active {
+      background: rgba(119, 107, 231, 0.14);
+      color: var(--mud-palette-primary);
+      font-weight: 600;
+    }
+
+    &:hover:not(.active) {
+      background: var(--mud-palette-action-default-hover);
+    }
+  }
+}
+
+.components-sort {
+  flex: 0 0 200px;
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+// ----- Search -----------------------------------------------------------------
+
+.global-search {
+  width: 280px;
+  margin-right: 8px;
+
+  &--large {
+    width: 100%;
+    margin-right: 0;
+
+    .mud-input {
+      background: var(--mud-palette-surface);
+      font-size: 1rem;
+    }
+  }
+}
+
+.global-search-group {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mud-palette-text-secondary);
+}
+
+// ----- Responsive -------------------------------------------------------------
+
+@media (max-width: 960px) {
+  .components-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .world-banner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 20px;
+    height: auto;
+  }
+
+  .world-banner__art {
+    min-height: 170px;
+  }
+}
+
+@media (max-width: 600px) {
+  .world-banner__art {
+    display: none;
+  }
+}
+// ----- Top-bar brand (logo follows the world) ---------------------------------
+
+.world-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: var(--mud-palette-text-primary);
+
+  img {
+    display: block;
+  }
+
+  &__name {
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  &__tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+
+    &--apps {
+      background: rgba(119, 107, 231, 0.16);
+      color: var(--mud-palette-primary);
+    }
+
+    &--components {
+      background: rgba(119, 107, 231, 0.16);
+      color: var(--mud-palette-primary);
+    }
+  }
+}
+
+// ----- Home (layout D) -----------------------------------------------------------
+
+.home-hero {
+  padding-bottom: 136px;
+}
+
+.home-world-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.home-world-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 16px;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  img {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #fff;
+    padding: 5px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    b {
+      font-size: 1.4rem;
+    }
+
+    span {
+      font-size: 0.9rem;
+      opacity: 0.95;
+    }
+  }
+
+  &--apps {
+    background: var(--world-gradient);
+    box-shadow: 0 8px 24px rgba(8, 116, 200, 0.22);
+  }
+
+  &--libraries {
+    background: var(--world-gradient);
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.22);
+  }
+}
+
+.home-get-started {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--mud-palette-primary);
+  color: var(--mud-palette-primary);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(119, 107, 231, 0.1);
+  }
+}
+
+.home-content {
+  position: relative;
+  z-index: 2;
+  margin-top: -96px;
+  padding-bottom: 64px;
+}
+
+.home-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 56px;
+}
+
+.home-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px;
+  border-radius: 16px;
+  background: var(--mud-palette-surface);
+  box-shadow: 0 6px 24px rgba(45, 43, 66, 0.1);
+
+  &__value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    background: var(--atc-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &--apps &__value {
+    background: var(--world-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mud-palette-text-primary);
+  }
+
+  &__detail {
+    font-size: 0.85rem;
+    color: var(--mud-palette-text-secondary);
+  }
+}
+
+.home-section {
+  margin-bottom: 56px;
+
+  .featured-repos-grid {
+    padding: 0;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 8px;
+
+    .section-subtitle {
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.repo-card-app::before {
+  background: var(--world-gradient);
+}
+
+.home-why {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--mud-palette-lines-default);
+
+  b {
+    font-size: 0.95rem;
+    color: var(--mud-palette-text-primary);
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--mud-palette-text-secondary);
+  }
+}
+
+// ----- AtcApp page header (same layout as the component page) ----------------
+
+.repo-hero.app-hero-card::before {
+  background: var(--world-gradient);
+}
+
+.app-hero-card__title {
+  color: var(--mud-palette-primary);
+  font-weight: 700 !important;
+}
+
+.app-download-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--mud-palette-lines-default);
+  background: var(--mud-palette-surface);
+  min-width: 0;
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+
+    b {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    span {
+      font-size: 0.8rem;
+      color: var(--mud-palette-text-secondary);
+    }
+  }
+}

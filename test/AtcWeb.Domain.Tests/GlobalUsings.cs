@@ -8,5 +8,8 @@ global using AtcWeb.Domain.Compliance;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
 global using AtcWeb.Domain.Tests.Fakes;
+global using AtcWeb.Helpers;
+global using AtcWeb.Models;
+global using AtcWeb.State;
 global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.JSInterop;

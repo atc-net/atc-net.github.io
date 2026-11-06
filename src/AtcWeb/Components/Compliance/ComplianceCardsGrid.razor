@@ -4,7 +4,7 @@
     @foreach (var s in Summaries)
     {
         var health = ComplianceHealth.Compute(s);
-        <a href="@($"/repository/{s.Name}")"
+        <a href="@($"/libraries/{s.Name}")"
            class="repo-card @RepositoryCategoryHelper.GetCardCssClass(s.Name)"
            style="text-decoration: none;">
             <div class="repo-card-name">@s.Name</div>

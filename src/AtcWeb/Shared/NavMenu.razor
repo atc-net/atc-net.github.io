@@ -3,29 +3,88 @@
 <MudNavMenu Class="atc-navmenu">
     <div class="docs-nav-fader"></div>
 
-    <MudNavLink Icon="@Icons.Material.Filled.Newspaper" Href="/news">News</MudNavLink>
-    <MudNavGroup Title="Introduction"
-                 Icon="@Icons.Material.Filled.School"
-                 Expanded="@(section == "introduction")"
-                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/introduction/getting-started">Getting Started</MudNavLink>
-        <MudNavLink Href="/introduction/repository-overview">Repository overview</MudNavLink>
-    </MudNavGroup>
-    <MudNavGroup Title="Tools"
-                 Icon="@Icons.Material.Filled.Terminal"
-                 Expanded="@(section == "tools")"
-                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/tools/cli-tools">CLI Tools</MudNavLink>
-    </MudNavGroup>
-    <MudNavGroup Title="Manuals"
-                 Icon="@Icons.Material.Filled.School"
-                 Expanded="@(section == "manuals")"
-                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
-        <MudNavLink Href="/manuals/devops-playbook">DevOps Playbook</MudNavLink>
-    </MudNavGroup>
+    @* The two worlds are always reachable at the top; the list below follows the current world. *@
+    <MudNavLink Icon="@Icons.Material.Filled.Apps" Href="/apps" Class="world-nav-link world-nav-link--apps">Apps</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.Widgets" Href="/libraries" Class="world-nav-link world-nav-link--components">Libraries</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    @if (world == SiteWorld.AtcApps)
+    {
+        <div class="world-tag world-tag--apps mx-4 mt-2 mb-1">All apps</div>
+        <MudTextField @bind-Value="appFilter"
+                      Placeholder="Filter apps..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Clearable="true"
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense"
+                      Class="mx-3 mt-3 mb-2 nav-search-field"
+                      Immediate="true"
+                      Disabled="@(apps is null)"
+                      Style="font-size: 13px;" />
+        @if (apps is null)
+        {
+            @* Placeholder group headers, as on /libraries, to prevent layout jump *@
+            <MudNavGroup Title="Available" Icon="@AvailableAppsIcon" Disabled="true" />
+            <MudNavGroup Title="Coming soon" Icon="@ComingSoonAppsIcon" Disabled="true" />
+        }
+        else
+        {
+            @foreach (var group in AppGroups())
+            {
+                var groupName = group.Title;
+                <div style="@(group.Apps.Count > 0 ? "" : "display:none")">
+                    <MudNavGroup Title="@groupName"
+                                 Icon="@group.Icon"
+                                 Expanded="@IsAppGroupExpanded(groupName)"
+                                 ExpandedChanged="@(value => OnGroupExpandedChanged(groupName, value))"
+                                 ExpandIcon="@Icons.Material.Filled.ExpandMore">
+                        @foreach (var app in group.Apps)
+                        {
+                            <MudElement HtmlTag="div"
+                                        Class="mud-nav-item mud-ripple d-flex items-center">
+                                <a href="@($"/apps/{app.Name}")" class="mud-nav-link @(IsAppActive(app.Name) ? "active" : "")">
+                                    <MudIcon Icon="@Icons.Material.Filled.Apps" Class="world-nav-app__icon" />
+                                    <MudText Class="mud-nav-link-text"
+                                             Inline="true">
+                                        @app.DisplayName
+                                    </MudText>
+                                </a>
+                            </MudElement>
+                        }
+                    </MudNavGroup>
+                </div>
+            }
+        }
+    }
+    else if (world == SiteWorld.None)
+    {
+        <MudNavLink Icon="@Icons.Material.Filled.Newspaper" Href="/news">News</MudNavLink>
+        <MudNavGroup Title="Introduction"
+                     Icon="@Icons.Material.Filled.School"
+                     Expanded="@(section == "introduction")"
+                     ExpandIcon="@Icons.Material.Filled.ExpandMore">
+            <MudNavLink Href="/introduction/getting-started">Getting Started</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Tools"
+                     Icon="@Icons.Material.Filled.Terminal"
+                     Expanded="@(section == "tools")"
+                     ExpandIcon="@Icons.Material.Filled.ExpandMore">
+            <MudNavLink Href="/tools/cli-tools">CLI Tools</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Manuals"
+                     Icon="@Icons.Material.Filled.School"
+                     Expanded="@(section == "manuals")"
+                     ExpandIcon="@Icons.Material.Filled.ExpandMore">
+            <MudNavLink Href="/manuals/devops-playbook">DevOps Playbook</MudNavLink>
+        </MudNavGroup>
+    }
+    else
+    {
+    <div class="world-tag world-tag--components mx-4 mt-2 mb-1">All projects</div>
 
     <MudTextField @bind-Value="searchText"
-                  Placeholder="Filter repositories..."
+                  Placeholder="Filter projects..."
                   Adornment="Adornment.Start"
                   AdornmentIcon="@Icons.Material.Filled.Search"
                   Clearable="true"
@@ -68,7 +127,7 @@
                     {
                         @foreach (var repository in filteredRepos)
                         {
-                            var href = $"/repository/{repository.Name}";
+                            var href = $"/libraries/{repository.Name}";
                             var iconSrc = ImageHelper.GetProgramIconPathForLanguage(repository.BaseData.Language);
 
                             <MudElement HtmlTag="div"
@@ -86,6 +145,8 @@
                 </MudNavGroup>
             </div>
         }
+    }
+
     }
 
 </MudNavMenu>

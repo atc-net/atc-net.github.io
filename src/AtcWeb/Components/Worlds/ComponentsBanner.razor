@@ -1,0 +1,24 @@
+<section class="world-banner world-banner--components">
+    <div class="world-banner__text">
+        <h1>Libraries</h1>
+        <p>Open-source .NET libraries and tools. Add, build, ship.</p>
+        <div class="world-banner__stats">
+            <div><b>@WorldBannerStat.Format(LibraryCount)</b><span>libraries</span></div>
+            <div><b>@WorldBannerStat.Format(CliToolCount)</b><span>CLI tools</span></div>
+            <div><b>@(Downloads ?? "--")</b><span>NuGet downloads</span></div>
+        </div>
+    </div>
+    <div class="world-banner__art" aria-hidden="true">
+        <div class="world-terminal">
+            @if (Commands.Count > 0)
+            {
+                var command = Commands[current];
+                <div @key="current">
+                    <span class="world-terminal__prompt">$ </span><span class="world-terminal__typed">dotnet add package <span class="world-terminal__package">@command.PackageId</span></span>
+                    <div class="world-terminal__ok">✓ added @command.PackageId @command.Version</div>
+                </div>
+            }
+            <span class="world-terminal__prompt">$ </span><span class="world-terminal__cursor"></span>
+        </div>
+    </div>
+</section>

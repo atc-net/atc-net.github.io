@@ -15,7 +15,7 @@ else
                 <MudListItem T="string"
                              Icon="@StatusIcon(item.Health)"
                              IconColor="@StatusColor(item.Health)">
-                    <MudLink Href="@($"/repository/{item.Repo.Name}")" Color="Color.Primary">@item.Repo.Name</MudLink>
+                    <MudLink Href="@($"/libraries/{item.Repo.Name}")" Color="Color.Primary">@item.Repo.Name</MudLink>
                     <span class="ml-2 text-secondary">@string.Join(" · ", item.FailingRules)</span>
                 </MudListItem>
             }

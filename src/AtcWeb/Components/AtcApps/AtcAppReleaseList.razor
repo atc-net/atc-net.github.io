@@ -1,0 +1,37 @@
+@if (Releases is null)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+}
+else if (Releases.Count == 0)
+{
+    <MudText Typo="Typo.body2">No releases yet.</MudText>
+}
+else
+{
+    <MudSimpleTable Dense="true" Hover="true" Elevation="0">
+        <thead>
+            <tr>
+                <th>Version</th>
+                <th>Released</th>
+                <th>Downloads</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var release in Releases)
+            {
+                <tr>
+                    <td><b>@release.TagName</b></td>
+                    <td>@release.PublishedAt?.ToString("d MMM yyyy", CultureInfo.InvariantCulture)</td>
+                    <td>@release.Assets.Count(x => !x.IsSecondary) files</td>
+                    <td><MudLink Href="@release.HtmlUrl" Target="_blank">Release notes ↗</MudLink></td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+    [Parameter]
+    public List<AtcAppRelease>? Releases { get; set; }
+}

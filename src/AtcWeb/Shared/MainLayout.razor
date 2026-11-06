@@ -14,13 +14,7 @@
                            Color="Color.Inherit"
                            Edge="Edge.Start"
                            OnClick="@((_) => DrawerToggle())" />
-            <a href="/" class="d-flex align-center" style="text-decoration: none;">
-                <img src="/images/atc-logo.svg" alt="ATC" width="28" height="28" class="mr-2" />
-                <MudText Typo="Typo.h5"
-                         Class="atc-appbar-brand-text">
-                    ATC
-                </MudText>
-            </a>
+            <WorldBrand />
             <MudSpacer />
             <div class="d-none d-md-flex align-center">
                 <MudButton Variant="Variant.Text"
@@ -29,12 +23,8 @@
                            Class="atc-nav-button">
                     Home
                 </MudButton>
-                <MudButton Variant="Variant.Text"
-                           Color="Color.Inherit"
-                           Href="/introduction/repository-overview"
-                           Class="atc-nav-button">
-                    Repositories
-                </MudButton>
+                <GlobalSearch />
+                <WorldSwitch />
                 <MudButton Variant="Variant.Text"
                            Color="Color.Inherit"
                            Href="/introduction/getting-started"
@@ -69,12 +59,13 @@
                                    Href="https://discord.gg/hzNpdEdhRg"
                                    Target="_blank" />
                 </MudTooltip>
-                <MudTooltip Text="GitHub organization">
-                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
-                                   Color="Color.Inherit"
-                                   Href="https://github.com/atc-net/"
-                                   Target="_blank" />
-                </MudTooltip>
+                <MudMenu Icon="@Icons.Custom.Brands.GitHub"
+                         Color="Color.Inherit"
+                         Dense="true"
+                         AriaLabel="GitHub organizations">
+                    <MudMenuItem Href="https://github.com/atc-net-apps/" Target="_blank">Apps on GitHub (atc-net-apps)</MudMenuItem>
+                    <MudMenuItem Href="https://github.com/atc-net/" Target="_blank">Libraries on GitHub (atc-net)</MudMenuItem>
+                </MudMenu>
             </div>
             <MudMenu Icon="@Icons.Material.Filled.Settings"
                      Color="Color.Inherit"
@@ -90,7 +81,8 @@
                                    Target="_blank" />
                 </div>
                 <MudMenuItem Href="/">Home</MudMenuItem>
-                <MudMenuItem Href="/introduction/repository-overview">Repositories</MudMenuItem>
+                <MudMenuItem Href="/apps">Apps</MudMenuItem>
+                <MudMenuItem Href="/libraries">Libraries</MudMenuItem>
                 <MudMenuItem Href="/introduction/getting-started">Docs</MudMenuItem>
                 <MudMenuItem Href="/news">News</MudMenuItem>
             </MudMenu>
@@ -100,11 +92,6 @@
                    Elevation="0"
                    Breakpoint="Breakpoint.Lg"
                    Class="atc-appbar-band">
-            <MudDrawerHeader Class="atc-brand"
-                             Style="margin: 20px auto 0"
-                             LinkToIndex="true">
-                <img src="/images/atc-logo.svg" alt="ATC" />
-            </MudDrawerHeader>
             <NavMenu />
         </MudDrawer>
 

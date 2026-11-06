@@ -19,6 +19,18 @@ public partial class MarkdownRepositoryContent : ComponentBase
     [Parameter]
     public string RepositoryName { get; set; }
 
+    /// <summary>
+    /// Gets or sets the GitHub owner of the repository. Components live in atc-net, apps in atc-net-apps.
+    /// </summary>
+    [Parameter]
+    public string RepositoryOwner { get; set; } = "atc-net";
+
+    /// <summary>
+    /// Gets or sets the page slugs when the content is a wiki page, so links between wiki pages keep working.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyCollection<string>? WikiPageSlugs { get; set; }
+
     [Parameter]
     public string RepositoryBranch { get; set; }
 
@@ -100,13 +112,13 @@ public partial class MarkdownRepositoryContent : ComponentBase
         markdownContent = Regex.Replace(
             markdownContent,
             @"\[\[([^|\]]+)\|([^\]]+)\]\]",
-            $"[$1](https://github.com/atc-net/{RepositoryName}/wiki/$2)",
+            $"[$1](https://github.com/{RepositoryOwner}/{RepositoryName}/wiki/$2)",
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
         markdownContent = Regex.Replace(
             markdownContent,
             @"\[\[([^\]]+)\]\]",
-            m => $"[{m.Groups[1].Value}](https://github.com/atc-net/{RepositoryName}/wiki/{m.Groups[1].Value.Replace(' ', '-')})",
+            m => $"[{m.Groups[1].Value}](https://github.com/{RepositoryOwner}/{RepositoryName}/wiki/{m.Groups[1].Value.Replace(' ', '-')})",
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
 
@@ -145,7 +157,8 @@ public partial class MarkdownRepositoryContent : ComponentBase
     [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "Capture groups are used in replacements.")]
     private MarkupString SanitizeHtmlToMarkup(string html)
     {
-        const string hrefBase = "https://github.com/atc-net/";
+        var hrefBase = $"https://github.com/{RepositoryOwner}/";
+        var isAtcNet = string.Equals(RepositoryOwner, "atc-net", StringComparison.OrdinalIgnoreCase);
         const string imgStyle = "max-width: 100%; height: auto;";
         var hrefRepo = $"{hrefBase}{RepositoryName}/blob/{RepositoryBranch}/";
         var hrefRepoTree = $"{hrefBase}{RepositoryName}/tree/{RepositoryBranch}/";
@@ -156,7 +169,13 @@ public partial class MarkdownRepositoryContent : ComponentBase
         sanitizedHtml = Regex.Replace(
             sanitizedHtml,
             @"<img src=""(?!https?://)(?:\./)?([^""]+)""",
-            m => $@"<img style='{imgStyle}' src=""{AtcApiUrlBuilder.BuildRawFileUrl(RepositoryName, RepositoryBranch, m.Groups[1].Value)}""",
+            m =>
+            {
+                var src = isAtcNet
+                    ? AtcApiUrlBuilder.BuildRawFileUrl(RepositoryName, RepositoryBranch, m.Groups[1].Value)
+                    : AtcApiUrlBuilder.BuildExternalRawFileUrl(RepositoryOwner, RepositoryName, RepositoryBranch, m.Groups[1].Value);
+                return $@"<img style='{imgStyle}' src=""{src}""";
+            },
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
 
@@ -205,6 +224,11 @@ public partial class MarkdownRepositoryContent : ComponentBase
             },
             RegexOptions.None,
             TimeSpan.FromSeconds(5));
+
+        if (WikiPageSlugs is not null)
+        {
+            sanitizedHtml = WikiLinkHelper.RewritePageLinks(sanitizedHtml, RepositoryOwner, RepositoryName, WikiPageSlugs);
+        }
 
         // Rewrite relative src/ links to GitHub tree URLs
         sanitizedHtml = Regex.Replace(

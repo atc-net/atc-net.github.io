@@ -1,0 +1,219 @@
+@page "/apps/{AtcAppName}"
+
+<PageTitle>@(app?.DisplayName ?? AtcAppName) - ATC-NET</PageTitle>
+
+<MudMainContent Class="atc-main-content">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="pb-12">
+        @if (!isLoaded)
+        {
+            <div class="d-flex flex-column gap-3 mt-6">
+                <div>
+                    <MudSkeleton Width="60%" Height="48px" />
+                    <MudSkeleton Width="90%" Height="20px" />
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="220px" Class="mt-4 rounded-lg" />
+                </div>
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="320px" Class="rounded-lg" />
+            </div>
+        }
+        else if (app is null)
+        {
+            <MudText Typo="Typo.h5" Class="mt-8">App '@AtcAppName' was not found.</MudText>
+            <MudButton Href="/apps" Variant="Variant.Text" Class="mt-2">See all apps</MudButton>
+        }
+        else
+        {
+            <div class="accent-top-card repo-hero app-hero-card pa-6 mb-6">
+                <div class="d-flex align-center justify-space-between flex-wrap gap-3 mb-4">
+                    <div class="d-flex align-center flex-wrap gap-3">
+                        <MudIcon Icon="@Icons.Material.Filled.Apps" Class="app-icon app-icon--large" />
+                        <MudText Typo="Typo.h4" Class="app-hero-card__title">@app.DisplayName</MudText>
+                        @if (app.LatestRelease is not null)
+                        {
+                            <MudChip T="string" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small">@app.LatestRelease.TagName</MudChip>
+                        }
+                        @if (IsWindows)
+                        {
+                            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success" Size="Size.Small">Windows</MudChip>
+                        }
+                    </div>
+                    <div class="d-flex align-center gap-2">
+                        @if (!string.IsNullOrEmpty(app.DocsSiteUrl))
+                        {
+                            <MudButton Variant="Variant.Filled" Size="Size.Small"
+                                       Class="world-button-apps"
+                                       EndIcon="@Icons.Material.Filled.OpenInNew"
+                                       Href="@app.DocsSiteUrl"
+                                       Target="_blank">
+                                Open documentation site
+                            </MudButton>
+                        }
+                        <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small"
+                                   StartIcon="@Icons.Custom.Brands.GitHub"
+                                   Href="@app.HtmlUrl"
+                                   Target="_blank">
+                            GitHub
+                        </MudButton>
+                    </div>
+                </div>
+
+                <div class="repo-hero-body">
+                    <div class="repo-hero-main">
+                        @if (!string.IsNullOrWhiteSpace(app.Description))
+                        {
+                            <MudText Typo="Typo.body1" Class="repo-hero-description">@app.Description</MudText>
+                        }
+                        <div class="repo-fact-chips">
+                            @if (IsWindows)
+                            {
+                                <RepositoryFactChip Label="Runs on" Values="@WindowsFact" />
+                            }
+                            <RepositoryFactChip Label="Price" Values="@PriceFact" />
+                            @if (app.PushedAt.HasValue)
+                            {
+                                <RepositoryFactChip Label="Updated" Values="@UpdatedFact" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="repo-hero-stats">
+                        <div class="repo-stat-tile">
+                            <span class="repo-stat-value">@LatestReleaseText</span>
+                            <span class="repo-stat-label"><MudIcon Icon="@Icons.Material.Filled.NewReleases" Size="Size.Small" />Latest release</span>
+                        </div>
+                        <div class="repo-stat-tile">
+                            <span class="repo-stat-value">@VersionsText</span>
+                            <span class="repo-stat-label"><MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Small" />Versions</span>
+                        </div>
+                        <div class="repo-stat-tile">
+                            <span class="repo-stat-value">@GuidesText</span>
+                            <span class="repo-stat-label"><MudIcon Icon="@Icons.Material.Filled.MenuBook" Size="Size.Small" />Guides</span>
+                        </div>
+                        <a class="repo-stat-tile repo-stat-tile-link" href="@IssuesHref" target="_blank" rel="noopener noreferrer">
+                            <span class="repo-stat-value">Report</span>
+                            <span class="repo-stat-label"><MudIcon Icon="@Icons.Material.Filled.BugReport" Size="Size.Small" />A problem</span>
+                        </a>
+                    </div>
+                </div>
+
+                @if (app.LatestRelease is not null)
+                {
+                    <AtcAppDownloadBox @ref="downloadBox"
+                                        Release="@app.LatestRelease"
+                                        OnWhatsNew="ShowWhatsNew" />
+                }
+                else
+                {
+                    <div class="repo-install-dock" id="download">
+                        <div class="repo-install-dock-header">
+                            <span class="repo-section-label">Download</span>
+                        </div>
+                        <div class="d-flex align-center flex-wrap gap-3">
+                            <span class="world-chip world-chip--soon">Coming soon</span>
+                            <MudText Typo="Typo.body2">There is no release yet. Follow the project on GitHub to hear about the first one.</MudText>
+                            <MudButton Variant="Variant.Outlined" Size="Size.Small" Href="@app.HtmlUrl" Target="_blank" StartIcon="@Icons.Custom.Brands.GitHub">Follow</MudButton>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <MudTabs @bind-ActivePanelIndex="activeTab"
+                     Elevation="0"
+                     Rounded="true"
+                     ApplyEffectsToContainer="true"
+                     Class="repo-detail-tabs mb-6"
+                     TabPanelsClass="pt-4">
+                <MudTabPanel Text="Overview" Icon="@Icons.Material.Filled.Description">
+                    @if (readme is null)
+                    {
+                        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+                    }
+                    else if (readme.Length == 0)
+                    {
+                        <MudText Typo="Typo.body2">No description yet.</MudText>
+                    }
+                    else
+                    {
+                        <RepositoryTabPanelWithToc Headings="@readmeHeadings">
+                            <MudCard Elevation="0">
+                                <MudCardContent>
+                                    <MarkdownRepositoryContent RepositoryName="@app.Name"
+                                                               RepositoryOwner="@app.Owner"
+                                                               RepositoryBranch="@app.DefaultBranch"
+                                                               IdPrefix="readme"
+                                                               OnHeadingsExtracted="OnReadmeHeadingsExtracted"
+                                                               Content="@readme" />
+                                </MudCardContent>
+                            </MudCard>
+                        </RepositoryTabPanelWithToc>
+                    }
+                </MudTabPanel>
+                @if (wiki.HasWiki)
+                {
+                    <MudTabPanel Text="Guides" Icon="@Icons.Material.Filled.MenuBook">
+                        <RepositoryWikiTab Wiki="@wiki"
+                                           RepositoryName="@app.Name"
+                                           RepositoryOwner="@app.Owner"
+                                           RepositoryBranch="@app.DefaultBranch" />
+                    </MudTabPanel>
+                }
+                @if (app.LatestRelease is not null)
+                {
+                    <MudTabPanel Text="What's new" Icon="@Icons.Material.Filled.NewReleases">
+                        @if (string.IsNullOrWhiteSpace(app.LatestRelease.Body))
+                        {
+                            <MudText Typo="Typo.body2">No release notes for @app.LatestRelease.TagName.</MudText>
+                        }
+                        else
+                        {
+                            <MarkdownRepositoryContent RepositoryName="@app.Name"
+                                                       RepositoryOwner="@app.Owner"
+                                                       RepositoryBranch="@app.DefaultBranch"
+                                                       Content="@app.LatestRelease.Body" />
+                        }
+                    </MudTabPanel>
+                    <MudTabPanel Text="All versions" Icon="@Icons.Material.Filled.History">
+                        <AtcAppReleaseList Releases="@releases" />
+                    </MudTabPanel>
+                }
+                @if (!string.IsNullOrEmpty(app.DocsSiteUrl))
+                {
+                    <MudTabPanel Text="Documentation" Icon="@Icons.Material.Filled.MenuBook">
+                        <MudText Typo="Typo.body1" Class="mb-3">@app.DisplayName has its own documentation site.</MudText>
+                        <MudButton Variant="Variant.Filled"
+                                   Class="world-button-apps"
+                                   Href="@app.DocsSiteUrl"
+                                   Target="_blank"
+                                   EndIcon="@Icons.Material.Filled.OpenInNew">
+                            Open documentation site
+                        </MudButton>
+                    </MudTabPanel>
+                }
+                @if (builtWith.Count > 0)
+                {
+                    <MudTabPanel Text="Built with" Icon="@Icons.Material.Filled.Widgets">
+                        <MudText Typo="Typo.body2" Class="mb-3">@app.DisplayName is built with these ATC libraries:</MudText>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var group in builtWith)
+                            {
+                                <MudChip T="string"
+                                         Href="@($"/libraries/{group.Key}")"
+                                         Variant="Variant.Outlined"
+                                         Color="Color.Primary"
+                                         title="@string.Join(", ", group.Value)">
+                                    @group.Key
+                                </MudChip>
+                            }
+                        </div>
+                    </MudTabPanel>
+                }
+            </MudTabs>
+
+            <div class="mt-8">
+                <MudLink Href="@($"{app.HtmlUrl}/issues")" Target="_blank">
+                    <MudIcon Icon="@Icons.Material.Filled.BugReport" Size="Size.Small" Class="mr-1" Style="vertical-align: middle;" />
+                    Report a problem
+                </MudLink>
+            </div>
+        }
+    </MudContainer>
+</MudMainContent>

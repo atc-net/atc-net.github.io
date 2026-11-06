@@ -1,0 +1,29 @@
+<section class="world-banner world-banner--apps">
+    <div class="world-banner__text">
+        <h1>Apps</h1>
+        <p>Free, open-source apps. Download, install, done.</p>
+        <div class="world-banner__stats">
+            <div><b>@WorldBannerStat.Format(ReadyCount)</b><span>apps ready</span></div>
+            <div><b>@WorldBannerStat.Format(ComingSoonCount)</b><span>coming soon</span></div>
+            <div><b>100%</b><span>open source</span></div>
+        </div>
+    </div>
+    <div class="world-banner__art" aria-hidden="true">
+        <div class="world-installer">
+            <div class="world-installer__bar"><i></i><i></i><i></i><span>Downloading</span></div>
+            @if (Apps.Count > 0)
+            {
+                var app = Apps[current];
+                <div @key="current" class="world-installer__body">
+                    <div class="world-installer__app">
+                        <MudIcon Icon="@Icons.Material.Filled.Apps" Class="app-icon world-installer__icon" />
+                        <span class="world-installer__name">@app.DisplayName</span>
+                        <span class="world-installer__version">@app.Version</span>
+                    </div>
+                    <div class="world-installer__progress"><div></div></div>
+                    <div class="world-installer__ok">✓ ready to install</div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

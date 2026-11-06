@@ -1,0 +1,98 @@
+@page "/libraries"
+
+<PageTitle>Libraries - ATC-NET</PageTitle>
+
+<MudMainContent Class="atc-main-content">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="pb-12">
+        <ComponentsBanner Commands="@bannerCommands"
+                          LibraryCount="@libraryCount"
+                          CliToolCount="@cliToolCount"
+                          Downloads="@totalDownloads" />
+
+        @if (cards is null)
+        {
+            <div class="component-grid">
+                @for (var i = 0; i < 6; i++)
+                {
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="170px" Class="rounded-lg" />
+                }
+            </div>
+        }
+        else
+        {
+            <div class="components-layout">
+                <nav class="components-sidebar" aria-label="Categories">
+                    <button type="button" class="@(selectedCategories.Count == 0 ? "active" : null)" @onclick="ClearCategories">
+                        <span>All</span><span>@cards.Count</span>
+                    </button>
+                    @foreach (var category in categories)
+                    {
+                        <button type="button"
+                                class="@(selectedCategories.Contains(category.Name) ? "active" : null)"
+                                @onclick="() => SelectCategory(category.Name)">
+                            <span class="d-inline-flex align-center gap-2">
+                                <MudIcon Icon="@RepositoryCategoryHelper.GetIcon(category.Name)" Size="Size.Small" />
+                                @category.Name
+                            </span>
+                            <span>@category.Count</span>
+                        </button>
+                    }
+                </nav>
+
+                <div>
+                    <div class="d-flex align-center flex-wrap gap-2 mb-4">
+                        <button type="button" class="@KindClass(ComponentKind.All)" @onclick="() => kind = ComponentKind.All">All</button>
+                        <button type="button" class="@KindClass(ComponentKind.Packages)" @onclick="() => kind = ComponentKind.Packages">Libraries</button>
+                        <button type="button" class="@KindClass(ComponentKind.CliTools)" @onclick="() => kind = ComponentKind.CliTools">CLI tools</button>
+                        <MudSpacer />
+                        @* Fixed-width wrapper: MudSelect's outer element grows, which left the dropdown short of the grid's right edge. *@
+                        <div class="components-sort">
+                            <MudSelect T="ComponentSort"
+                                       @bind-Value="sort"
+                                       Dense="true"
+                                       Margin="Margin.Dense"
+                                       Variant="Variant.Outlined"
+                                       Label="Sort">
+                                <MudSelectItem Value="ComponentSort.MostDownloaded">Most downloaded</MudSelectItem>
+                                <MudSelectItem Value="ComponentSort.RecentlyUpdated">Recently updated</MudSelectItem>
+                                <MudSelectItem Value="ComponentSort.Name">Name</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </div>
+
+                    <div class="component-grid">
+                        @foreach (var card in VisibleCards)
+                        {
+                            <div @key="card.Name" class="repo-card @RepositoryCategoryHelper.GetCardCssClass(card.Name)">
+                                <a href="@($"/libraries/{card.Name}")" class="d-flex align-center gap-2 mb-2" style="text-decoration: none;">
+                                    <img src="@ImageHelper.GetProgramIconPathForLanguage(card.Language ?? string.Empty)" width="20" height="20" alt="" />
+                                    <span class="repo-card-name">@card.Name</span>
+                                </a>
+                                <div class="repo-card-description">@(card.Description ?? "No description available.")</div>
+                                @if (InstallFor(card) is { Command: { } installCommand } install)
+                                {
+                                    <CopyableSnippet Code="@installCommand"
+                                                     Label="@(install.IsTool ? "Install tool" : "Install")" />
+                                }
+                                <div class="repo-card-meta">
+                                    @if (card.Downloads > 0)
+                                    {
+                                        <RepositoryFactChip Label="Downloads" Values="@([DisplayFormatHelper.FormatDownloads(card.Downloads)])" />
+                                    }
+                                    @if (card.UpdatedAt.HasValue)
+                                    {
+                                        <RepositoryFactChip Label="Updated" Values="@([DisplayFormatHelper.FormatRelativeTime(card.UpdatedAt)])" />
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (!VisibleCards.Any())
+                    {
+                        <MudText Typo="Typo.body2" Class="mt-4">No components match these filters.</MudText>
+                    }
+                </div>
+            </div>
+        }
+    </MudContainer>
+</MudMainContent>

@@ -1,0 +1,38 @@
+<div id="download" class="repo-install-dock" tabindex="-1" @ref="Element">
+    <div class="repo-install-dock-header">
+        <div class="d-flex align-center flex-wrap gap-3">
+            <span class="repo-section-label">Download</span>
+            <span class="download-box__meta">
+                @Release.TagName
+                @if (Release.PublishedAt.HasValue)
+                {
+                    <text> · released @Release.PublishedAt.Value.ToString("d MMM yyyy", CultureInfo.InvariantCulture)</text>
+                }
+            </span>
+        </div>
+        @if (OnWhatsNew.HasDelegate)
+        {
+            <MudButton Variant="Variant.Filled" Size="Size.Small" Class="world-button-apps" OnClick="OnWhatsNew">What's new</MudButton>
+        }
+    </div>
+
+    <div class="repo-install-grid">
+        @foreach (var asset in PrimaryAssets)
+        {
+            <div class="app-download-tile">
+                <div class="app-download-tile__text">
+                    <b>@asset.Label</b>
+                    <span>@FileSizeFormatter.Format(asset.Size) · .@asset.FileType</span>
+                </div>
+                <MudButton Variant="Variant.Filled"
+                           Size="Size.Small"
+                           Class="world-button-apps"
+                           Href="@asset.DownloadUrl"
+                           StartIcon="@Icons.Material.Filled.Download"
+                           UserAttributes="@DownloadAttributes(asset)">
+                    Download
+                </MudButton>
+            </div>
+        }
+    </div>
+</div>
