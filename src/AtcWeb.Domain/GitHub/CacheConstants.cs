@@ -26,6 +26,16 @@ public static class CacheConstants
 
     public const string CacheKeyComplianceSummary = "ComplianceSummary";
 
+    public const string CacheKeyAtcApps = "AtcApps";
+
+    public const string CacheKeyAtcAppReleases = "AtcAppReleases";
+
+    public const string CacheKeyAtcAppReadme = "AtcAppReadme";
+
+    public const string CacheKeyAtcAppBuiltWith = "AtcAppBuiltWith";
+
+    public const string CacheKeyAtcAppWiki = "AtcAppWiki";
+
     public static readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(6);
 
     public static readonly TimeSpan AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
