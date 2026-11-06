@@ -2,7 +2,9 @@ namespace AtcWeb.Domain.AtcApi;
 
 public class AtcApiGitHubApiInformationClient
 {
-    private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/api-information";
+    private static string BaseAddress
+        => $"{AtcApiConstants.BaseAddress}/github/api-information";
+
     private readonly HttpClient httpClient;
 
     public AtcApiGitHubApiInformationClient(HttpClient httpClient)
@@ -15,7 +17,7 @@ public class AtcApiGitHubApiInformationClient
     public async Task<(bool IsSuccessful, GitHubApiRateLimits GitHubApiRateLimits)> GetApiRateLimits(
         CancellationToken cancellationToken = default)
     {
-        const string url = $"{BaseAddress}/rate-limits";
+        var url = $"{BaseAddress}/rate-limits";
 
         try
         {

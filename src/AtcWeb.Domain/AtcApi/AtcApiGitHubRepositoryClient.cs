@@ -2,7 +2,9 @@ namespace AtcWeb.Domain.AtcApi;
 
 public class AtcApiGitHubRepositoryClient
 {
-    private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/repository";
+    private static string BaseAddress
+        => $"{AtcApiConstants.BaseAddress}/github/repository";
+
     private readonly HttpClient httpClient;
     private readonly IMemoryCache memoryCache;
     private readonly BrowserCacheService browserCache;
@@ -46,7 +48,7 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            const string url = $"{BaseAddress}/";
+            var url = $"{BaseAddress}/";
 
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
@@ -120,7 +122,7 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            const string url = $"{BaseAddress}/compliance-summary";
+            var url = $"{BaseAddress}/compliance-summary";
 
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
@@ -160,7 +162,7 @@ public class AtcApiGitHubRepositoryClient
 
         try
         {
-            const string url = $"{BaseAddress}/nuget-packages-used";
+            var url = $"{BaseAddress}/nuget-packages-used";
 
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)

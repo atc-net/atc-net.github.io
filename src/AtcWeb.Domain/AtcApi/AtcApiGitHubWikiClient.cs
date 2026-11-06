@@ -2,7 +2,9 @@ namespace AtcWeb.Domain.AtcApi;
 
 public class AtcApiGitHubWikiClient
 {
-    private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/github/wiki";
+    private static string BaseAddress
+        => $"{AtcApiConstants.BaseAddress}/github/wiki";
+
     private readonly HttpClient httpClient;
     private readonly IMemoryCache memoryCache;
     private static readonly SemaphoreSlim SemaphoreWiki = new(1, 1);

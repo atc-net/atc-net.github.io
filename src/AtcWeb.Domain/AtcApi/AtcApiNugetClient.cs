@@ -2,7 +2,9 @@ namespace AtcWeb.Domain.AtcApi;
 
 public class AtcApiNugetClient
 {
-    private const string BaseAddress = $"{AtcApiConstants.BaseAddress}/nuget-search";
+    private static string BaseAddress
+        => $"{AtcApiConstants.BaseAddress}/nuget-search";
+
     private readonly HttpClient httpClient;
     private readonly IMemoryCache memoryCache;
     private static readonly SemaphoreSlim SemaphoreTotalDownloads = new(1, 1);
@@ -35,7 +37,7 @@ public class AtcApiNugetClient
 
         try
         {
-            const string url = $"{BaseAddress}/total-downloads";
+            var url = $"{BaseAddress}/total-downloads";
 
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)
@@ -76,7 +78,7 @@ public class AtcApiNugetClient
 
         try
         {
-            const string url = $"{BaseAddress}/cli-tools";
+            var url = $"{BaseAddress}/cli-tools";
 
             var responseMessage = await httpClient.GetAsync(url, cancellationToken);
             if (!responseMessage.IsSuccessStatusCode)

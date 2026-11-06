@@ -1,5 +1,7 @@
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+AtcApiConstants.Configure(builder.Configuration["AtcApi:BaseAddress"]);
+
 builder.RootComponents.Add<App>("#app");
 
 builder.Services.AddScoped(_ => new HttpClient());
