@@ -10,6 +10,22 @@ The `atc-net.github.io` website is build in Blazor WebAssembly with the UI frame
 
 When commiting a PR to the `atc-net.github.io` repository, a build and release pipeline will ensure a compiled Blazor webassembly will be publish in a github-pages (known as the reserved gh-pages branch name).
 
+## Run locally
+
+The `src/AtcWeb.AppHost` project is an Aspire host. On start, the dashboard asks which atc-api the site should use:
+
+| Choice | API used by the site |
+|--------|----------------------|
+| LOCAL | `https://localhost:51612/` (run [atc-api](https://github.com/atc-net/atc-api) yourself) |
+| DEPLOYED | the deployed atc-api |
+
+```bash
+dotnet run --project src/AtcWeb.AppHost
+dotnet run --project src/AtcWeb.AppHost -- --Parameters:atc-api-url=https://localhost:51612/
+```
+
+The Aspire dashboard is at https://localhost:17200 and the site at https://localhost:45365.
+
 ## Q & A
 
 ### Q: Why is the repository called `atc-net.github.io`

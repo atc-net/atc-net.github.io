@@ -27,6 +27,14 @@
     <ProjectReference Include="..\AtcWeb.Domain\AtcWeb.Domain.csproj" />
   </ItemGroup>
 
+  <!--
+    Local development: "dotnet run -p:AtcApiBaseAddress=<url>" (used by the Aspire AppHost) bakes the API address
+    into the WebAssembly boot config as an environment variable, which overrides wwwroot/appsettings*.json.
+  -->
+  <ItemGroup Condition="'$(AtcApiBaseAddress)' != ''">
+    <WasmEnvironmentVariable Include="AtcApi__BaseAddress" Value="$(AtcApiBaseAddress)" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Update="Atc.Analyzer" Version="0.1.23" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.403" />

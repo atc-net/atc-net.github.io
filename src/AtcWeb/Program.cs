@@ -1,6 +1,10 @@
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-AtcApiConstants.Configure(builder.Configuration["AtcApi:BaseAddress"]);
+// The Aspire AppHost passes the API address as a WebAssembly environment variable (see AtcWeb.csproj);
+// otherwise it comes from wwwroot/appsettings*.json.
+AtcApiConstants.Configure(
+    Environment.GetEnvironmentVariable("AtcApi__BaseAddress")
+    ?? builder.Configuration["AtcApi:BaseAddress"]);
 
 builder.RootComponents.Add<App>("#app");
 
