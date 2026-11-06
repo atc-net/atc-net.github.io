@@ -1,4 +1,5 @@
 global using System.Diagnostics.CodeAnalysis;
+global using System.Net;
 global using AtcWeb.Domain.AtcApi;
 global using AtcWeb.Domain.AtcApi.Models;
 global using AtcWeb.Domain.AtcApi.Models.Compliance;
@@ -6,4 +7,6 @@ global using AtcWeb.Domain.Caching;
 global using AtcWeb.Domain.Compliance;
 global using AtcWeb.Domain.GitHub;
 global using AtcWeb.Domain.GitHub.Models;
+global using AtcWeb.Domain.Tests.Fakes;
 global using Microsoft.Extensions.Caching.Memory;
+global using Microsoft.JSInterop;

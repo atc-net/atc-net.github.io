@@ -36,6 +36,11 @@ public class GitHubRepository
 
     public List<string> Topics { get; set; } = [];
 
+    /// <summary>
+    /// GitHub Pages site URL when the repository publishes one.
+    /// </summary>
+    public string? DocsSiteUrl { get; set; }
+
     public override string ToString()
         => $"{nameof(Name)}: {Name}, {nameof(Language)}: {Language}";
 }
