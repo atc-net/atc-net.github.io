@@ -13,6 +13,16 @@ dotnet build src/AtcWeb/AtcWeb.csproj
 dotnet run --project src/AtcWeb/AtcWeb.csproj
 ```
 
+Local dev host (Aspire, `src/AtcWeb.AppHost`) — dashboard at https://localhost:17200, site at https://localhost:45365:
+
+```bash
+dotnet run --project src/AtcWeb.AppHost                                                       # pick LOCAL/DEPLOYED in the dashboard
+dotnet run --project src/AtcWeb.AppHost -- --Parameters:atc-api-url=https://localhost:51612/   # preset the choice
+```
+
+- The `atc-api-url` parameter (LOCAL `https://localhost:51612/` or DEPLOYED) backs an external service `atc-api` with a `/health` check, and the site waits for it. LOCAL means you run atc-api yourself (e.g. its own AppHost).
+- The site is standalone Blazor WASM, so resource environment variables never reach the browser. The AppHost starts it with `dotnet run -p:AtcApiBaseAddress=<url>`; `AtcWeb.csproj` turns that into a `WasmEnvironmentVariable` (`AtcApi__BaseAddress`) in the boot config, which `Program.cs` prefers over `wwwroot/appsettings*.json`. `AddProject` can't do this because it runs `--no-build`. That build goes to `artifacts/apphost-web` (`--artifacts-path`), so IDE/`dotnet build` output can't overwrite the running site.
+
 ## Tests
 
 ```bash
