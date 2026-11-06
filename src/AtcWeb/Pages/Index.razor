@@ -1,173 +1,191 @@
 @page "/"
 
+<PageTitle>ATC-NET - apps and libraries, free and open source</PageTitle>
+
 <MudMainContent>
-    @* ===== HERO SECTION ===== *@
-    <section class="hero-section">
+    @* ===== HERO ===== *@
+    <section class="hero-section home-hero">
         <div class="hero-title">ATC-NET</div>
         <div class="hero-subtitle">A Touch of Class</div>
         <div class="hero-description">
-            Open-source .NET libraries and tools built from years of real-world developer experience.
-            Battle-tested, MIT licensed, and ready for your next project.
+            Free, open-source apps for everyone and battle-tested .NET libraries for developers.
+            Built from years of real-world experience, MIT licensed.
         </div>
-        <div class="d-flex justify-center gap-3 flex-wrap">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Size="Size.Large"
-                       Href="/introduction/repository-overview"
-                       Class="hero-cta-primary">
-                Explore Repositories
-            </MudButton>
-            <MudButton Variant="Variant.Outlined"
-                       Color="Color.Primary"
-                       Size="Size.Large"
-                       Href="/introduction/getting-started"
-                       Class="hero-cta-secondary">
-                Get Started
-            </MudButton>
+
+        <div class="home-world-cards">
+            <a href="/apps" class="home-world-card home-world-card--apps">
+                <img src="/images/atc-apps-logo.png" alt="" width="48" height="48" />
+                <span class="home-world-card__text">
+                    <b>Apps</b>
+                    <span>Apps you can download and use</span>
+                </span>
+                <MudIcon Icon="@Icons.Material.Filled.ArrowForward" aria-hidden="true" />
+            </a>
+            <a href="/libraries" class="home-world-card home-world-card--libraries">
+                <img src="/images/atc-logo.svg" alt="" width="48" height="48" />
+                <span class="home-world-card__text">
+                    <b>Libraries</b>
+                    <span>Libraries and CLI tools for .NET</span>
+                </span>
+                <MudIcon Icon="@Icons.Material.Filled.ArrowForward" aria-hidden="true" />
+            </a>
         </div>
+        <a href="/introduction/getting-started" class="home-get-started">Get started</a>
     </section>
 
-    @* ===== STATS BAR ===== *@
-    <div class="stats-bar">
-        <div class="stat-item">
-            <div class="stat-value">@(nugetStats is not null ? nugetStats.FormattedDownloads : "--")</div>
-            <div class="stat-label">NuGet Downloads</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">@(nugetStats is not null ? $"{nugetStats.PackageCount}+" : "--")</div>
-            <div class="stat-label">Libraries</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">@(repositoryCount > 0 ? $"{repositoryCount}+" : "--")</div>
-            <div class="stat-label">Repositories</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">100%</div>
-            <div class="stat-label">Open Source</div>
-        </div>
-    </div>
+    <MudContainer MaxWidth="MaxWidth.Large" Class="home-content">
 
-    <hr class="gradient-divider mx-auto mb-12" style="max-width: 200px;" />
-
-    @* ===== FEATURED REPOS ===== *@
-    <MudContainer MaxWidth="MaxWidth.Large" Class="mb-16">
-        <div class="text-center mb-8">
-            <div class="section-title">Featured Repositories</div>
-            <div class="section-subtitle">The most popular packages in the ATC-NET ecosystem</div>
-        </div>
-
-        @if (featuredRepos is null)
-        {
-            <div class="featured-repos-grid">
-                @for (var i = 0; i < 6; i++)
-                {
-                    <div class="repo-card repo-card-core" style="min-height: 140px;">
-                        <MudSkeleton Width="60%" Height="24px" Class="mb-3" />
-                        <MudSkeleton Width="90%" Height="16px" Class="mb-2" />
-                        <MudSkeleton Width="75%" Height="16px" Class="mb-4" />
-                        <MudSkeleton Width="30%" Height="14px" />
-                    </div>
-                }
+        @* ===== STAT CARDS ===== *@
+        <section class="home-stat-cards" aria-label="ATC-NET in numbers">
+            <div class="home-stat-card home-stat-card--apps">
+                <span class="home-stat-card__value">@Count(appCount)</span>
+                <span class="home-stat-card__label">Apps</span>
+                <span class="home-stat-card__detail">Download and install</span>
             </div>
-        }
-        else
-        {
-            <div class="featured-repos-grid">
-                @foreach (var repo in featuredRepos)
-                {
-                    <a href="/repository/@repo.Name" class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repo.Name)" style="text-decoration: none;">
-                        <div class="d-flex align-center gap-2 mb-2">
-                            <img src="@ImageHelper.GetProgramIconPathForLanguage(repo.BaseData.Language)"
-                                 width="20" height="20" alt="@repo.BaseData.Language" title="@repo.BaseData.Language" />
-                            <div class="repo-card-name">@repo.Name</div>
-                        </div>
-                        <div class="repo-card-description">@(string.IsNullOrEmpty(repo.BaseData.Description) ? "A .NET library" : repo.BaseData.Description)</div>
-                        <div class="repo-card-meta">
-                            @{
-                                var downloads = GetDownloads(repo);
-                            }
-                            @if (downloads > 0)
-                            {
-                                <RepositoryFactChip Label="Downloads" Values="@([DisplayFormatHelper.FormatDownloads(downloads)])" />
-                            }
-                            @if (repo.BaseData.PushedAt.HasValue)
-                            {
-                                <RepositoryFactChip Label="Updated" Values="@([DisplayFormatHelper.FormatRelativeTime(repo.BaseData.PushedAt)])" />
-                            }
-                            @* Every ATC repo is MIT, so the license only earns a chip when it differs *@
-                            @if (HasNonMitLicense(repo))
-                            {
-                                <RepositoryFactChip Label="License" Values="@([repo.BaseData.License!.Key.ToUpperInvariant()])" />
-                            }
-                        </div>
-                    </a>
-                }
+            <div class="home-stat-card">
+                <span class="home-stat-card__value">@Count(libraryCount)</span>
+                <span class="home-stat-card__label">Libraries</span>
+                <span class="home-stat-card__detail">NuGet packages</span>
             </div>
-            <div class="text-center mt-6">
-                <MudButton Variant="Variant.Text"
-                           Color="Color.Primary"
-                           Href="/introduction/repository-overview"
-                           EndIcon="@Icons.Material.Filled.ArrowForward">
-                    View all @repositoryCount repositories
+            <div class="home-stat-card">
+                <span class="home-stat-card__value">@Count(cliToolCount)</span>
+                <span class="home-stat-card__label">CLI tools</span>
+                <span class="home-stat-card__detail">Installed with dotnet tool</span>
+            </div>
+            <div class="home-stat-card">
+                <span class="home-stat-card__value">@(nugetStats?.FormattedDownloads ?? "--")</span>
+                <span class="home-stat-card__label">NuGet downloads</span>
+                <span class="home-stat-card__detail">on nuget.org</span>
+            </div>
+            <div class="home-stat-card">
+                <span class="home-stat-card__value">100%</span>
+                <span class="home-stat-card__label">Open source</span>
+                <span class="home-stat-card__detail">MIT licensed, free to use</span>
+            </div>
+        </section>
+
+        @* ===== FEATURED APPS ===== *@
+        <section class="home-section">
+            <div class="home-section__header">
+                <div>
+                    <div class="section-title">Featured apps</div>
+                    <div class="section-subtitle">Apps you can download and use today</div>
+                </div>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Href="/apps" EndIcon="@Icons.Material.Filled.ArrowForward">
+                    See all apps
                 </MudButton>
             </div>
-        }
+            <div class="featured-repos-grid">
+                @if (featuredAtcApps is null)
+                {
+                    @for (var i = 0; i < 3; i++)
+                    {
+                        <div class="repo-card repo-card-app" style="min-height: 160px;">
+                            <MudSkeleton Width="60%" Height="24px" Class="mb-3" />
+                            <MudSkeleton Width="90%" Height="16px" />
+                        </div>
+                    }
+                }
+                else
+                {
+                    @foreach (var card in featuredAtcApps)
+                    {
+                        <a href="@($"/apps/{card.Name}")" class="repo-card repo-card-app" style="text-decoration: none;">
+                            <div class="d-flex align-center gap-2 mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.Apps" Class="app-icon" />
+                                <div class="repo-card-name" style="margin-bottom: 0;">@card.DisplayName</div>
+                            </div>
+                            <div class="repo-card-description">@(card.Pitch ?? "A ready-to-run app.")</div>
+                            <div class="repo-card-meta">
+                                @if (ShipsFormatter.ForAtcApp(card.DownloadCount) is { } ships)
+                                {
+                                    <RepositoryFactChip Label="Ships" Values="@([ships])" />
+                                }
+                                @if (card.Version is not null)
+                                {
+                                    <RepositoryFactChip Label="Latest" Values="@([card.Version])" />
+                                }
+                                @if (card.UpdatedAt.HasValue)
+                                {
+                                    <RepositoryFactChip Label="Updated" Values="@([DisplayFormatHelper.FormatRelativeTime(card.UpdatedAt)])" />
+                                }
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </section>
+
+        @* ===== FEATURED LIBRARIES ===== *@
+        <section class="home-section">
+            <div class="home-section__header">
+                <div>
+                    <div class="section-title">Featured libraries</div>
+                    <div class="section-subtitle">The most used libraries and CLI tools in the ATC-NET ecosystem</div>
+                </div>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Href="/libraries" EndIcon="@Icons.Material.Filled.ArrowForward">
+                    See all libraries
+                </MudButton>
+            </div>
+            <div class="featured-repos-grid">
+                @if (featuredRepositories is null)
+                {
+                    @for (var i = 0; i < 6; i++)
+                    {
+                        <div class="repo-card repo-card-core" style="min-height: 160px;">
+                            <MudSkeleton Width="60%" Height="24px" Class="mb-3" />
+                            <MudSkeleton Width="90%" Height="16px" />
+                        </div>
+                    }
+                }
+                else
+                {
+                    @foreach (var repo in featuredRepositories)
+                    {
+                        <a href="@($"/libraries/{repo.Name}")" class="repo-card @RepositoryCategoryHelper.GetCardCssClass(repo.Name)" style="text-decoration: none;">
+                            <div class="d-flex align-center gap-2 mb-2">
+                                <img src="@ImageHelper.GetProgramIconPathForLanguage(repo.Language ?? string.Empty)" width="20" height="20" alt="" />
+                                <div class="repo-card-name" style="margin-bottom: 0;">@repo.Name</div>
+                            </div>
+                            <div class="repo-card-description">@(repo.Description ?? "A .NET library")</div>
+                            <div class="repo-card-meta">
+                                @if (repo.Ships is not null)
+                                {
+                                    <RepositoryFactChip Label="Ships" Values="@([repo.Ships])" />
+                                }
+                                @if (repo.Downloads > 0)
+                                {
+                                    <RepositoryFactChip Label="Downloads" Values="@([DisplayFormatHelper.FormatDownloads(repo.Downloads)])" />
+                                }
+                                @if (repo.UpdatedAt.HasValue)
+                                {
+                                    <RepositoryFactChip Label="Updated" Values="@([DisplayFormatHelper.FormatRelativeTime(repo.UpdatedAt)])" />
+                                }
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </section>
+
+        @* ===== WHY ATC-NET ===== *@
+        <section class="home-why" aria-label="Why ATC-NET">
+            <div>
+                <b>Battle-tested</b>
+                <p>Built from years of real-world project experience across customers and domains.</p>
+            </div>
+            <div>
+                <b>Open source</b>
+                <p>MIT licensed. Fork it, use it, contribute to it.</p>
+            </div>
+            <div>
+                <b>Apps and libraries</b>
+                <p>Ready-to-run apps for everyone, built on the libraries we share with developers.</p>
+            </div>
+            <div>
+                <b>Community driven</b>
+                <p>Started by two colleagues sharing code, now a growing community on GitHub.</p>
+            </div>
+        </section>
     </MudContainer>
-
-    @* ===== WHY ATC-NET ===== *@
-    <MudContainer MaxWidth="MaxWidth.Large" Class="mb-16">
-        <div class="text-center mb-8">
-            <div class="section-title">Why ATC-NET?</div>
-            <div class="section-subtitle">Built by developers, for developers</div>
-        </div>
-
-        <MudGrid Spacing="4">
-            <MudItem xs="12" sm="6" md="3">
-                <div class="feature-card">
-                    <MudIcon Icon="@Icons.Material.Filled.Verified"
-                             Class="feature-icon"
-                             Style="color: #776be7;" />
-                    <div class="feature-title">Battle-Tested</div>
-                    <div class="feature-description">
-                        Built from years of real-world project experience across different customers and domains.
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="feature-card">
-                    <MudIcon Icon="@Icons.Material.Filled.Code"
-                             Class="feature-icon"
-                             Style="color: #1ec8a5;" />
-                    <div class="feature-title">Open Source</div>
-                    <div class="feature-description">
-                        MIT licensed. Fork it, use it, contribute to it. The code stays in GitHub forever.
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="feature-card">
-                    <MudIcon Icon="@Icons.Material.Filled.Devices"
-                             Class="feature-icon"
-                             Style="color: #ff4081;" />
-                    <div class="feature-title">Cross-Platform</div>
-                    <div class="feature-description">
-                        Support for Linux, macOS, and Windows. Built on .NET LTS with modern C# features.
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="feature-card">
-                    <MudIcon Icon="@Icons.Material.Filled.Groups"
-                             Class="feature-icon"
-                             Style="color: #ffa800;" />
-                    <div class="feature-title">Community Driven</div>
-                    <div class="feature-description">
-                        Started by two colleagues sharing common code, now a growing community
-                        of developers building and contributing together on GitHub.
-                    </div>
-                </div>
-            </MudItem>
-        </MudGrid>
-    </MudContainer>
-
 </MudMainContent>

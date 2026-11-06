@@ -67,7 +67,9 @@
             @if (Repository.Wiki.HasWiki)
             {
                 <MudTabPanel Text="Documentation" Icon="@Icons.Material.Filled.MenuBook">
-                    <RepositoryWikiTab Repository="@Repository" />
+                    <RepositoryWikiTab Wiki="@Repository.Wiki"
+                                       RepositoryName="@Repository.Name"
+                                       RepositoryBranch="@Repository.BaseData.DefaultBranch" />
                 </MudTabPanel>
             }
 

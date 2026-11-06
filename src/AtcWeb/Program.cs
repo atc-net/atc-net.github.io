@@ -16,6 +16,8 @@ builder.Services.AddScoped<AtcApiGitHubRepositoryClient>();
 builder.Services.AddScoped<AtcApiGitHubWikiClient>();
 builder.Services.AddScoped<AtcApiNugetClient>();
 builder.Services.AddScoped<GitHubRepositoryService>();
+builder.Services.AddScoped<AtcApiAppClient>();
+builder.Services.AddScoped<AtcAppService>();
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(_ =>
 {
     var sanitizer = new HtmlSanitizer();

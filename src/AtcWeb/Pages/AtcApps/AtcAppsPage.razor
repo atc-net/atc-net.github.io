@@ -1,0 +1,44 @@
+@page "/apps"
+
+<PageTitle>Apps - ATC-NET</PageTitle>
+
+<MudMainContent Class="atc-main-content">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="pb-12">
+        <AtcAppsBanner Apps="@bannerApps"
+                       ReadyCount="@readyCount"
+                       ComingSoonCount="@comingSoonCount" />
+
+        @if (cards is null)
+        {
+            <div class="app-grid">
+                @for (var i = 0; i < 3; i++)
+                {
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="320px" Class="rounded-lg" />
+                }
+            </div>
+        }
+        else if (cards.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info">No apps are available right now. Please try again later.</MudAlert>
+        }
+        else
+        {
+            @if (topics.Count > 0)
+            {
+                <div class="d-flex align-center flex-wrap gap-2 mb-4">
+                    <button type="button" class="@FilterClass(null)" @onclick="() => selectedTopic = null">All</button>
+                    @foreach (var topic in topics)
+                    {
+                        <button type="button" class="@FilterClass(topic)" @onclick="() => selectedTopic = topic">@topic</button>
+                    }
+                </div>
+            }
+            <div class="app-grid">
+                @foreach (var card in VisibleCards)
+                {
+                    <AtcAppCard @key="card.Name" Model="@card" />
+                }
+            </div>
+        }
+    </MudContainer>
+</MudMainContent>

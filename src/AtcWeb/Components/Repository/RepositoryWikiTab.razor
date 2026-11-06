@@ -1,4 +1,4 @@
-@if (Repository?.Wiki.HasWiki == true)
+@if (Wiki?.HasWiki == true)
 {
     <div class="repo-side-layout repo-wiki-layout has-side">
         <nav class="repo-side-nav repo-wiki-nav" aria-label="Wiki pages">
@@ -42,9 +42,11 @@
                 @if (selectedPage is not null && selectedPage.IsLoaded)
                 {
                     <MudCardContent>
-                        <MarkdownRepositoryContent RepositoryName="@Repository.Name"
-                                                   RepositoryBranch="@Repository.BaseData.DefaultBranch"
+                        <MarkdownRepositoryContent RepositoryName="@RepositoryName"
+                                                   RepositoryOwner="@RepositoryOwner"
+                                                   RepositoryBranch="@RepositoryBranch"
                                                    HeaderName="@GetWikiPageTitle(selectedPage)"
+                                                   WikiPageSlugs="@PageSlugs"
                                                    Content="@selectedPage.RawContent" />
                     </MudCardContent>
                 }

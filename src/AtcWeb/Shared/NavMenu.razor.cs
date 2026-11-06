@@ -6,6 +6,9 @@ public partial class NavMenu : IDisposable
     private string? section;
     private string? componentLink;
     private string searchText = string.Empty;
+    private string appFilter = string.Empty;
+    private SiteWorld world;
+    private List<AtcApp>? apps;
 
     private Dictionary<string, List<AtcRepository>>? allGroups;
 
@@ -17,12 +20,16 @@ public partial class NavMenu : IDisposable
     [Inject]
     protected GitHubRepositoryService RepositoryService { get; set; }
 
+    [Inject]
+    private AtcAppService AtcAppService { get; set; } = default!;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         section = NavigationManager.GetSection();
         componentLink = NavigationManager.GetComponentLink();
+        world = CurrentWorld();
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
@@ -34,6 +41,7 @@ public partial class NavMenu : IDisposable
         groupExpandedState.Clear();
         section = NavigationManager.GetSection();
         componentLink = NavigationManager.GetComponentLink();
+        world = CurrentWorld();
         _ = InvokeAsync(StateHasChanged);
     }
 
@@ -55,6 +63,9 @@ public partial class NavMenu : IDisposable
     {
         if (firstRender)
         {
+            apps = await AtcAppService.GetAtcAppsAsync();
+            StateHasChanged();
+
             repositories = await RepositoryService.GetRepositoriesAsync();
             allGroups = BuildAllGroups();
 
@@ -65,6 +76,9 @@ public partial class NavMenu : IDisposable
             StateHasChanged();
         }
     }
+
+    private SiteWorld CurrentWorld()
+        => SiteWorldHelper.FromRelativePath(NavigationManager.ToBaseRelativePath(NavigationManager.Uri));
 
     public bool IsSubGroupExpanded(AtcComponent? item)
         => item is not null &&
@@ -122,11 +136,35 @@ public partial class NavMenu : IDisposable
         groupExpandedState[groupName] = expanded;
     }
 
+    private const string AvailableAppsIcon = Icons.Material.Filled.Download;
+    private const string ComingSoonAppsIcon = Icons.Material.Filled.Schedule;
+
+    private IEnumerable<(string Title, string Icon, List<AtcApp> Apps)> AppGroups()
+    {
+        var visible = (apps ?? [])
+            .Where(x => AtcAppFilter.Matches(x, appFilter))
+            .ToList();
+
+        yield return ("Available", AvailableAppsIcon, visible.Where(x => x.LatestRelease is not null).ToList());
+        yield return ("Coming soon", ComingSoonAppsIcon, visible.Where(x => x.LatestRelease is null).ToList());
+    }
+
+    // Only a handful of apps, so groups start expanded; the user can still collapse them.
+    private bool IsAppGroupExpanded(string groupName)
+        => !string.IsNullOrWhiteSpace(appFilter) ||
+           !groupExpandedState.TryGetValue(groupName, out var explicitState) ||
+           explicitState;
+
+    private bool IsAppActive(string appName)
+        => NavigationManager.Uri.EndsWith(
+            $"/apps/{appName}",
+            StringComparison.OrdinalIgnoreCase);
+
     private bool IsRepoActive(string repoName)
     {
         var uri = NavigationManager.Uri;
         return uri.EndsWith(
-            $"/repository/{repoName}",
+            $"/libraries/{repoName}",
             StringComparison.OrdinalIgnoreCase);
     }
 
@@ -143,12 +181,12 @@ public partial class NavMenu : IDisposable
         }
 
         var currentUri = NavigationManager.Uri;
-        if (!currentUri.Contains("/repository/", StringComparison.OrdinalIgnoreCase))
+        if (!currentUri.Contains("/libraries/", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        var repoName = currentUri.Split("/repository/").LastOrDefault() ?? string.Empty;
+        var repoName = currentUri.Split("/libraries/").LastOrDefault() ?? string.Empty;
         return string.Equals(RepositoryCategoryHelper.GetCategory(repoName), groupName, StringComparison.Ordinal);
     }
 }

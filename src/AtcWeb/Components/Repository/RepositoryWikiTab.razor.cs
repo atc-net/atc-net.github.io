@@ -30,17 +30,35 @@ public partial class RepositoryWikiTab : ComponentBase
     private IJSRuntime JsRuntime { get; set; } = default!;
 
     [Parameter]
-    public AtcRepository? Repository { get; set; }
+    public WikiMetadata? Wiki { get; set; }
+
+    [Parameter]
+    public string RepositoryName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string RepositoryOwner { get; set; } = "atc-net";
+
+    [Parameter]
+    public string RepositoryBranch { get; set; } = "main";
+
+    private IReadOnlyCollection<string> PageSlugs
+        => Wiki?.Pages.ConvertAll(x => x.Slug) ?? [];
 
     protected override void OnParametersSet()
     {
-        if (Repository?.Wiki.HasWiki == true)
+        if (Wiki?.HasWiki == true)
         {
             BuildSidebarTitleMaps();
 
-            if (selectedPage is null && Repository.Wiki.Pages.Count > 0)
+            // A different wiki (e.g. another app) must not keep the previous wiki's page.
+            if (selectedPage is not null && !Wiki.Pages.Contains(selectedPage))
             {
-                selectedPage = Repository.Wiki.Pages[0];
+                selectedPage = null;
+            }
+
+            if (selectedPage is null && Wiki.Pages.Count > 0)
+            {
+                selectedPage = Wiki.Pages[0];
             }
         }
     }
@@ -92,12 +110,12 @@ public partial class RepositoryWikiTab : ComponentBase
 
     private List<KeyValuePair<string, List<WikiPage>>> GetGroupedPages()
     {
-        if (Repository?.Wiki.Pages is null)
+        if (Wiki?.Pages is null)
         {
             return [];
         }
 
-        return Repository.Wiki.Pages
+        return Wiki.Pages
             .GroupBy(p => p.GroupName ?? string.Empty, StringComparer.Ordinal)
             .Select(g => new KeyValuePair<string, List<WikiPage>>(g.Key, g.ToList()))
             .ToList();
@@ -112,7 +130,7 @@ public partial class RepositoryWikiTab : ComponentBase
         sidebarTitleMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         sidebarGroupTitleMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        var sidebar = Repository?.Wiki.RawSidebar;
+        var sidebar = Wiki?.RawSidebar;
         if (string.IsNullOrEmpty(sidebar))
         {
             return;

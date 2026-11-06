@@ -1,6 +1,6 @@
-namespace AtcWeb.Pages.Repository;
+namespace AtcWeb.Pages.Components;
 
-public partial class RepositoryPage : ComponentBase
+public partial class ComponentPage : ComponentBase
 {
     private AtcRepository? repository;
     private bool isLoaded;

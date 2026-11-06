@@ -1,0 +1,12 @@
+<a href="/" class="world-brand" aria-label="@AriaLabel">
+    <img src="@LogoSrc" alt="" width="24" height="24" />
+    <span class="world-brand__name">ATC-NET</span>
+    @if (world == SiteWorld.AtcApps)
+    {
+        <span class="world-brand__tag world-brand__tag--apps">Apps</span>
+    }
+    else if (world == SiteWorld.Libraries)
+    {
+        <span class="world-brand__tag world-brand__tag--components">Libraries</span>
+    }
+</a>

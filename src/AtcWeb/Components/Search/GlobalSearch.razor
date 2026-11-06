@@ -1,0 +1,27 @@
+<div class="@(Large ? "global-search global-search--large" : "global-search")">
+    <MudAutocomplete T="SearchHit"
+                     SearchFunc="SearchAsync"
+                     ToStringFunc="@(x => x?.Title)"
+                     ValueChanged="OnSelected"
+                     Placeholder="@Placeholder"
+                     Adornment="Adornment.Start"
+                     AdornmentIcon="@Icons.Material.Filled.Search"
+                     Variant="Variant.Outlined"
+                     Margin="@(Large ? Margin.Normal : Margin.Dense)"
+                     Dense="@(!Large)"
+                     DebounceInterval="200"
+                     MaxItems="10"
+                     ResetValueOnEmptyText="true"
+                     CoerceText="false"
+                     aria-label="Search apps and libraries">
+        <ItemTemplate Context="hit">
+            <div class="d-flex align-center gap-2">
+                <span class="@(hit.World == SiteWorld.AtcApps ? "world-tag world-tag--apps" : "world-tag world-tag--components")"
+                      style="min-width: 78px;">
+                    @(hit.World == SiteWorld.AtcApps ? "App" : "Library")
+                </span>
+                <span>@hit.Title</span>
+            </div>
+        </ItemTemplate>
+    </MudAutocomplete>
+</div>

@@ -16,7 +16,7 @@
         <HierarchyColumn T="RepositoryComplianceSummary" />
         <PropertyColumn Property="x => x.Name" Title="Name">
             <CellTemplate>
-                <a href="@($"/repository/{context.Item.Name}")" class="atc-link">@context.Item.Name</a>
+                <a href="@($"/libraries/{context.Item.Name}")" class="atc-link">@context.Item.Name</a>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Language" Title="Lang" />
@@ -31,7 +31,7 @@
             <CellTemplate>
                 <ComplianceStatusChip State="@(context.Item.Signals.HomepageIsAtcWeb ? ChipState.Ok : ChipState.Warning)"
                                       Label="@(context.Item.Signals.HomepageIsAtcWeb ? "OK" : "Wrong")"
-                                      Tooltip="Should be https://atc-net.github.io/repository/{name}" />
+                                      Tooltip="Should be https://atc-net.github.io/libraries/{name}" />
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="README" SortBy="x => x.Signals.HasGoodReadme">

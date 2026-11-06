@@ -1,0 +1,23 @@
+@page "/repository/{RepositoryName}"
+@page "/components/{RepositoryName}"
+@page "/components"
+
+@* Temporary: GitHub repo homepages and older links still use /repository/{name} or /components/...
+   Remove once the repositories' homepages point at /libraries/{name}. *@
+
+@code {
+    [Parameter]
+    public string? RepositoryName { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var query = new Uri(NavigationManager.Uri).Query;
+        var target = string.IsNullOrEmpty(RepositoryName)
+            ? $"/libraries{query}"
+            : $"/libraries/{RepositoryName}";
+        NavigationManager.NavigateTo(target, replace: true);
+    }
+}

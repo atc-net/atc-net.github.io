@@ -1,0 +1,21 @@
+@page "/products/{AppName}"
+@page "/products"
+
+@* Temporary: links from before "products" was renamed to "apps". *@
+
+@code {
+    [Parameter]
+    public string? AppName { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var target = string.IsNullOrEmpty(AppName)
+            ? $"/apps{uri.Query}"
+            : $"/apps/{AppName}{uri.Fragment}";
+        NavigationManager.NavigateTo(target, replace: true);
+    }
+}

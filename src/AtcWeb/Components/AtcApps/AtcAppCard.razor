@@ -1,0 +1,54 @@
+<article class="app-card">
+    <a class="app-card__shot" href="@DetailsHref" aria-label="@($"{Model.DisplayName} details")">
+        <img src="@Model.HeroImageUrl" alt="@($"{Model.DisplayName} screenshot")" loading="lazy" />
+    </a>
+    <div class="app-card__body">
+        <a class="app-card__title" href="@DetailsHref">
+            <MudIcon Icon="@Icons.Material.Filled.Apps" Class="app-icon" />
+            @Model.DisplayName
+        </a>
+        @if (!string.IsNullOrWhiteSpace(Model.Pitch))
+        {
+            <div class="app-card__pitch">@Model.Pitch</div>
+        }
+        <div>
+            @if (Model.IsComingSoon)
+            {
+                <span class="world-chip world-chip--soon">Coming soon</span>
+            }
+            else
+            {
+                <span class="world-chip">@Model.Version</span>
+                <span class="world-chip">Updated @DisplayFormatHelper.FormatRelativeTime(Model.UpdatedAt)</span>
+            }
+        </div>
+        <div class="app-card__actions">
+            @if (Model.IsComingSoon)
+            {
+                <MudButton Variant="Variant.Outlined"
+                           Size="Size.Small"
+                           Href="@GitHubHref"
+                           Target="_blank"
+                           StartIcon="@Icons.Custom.Brands.GitHub">
+                    Follow on GitHub
+                </MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled"
+                           Size="Size.Small"
+                           Class="world-button-apps"
+                           Href="@Model.DownloadHref"
+                           StartIcon="@Icons.Material.Filled.Download"
+                           UserAttributes="@DownloadAttributes">
+                    Download
+                </MudButton>
+            }
+            <MudButton Variant="Variant.Text"
+                       Size="Size.Small"
+                       Href="@DetailsHref">
+                Details
+            </MudButton>
+        </div>
+    </div>
+</article>
